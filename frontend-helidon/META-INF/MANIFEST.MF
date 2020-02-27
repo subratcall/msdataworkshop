@@ -1,0 +1,23 @@
+Manifest-Version: 1.0
+Implementation-Title: LRA Proxy API
+Implementation-Version: 5.9.8.Final
+Java-Version: 1.8.0_222
+Built-By: tom
+Scm-Connection: scm:git:git@github.com:jbosstm/narayana.git/rest-tx/lr
+ a-parent/lra-proxy-parent/lra-proxy-api
+Specification-Vendor: JBoss by Red Hat
+Os-Arch: amd64
+Specification-Title: LRA Proxy API
+Implementation-Vendor-Id: http://www.jboss.org/
+Java-Vendor: Oracle Corporation
+Os-Name: Linux
+Scm-Url: https://github.com/jbosstm/narayana/rest-tx/lra-parent/lra-pr
+ oxy-parent/lra-proxy-api
+Implementation-Vendor: JBoss by Red Hat, Inc.
+Os-Version: 5.2.9-200.fc30.x86_64
+Scm-Revision: 92f28891fd5f29d0381da214d4f3a2917f46e301
+Created-By: Apache Maven 3.5.4
+Build-Jdk: 1.8.0_222
+Specification-Version: 5.9
+Implementation-URL: http://www.jboss.org/
+

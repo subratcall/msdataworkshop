@@ -1,0 +1,18 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: frontend-helidon
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: frontend
+        version: helidon-mp
+    spec:
+      containers:
+      - name: frontend
+        image: docker.io/paulparkinson/frontend-helidon:0.1
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
