@@ -20,20 +20,6 @@ public class OrderServiceTestStreamingOrders implements Runnable{
     }
 
     public void run() {
-//        String authToken = System.getenv("AUTH_TOKEN");
-//        String tenancyName = System.getenv("TENANCY_NAME");
-//        String username = System.getenv("STREAMING_USERNAME");
-//        String streamPoolId = System.getenv("COMPARTMENT_ID");
-//        String topicName = System.getenv("TOPIC_NAME");
-//        String tenancyName = "ocid1.tenancy.oc1..aaaaaaaaogcg5o3giyldy7yybxphgnodvlgr4xuxv7fn5d7prjvt67qqplia";
-//        String username = "ocid1.user.oc1..aaaaaaaajliqydpf6pblr2k6a4ivazjtftmk6af5seozhkel3khbzmsxngpq";
-//        String streamPoolId = "ocid1.compartment.oc1..aaaaaaaagf5galz7jxth4ef6m6zxk4lsvigpv7t7kox7gpthsp2irycptmka";
-        String authToken = "}uC6hEgYpJT-)]7UV7cb";
-        String tenancyName = "weblogicondocker";
-        String username = "paulparkinson";
-        String streamPoolId = "ocid1.streampool.oc1.phx.amaaaaaagu6anria6zgrt4esdg6aibvi6zshwumji4nlb5735egsx5sfc5ea";
-        String topicName = "helidon-oss-kafka";
-
         Properties properties = new Properties();
         properties.put("bootstrap.servers", "streaming.us-phoenix-1.oci.oraclecloud.com:9092");
         properties.put("security.protocol", "SASL_SSL");
