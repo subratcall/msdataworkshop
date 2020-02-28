@@ -1,6 +1,6 @@
 "Intelligent Event-driven Stateful Microservices with Helidon and Autonomous Database on OCI" 
 
-WORKSHOP
+WORKSHOP - NOTE THAT IS A WORK IN PROGRESS AND WILL BE COMPLETE BY MID MARCH 2020
 
 Task 1 (create OCI account, OKE cluster, ATP databases, and access OKE from cloud console)
    - Get (free) OCI account and tenancy 
