@@ -88,7 +88,7 @@ Task 4 (Setup OCI Open Service Broker, binding to 2 existing atp instances, and 
    - Show ref in micro-profile
     
 
-Task 5 (setup AQ, order and inventory, saga, CQRS, and streaming)...
+Task 5 (setup AQ, order and inventory, saga, and CQRS)...
    - setup AQ, queue-progation
    - todo from frontpage app select create orderuser
    - todo from frontpage app select create inventoryuser
@@ -96,9 +96,15 @@ Task 5 (setup AQ, order and inventory, saga, CQRS, and streaming)...
    - create order, inventory, and supplier deployments and services
    - todo from frontpage app select create ordertoinventory propagation
    - todo from frontpage app select create inventorytoorder propagation
-   - https://docs.oracle.com/en/cloud/paas/atp-cloud/atpug/database-links.html#GUID-84FB6B85-D60D-4EDC-BB3C-6485B2E5DF4D
+   - demonstrate placeorder for choreography saga (success and fail/compensate)
+   - demonstrate showorder for CQRS
+   
+Task 6 (setup streaming)
+   - todo use OSB or just do manual streaming setup/secret?
+   - create streaming deployment and service
+   - demonstrate streaming
 
-Task 6 (demonstrate health/readiness) 
+Task 7 (demonstrate health/readiness) 
    - eg order service is not ready until some data load (from view or eventsourcing or lazily) is done
    - show src and probes in deployment
    - https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
@@ -107,7 +113,7 @@ Task 6 (demonstrate health/readiness)
    - https://github.com/oracle/helidon/blob/master/docs/src/main/docs/guides/07_health_se_guide.adoc
    - https://dmitrykornilov.net/2019/08/08/helidon-brings-microprofile-2-2-support/
     
-Task 7 (demonstrate metrics prometheus and grafana (maybe monitoring and alert)
+Task 8 (demonstrate metrics prometheus and grafana (maybe monitoring and alert)
    - show compute auto-scaling in console before explaining horizontal scaling of pods.
         - for reference re compute instance scaling... https://docs.cloud.oracle.com/en-us/iaas/Content/Compute/Tasks/autoscalinginstancepools.htm
    - https://medium.com/oracledevs/how-to-keep-your-microservices-available-by-monitoring-its-metrics-d88900298025
@@ -126,7 +132,8 @@ Task 7 (demonstrate metrics prometheus and grafana (maybe monitoring and alert)
    - https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale-walkthrough/#autoscaling-on-multiple-metrics-and-custom-metrics
    - https://github.com/helm/charts/tree/master/stable/prometheus-adapter
    - helm install --name my-release stable/prometheus-adapter
-Task 8 (demonstrate horizontal scaling)
+
+Task 9 (demonstrate horizontal scaling)
    - install metrics-server
         DOWNLOAD_URL=$(curl -Ls "https://api.github.com/repos/kubernetes-sigs/metrics-server/releases/latest" | jq -r .tarball_url)
         DOWNLOAD_VERSION=$(grep -o '[^/v]*$' <<< $DOWNLOAD_URL)
@@ -142,11 +149,11 @@ Task 8 (demonstrate horizontal scaling)
             order-helidon   Deployment/order-helidon   <unknown>/50%   1         2         0          16s
    - increase cpu, notice cpu increase and scale to 2 pods
 
-Task 9 (tracing)
+Task 10 (tracing)
    - install istio, demonstrate tracing (jaeger and kiali)
    - @Traced annotation
 
-Task 10 (other time permitting and future)
+Task 11 (other time permitting and future)
    - demonstrate scaling with pdb (comes from functional aspect, no sharding orders based on phone number, more memory ?)_
    - https://medium.com/oracledevs/how-to-keep-your-microservices-available-by-monitoring-its-metrics-d88900298025
    - nice to have: 
