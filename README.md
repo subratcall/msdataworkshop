@@ -36,7 +36,11 @@ Task 2
 
 Task 3
 - Setup OCIR, create authkey
-- login and modify `./build.sh` to point to OCIR created 
+- From cloud shell...
+- login and modify the following files... (todo get this from DEMOREGISTRY env var)
+    - export DEMOREGISTRY setting it to OCIR repos location such as 
+    - edit pom.xml and replace <docker.image.prefix>docker.io/paulparkinson</docker.image.prefix>
+    - edit `./deploy.sh` and replace docker.io/paulparkinson/frontend-helidon:0.1
 - run `./build.sh` in frontend-helidon dir to push imagine to OCIR
 - run `./deploy.sh` to create deployment and service
 - check frontend pod is running by using `kubectl get pods --all-namespaces`
