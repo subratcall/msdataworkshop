@@ -12,7 +12,7 @@ spec:
     spec:
       containers:
       - name: frontend
-        image: docker.io/paulparkinson/frontend-helidon:0.1
+        image: us-phoenix-1.ocir.io/stevengreenberginc/datademouser/msdataworkshop/frontend-helidon:0.1
         imagePullPolicy: Always
         ports:
         - containerPort: 8080

@@ -31,7 +31,7 @@ Task 2
 - From cloud console...
 - run `git clone https://github.com/paulparkinson/msdataworkshop.git`
     - optionally (if planning to make modifications, for example) fork this repos and run `git clone` on the forked repos
-- cd frontend-helidon
+- `cd msdataworkshop/frontend-helidon/`
 - mvn install
 
 Task 3
