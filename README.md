@@ -1,6 +1,6 @@
 "Intelligent Event-driven Stateful Microservices with Helidon and Autonomous Database on OCI" 
 
-WORKSHOP - NOTE THAT IS A WORK IN PROGRESS AND WILL BE COMPLETE BY MID MARCH 2020
+WORKSHOP - NOTE THAT THIS IS A WORK IN PROGRESS AND WILL BE COMPLETE BY MID MARCH 2020
 
 ![demo architecture](demo-arch.png) 
 
