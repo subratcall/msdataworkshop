@@ -2,6 +2,7 @@
 
 WORKSHOP - NOTE THAT IS A WORK IN PROGRESS AND WILL BE COMPLETE BY MID MARCH 2020
 
+
 Task 1 (create OCI account, OKE cluster, ATP databases, and access OKE from cloud console)
    - Get (free) OCI account and tenancy 
         - https://myservices.us.oraclecloud.com/mycloud/signup
@@ -26,6 +27,7 @@ Task 1 (create OCI account, OKE cluster, ATP databases, and access OKE from clou
         - related blog with quick instructions here: https://blogs.oracle.com/cloud-infrastructure/announcing-oracle-cloud-shell
         - Verify OKE access using command such as `kubectl get pods --all-namespaces`
     
+    
 Task 2 (create github account and build microservice image)
    - Create github account
         - http://github.com
@@ -34,6 +36,7 @@ Task 2 (create github account and build microservice image)
         - optionally (if planning to make modifications, for example) fork this repos and run `git clone` on the forked repos
    - `cd msdataworkshop/frontend-helidon/`
    - mvn install
+
 
 Task 3 (push image, deploy, and access microservice)
    - Setup OCIR, create authkey
@@ -53,35 +56,47 @@ Task 3 (push image, deploy, and access microservice)
    - access frontend page via frontend loadbalancer service, eg http://129.146.94.70:8080
    - todo give nodeport/port-forward example
 
-Task 4 (OCI Open Service Broker)... 
-   - Setup OSB, binding to 2 existing atp instances, and verify with test app for both...
-   - Refer to https://github.com/oracle/oci-service-broker specifically...
+
+Task 4 (Setup OCI Open Service Broker, binding to 2 existing atp instances, and verify with test/admin app for both)
+   - Refer to https://github.com/oracle/oci-service-broker and specifically...
         - https://github.com/oracle/oci-service-broker/blob/master/charts/oci-service-broker/docs/installation.md
         - https://github.com/oracle/oci-service-broker/blob/master/charts/oci-service-broker/docs/atp.md
+        - https://www.youtube.com/watch?v=qW_pw6Nd5hM&t=12s
    - run ./installOSB.sh
-   - If not already created, create user API Key with password https://docs.cloud.oracle.com/en-us/iaas/Content/Functions/Tasks/functionssetupapikey.htm
-   - modify and run ./ocicredentialsSecret
+   - If not already created, create user API Key with password...
+        - https://docs.cloud.oracle.com/en-us/iaas/Content/Functions/Tasks/functionssetupapikey.htm
+   - modify `./ocicredentialsSecret` supplying values from Task 1 
+   - run `./ocicredentialsSecret`
    - run ./installOCIOSB.sh
-   - run `svcat get brokers` # recheck until broker is shown in ready state
+   - run `svcat get brokers` 
+        - recheck until broker is shown in ready state
    - run `svcat get classes` and `svcat get plans` 
    - Do the following for each/both ATP instances...
-        - modify oci-service-broker/samples/atp/atp-existing-instance.yaml # provide class and plan name and pdb ocid and compartmentID
+        - modify `oci-service-broker/samples/atp/atp-existing-instance.yaml` # provide class and plan name and pdb ocid and compartmentID
         - run `kubectl create -f charts/oci-service-broker/samples/atp/atp-existing-instance.yaml`
-        - run `svcat get instances` #  verify in ready state
-        - modify oci-service-broker/samples/atp/atp-binding-plain.yaml # provide wallet pw (either new or existing)
+        - run `svcat get instances` '
+            - verify in ready state
+        - modify `oci-service-broker/samples/atp/atp-binding-plain.yaml` 
+            - provide wallet password (either new or existing, for example if downloaded from console previously)
         - run `kubectl create -f charts/oci-service-broker/samples/atp/atp-binding-plain.yaml`
         - run `svcat get bindings` # verify in ready state
         - run `kubectl get secrets atp-demo-binding -o yaml` 
-        - modify oci-service-broker/samples/atp/atp-demo-secret.yaml # provide admin password and wallet password (use `echo -n value | base64` to encode)
+        - modify `oci-service-broker/samples/atp/atp-demo-secret.yaml` 
+            - provide admin password and wallet password (use `echo -n value | base64` to encode)
         - run `kubectl create -f oci-service-broker/samples/atp/atp-demo-secret.yaml`
-   - Next steps, adding reference to binding and secrets in kubernetes deployment yaml (see helidon-atp)
+   - todo... Next steps, adding reference to binding and secrets in kubernetes deployment yaml (see helidon-atp)
    - Show ref in micro-profile
     
 
 Task 5 (setup AQ, order and inventory, saga, CQRS, and streaming)...
    - setup AQ, queue-progation
+   - todo from frontpage app select create orderuser
+   - todo from frontpage app select create inventoryuser
+   - mvn install SODA and AQ jars
+   - create order, inventory, and supplier deployments and services
+   - todo from frontpage app select create ordertoinventory propagation
+   - todo from frontpage app select create inventorytoorder propagation
    - https://docs.oracle.com/en/cloud/paas/atp-cloud/atpug/database-links.html#GUID-84FB6B85-D60D-4EDC-BB3C-6485B2E5DF4D
-   - deploy order and inventory and all other services, demonstrate working app for single orders
 
 Task 6 (demonstrate health/readiness) 
    - eg order service is not ready until some data load (from view or eventsourcing or lazily) is done
