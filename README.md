@@ -3,19 +3,34 @@
 WORKSHOP
 
 Task 1
-- Create tenancy and admin user
+- Get (free) OCI account and tenancy 
+    - https://myservices.us.oraclecloud.com/mycloud/signup
     - note tenancy ocid, region name, user ocid
-    - create user api key and note the private key/pem location, fingerprint, and passphrase foobar
-- Create 2 atps pdbs: inventorypdb and orderpdb (for order and all other services)
-    - note the ocid, compartmentId, name, and admin pw of the databases
-    - download the wallet (connection info) and note the wallet password
+- Create user api key and note the private key/pem location, fingerprint, and passphrase foobar 
+    - https://docs.cloud.oracle.com/en-us/iaas/Content/Functions/Tasks/functionssetupapikey.htm
+- Create compartment
+    - https://docs.cloud.oracle.com/en-us/iaas/Content/Identity/Tasks/managingcompartments.htm?Highlight=creating%20a%20comparment
+    - https://oracle-base.com/articles/vm/oracle-cloud-infrastructure-oci-create-a-compartment#create-compartment
+- Create OCIR setup
+    - https://docs.cloud.oracle.com/en-us/iaas/Content/Registry/Tasks/registrycreatingarepository.htm
 - Create OKE cluster
+    - https://docs.cloud.oracle.com/en-us/iaas/Content/ContEng/Tasks/contengcreatingclusterusingoke.htm
+    - https://docs.cloud.oracle.com/en-us/iaas/Content/ContEng/Tasks/contengaccessingclusterkubectl.htm
+    - https://docs.cloud.oracle.com/en-us/iaas/Content/ContEng/Tasks/contengdownloadkubeconfigfile.htm
+- Create 2 atps pdbs: inventorypdb and orderpdb (for order and all other services)
+    - https://docs.oracle.com/en/cloud/paas/autonomous-data-warehouse-cloud/tutorial-getting-started-autonomous-db/index.html
+    - note the ocid, compartmentId, name, and admin pw of the databases
+    - download the wallet (connection info) and note the wallet password (this is optional depending on setup - todo elaborate)
+- Create github account
+    - http://github.com
 - Enter cloud console and issue command to export kubeconfig for the OKE cluster created
+    - related blog with quick instructions here: https://blogs.oracle.com/cloud-infrastructure/announcing-oracle-cloud-shell
     - Verify OKE access using command such as `kubectl get pods --all-namespaces`
     
 Task 2
-- again from cloud console...
-- git clone 
+- From cloud console...
+- run `git clone https://github.com/paulparkinson/msdataworkshop.git`
+    - optionally (if planning to make modifications, for example) fork this repos and run `git clone` on the forked repos
 - cd frontend-helidon
 - mvn install
 
