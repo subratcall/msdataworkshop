@@ -11,8 +11,9 @@ Task 1
 - Create compartment
     - https://docs.cloud.oracle.com/en-us/iaas/Content/Identity/Tasks/managingcompartments.htm?Highlight=creating%20a%20comparment
     - https://oracle-base.com/articles/vm/oracle-cloud-infrastructure-oci-create-a-compartment#create-compartment
-- Create OCIR setup
+- Create OCIR repos and auth key
     - https://docs.cloud.oracle.com/en-us/iaas/Content/Registry/Tasks/registrycreatingarepository.htm
+    - https://docs.cloud.oracle.com/en-us/iaas/Content/Registry/Tasks/registrypushingimagesusingthedockercli.htm (login etc. steps can be done in later tasks)
 - Create OKE cluster
     - https://docs.cloud.oracle.com/en-us/iaas/Content/ContEng/Tasks/contengcreatingclusterusingoke.htm
     - https://docs.cloud.oracle.com/en-us/iaas/Content/ContEng/Tasks/contengaccessingclusterkubectl.htm
@@ -38,9 +39,9 @@ Task 3
 - Setup OCIR, create authkey
 - From cloud shell...
 - login and modify the following files... (todo get this from DEMOREGISTRY env var)
-    - export DEMOREGISTRY setting it to OCIR repos location such as 
-    - edit pom.xml and replace <docker.image.prefix>docker.io/paulparkinson</docker.image.prefix>
-    - edit `./deploy.sh` and replace docker.io/paulparkinson/frontend-helidon:0.1
+    - export DEMOREGISTRY setting it to OCIR repos location such as us-phoenix-1.ocir.io/stevengreenberginc/paul.parkinson/msdataworkshop
+    - edit pom.xml and replace <docker.image.prefix>us-phoenix-1.ocir.io/stevengreenberginc/paul.parkinson/msdataworkshop</docker.image.prefix>
+    - edit `./deploy.sh` and replace us-phoenix-1.ocir.io/stevengreenberginc/paul.parkinson/msdataworkshop/frontend-helidon:0.1
 - run `./build.sh` in frontend-helidon dir to push imagine to OCIR
 - run `./deploy.sh` to create deployment and service
 - check frontend pod is running by using `kubectl get pods --all-namespaces`
