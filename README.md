@@ -2,6 +2,7 @@
 
 WORKSHOP - NOTE THAT IS A WORK IN PROGRESS AND WILL BE COMPLETE BY MID MARCH 2020
 
+![demo architecture](demo-arch.png) 
 
 Task 1 (create OCI account, OKE cluster, ATP databases, and access OKE from cloud console)
    - Get (free) OCI account and tenancy 
@@ -179,4 +180,3 @@ Data Catalog
     - what data is available where in the organization and how trustworthy and fit-for-use they are
     - for demo: analytics report of order info from streaming + atp 
 
-![demo architecture](demo-arch.png)
