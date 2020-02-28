@@ -1,0 +1,74 @@
+/*
+ * Copyright (c) 2018 Oracle and/or its affiliates. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package io.helidon.data.examples;
+
+import java.sql.Connection;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
+import oracle.ucp.jdbc.PoolDataSource;
+
+@Path("/")
+@ApplicationScoped
+public class InventoryResource {
+
+
+    @Inject
+    @Named("atp1")
+    PoolDataSource atpOrderPdb;
+
+    @Inject
+    @Named("atpinventorypdb")
+    PoolDataSource atpInventoryPdb;
+
+    private Connection conn = null;
+    private InventoryServiceInitialization dbandMessagingInitialization= new InventoryServiceInitialization();
+    private InventoryServiceOrderEventConsumer oracleAQEventListener;
+    static final String orderQueueOwner;
+    static final String inventoryQueueOwner;
+    static final String inventoryQueueName = "inventoryqueue";
+
+    static {
+        inventoryQueueOwner = System.getenv("oracle.ucp.jdbc.PoolDataSource.atpinventorypdb.user");
+        System.out.println("InventoryResource inventoryQueueOwner:" + inventoryQueueOwner);
+        orderQueueOwner = System.getenv("oracle.ucp.jdbc.PoolDataSource.atp1.user");
+        System.out.println("InventoryResource orderQueueOwner:" + orderQueueOwner);
+    }
+
+    public InventoryResource() {
+        super();
+//        oracleAQEventListener=  new InventoryServiceOrderEventConsumer(this);
+//        new Thread(oracleAQEventListener).start();
+        System.out.println("InventoryResource.InventoryResource listening for messages...");
+    }
+
+    @Path("/listenForMessages")
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response listenForMessages()  {
+        new Thread(new InventoryServiceOrderEventConsumer(this)).start();
+        final Response returnValue = Response.ok()
+                .entity("now listening for messages...")
+                .build();
+        return returnValue;
+    }
+
+}
