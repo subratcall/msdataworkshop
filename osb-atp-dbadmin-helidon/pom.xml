@@ -38,7 +38,7 @@
         <maven.sources.skip>true</maven.sources.skip>
         <maven.javadoc.skip>true</maven.javadoc.skip>
         <dependenciesDirectory>libs</dependenciesDirectory>
-        <docker.image.prefix>docker.io/paulparkinson</docker.image.prefix>
+        <docker.image.prefix>us-phoenix-1.ocir.io/stevengreenberginc/paul.parkinson/msdataworkshop</docker.image.prefix>
     </properties>
     <build>
         <resources>

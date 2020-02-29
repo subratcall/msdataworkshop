@@ -11,6 +11,7 @@ if [ -z "DEMOREGISTRY" ]; then
 fi
 
 export IMAGE=${DEMOREGISTRY}/${IMAGE_NAME}:${IMAGE_VERSION}
+export IMAGE=us-phoenix-1.ocir.io/stevengreenberginc/paul.parkinson/msdataworkshop/${IMAGE_NAME}:${IMAGE_VERSION}
 
 mvn install
 mvn package docker:build

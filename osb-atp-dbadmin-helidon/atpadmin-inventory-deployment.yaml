@@ -28,7 +28,7 @@ spec:
           mountPath: /creds
       containers:
       - name: helidonatp
-        image: docker.io/paulparkinson/helidonatp:0.1
+        image: us-phoenix-1.ocir.io/stevengreenberginc/paul.parkinson/msdataworkshop/helidonatp:0.1
         imagePullPolicy: Always
         ports:
         - containerPort: 8080
