@@ -38,7 +38,7 @@ spec:
         - name: oracle.ucp.jdbc.PoolDataSource.atp1.password
           valueFrom:
             secretKeyRef:
-              name: atp-user-cred
+              name: atp-user-cred-inventory
               key: password
         - name: oracle.ucp.jdbc.PoolDataSource.atp1.URL
           value: "jdbc:oracle:thin:@inventorydb_high?TNS_ADMIN=/db-demo/creds"

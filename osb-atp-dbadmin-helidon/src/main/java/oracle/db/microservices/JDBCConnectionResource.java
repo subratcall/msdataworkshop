@@ -55,7 +55,7 @@ public class JDBCConnectionResource {
       return " result of sql = [" + sql + "], user = [" + user + "]" + " : " + "success";
     } catch (Exception e) {
       e.printStackTrace();
-      return " result of sql:" + sql + " : " + e;
+      return " result of sql = [" + sql + "], user = [" + user + "]" + " : " + e;
     }
   }
 
