@@ -20,7 +20,8 @@ Task 1 (create OCI account, OKE cluster, ATP databases, and access OKE from clou
         - https://docs.cloud.oracle.com/en-us/iaas/Content/ContEng/Tasks/contengcreatingclusterusingoke.htm
         - https://docs.cloud.oracle.com/en-us/iaas/Content/ContEng/Tasks/contengaccessingclusterkubectl.htm
         - https://docs.cloud.oracle.com/en-us/iaas/Content/ContEng/Tasks/contengdownloadkubeconfigfile.htm
-   - Create 2 atps pdbs: inventorypdb and orderpdb (for order and all other services)
+   - Create 2 atps pdbs named `inventorydb` and `orderdb` (for order and all other services)
+        - If the pdbs are not named `inventorydb` and `orderdb` the deployment yamls in the examples will need to be modified to use the names given.
         - https://docs.oracle.com/en/cloud/paas/autonomous-data-warehouse-cloud/tutorial-getting-started-autonomous-db/index.html
         - note the ocid, compartmentId, name, and admin pw of the databases
         - download the wallet (connection info) and note the wallet password (this is optional depending on setup - todo elaborate)
@@ -36,8 +37,7 @@ Task 2 (create github account and build microservice image)
    - run `git clone https://github.com/paulparkinson/msdataworkshop.git`
         - optionally (if planning to make modifications, for example) fork this repos and run `git clone` on the forked repos
    - `cd msdataworkshop`
-   - todo mvn install soda and aqapi jars from objectstore
-   - run `mvn install`
+   - run `./build.sh`
 
 
 Task 3 (push image, deploy, and access microservice)
@@ -45,12 +45,13 @@ Task 3 (push image, deploy, and access microservice)
    - From cloud shell...
    - `docker login` 
         - https://docs.cloud.oracle.com/en-us/iaas/Content/Registry/Tasks/registrypushingimagesusingthedockercli.htm
-        - example `docker login` user: datademotenancy/datademouser password: [authtoken]
+        - example `docker login us-phoenix-1.ocir.io` user: datademotenancy/datademouser password: [authtoken]
    - Modify the following files... (todo get this from single location such as DEMOREGISTRY env var)
         - export DEMOREGISTRY setting it to OCIR repos location such as us-phoenix-1.ocir.io/stevengreenberginc/paul.parkinson/msdataworkshop
         - edit pom.xml and replace <docker.image.prefix>us-phoenix-1.ocir.io/stevengreenberginc/paul.parkinson/msdataworkshop</docker.image.prefix>
         - edit `./deploy.sh` and replace us-phoenix-1.ocir.io/stevengreenberginc/paul.parkinson/msdataworkshop/frontend-helidon:0.1
-   - run `./build.sh` in frontend-helidon dir to push imagine to OCIR
+   - run `./build.sh` to push images to OCIR
+   - mark the images as public in OCIR via Cloud Console - todo if this is an issue mod deployment/git to do `docker login`
    - run `kubectl create ns datademo` 
    - run `./deploy.sh` to create deployment and service to namespace datademo created in previous step
    - check frontend pod is running by using `kubectl get pods --all-namespaces`
@@ -86,9 +87,14 @@ Task 4 (Setup OCI Open Service Broker, binding to 2 existing atp instances, and 
         - modify `oci-service-broker/samples/atp/atp-demo-secret.yaml` 
             - provide admin password and wallet password (use `echo -n value | base64` to encode)
         - run `kubectl create -f oci-service-broker/samples/atp/atp-demo-secret.yaml`
-   - If not already done (eg as part of Task 2) run `git clone https://github.com/paulparkinson/msdataworkshop.git`
-   - `cd `
-   - Show ref in micro-profile
+   - Insure Task 2 (create github account and build microservice image) is complete.
+   - `cd msdataworkshop/osb-atp-dbadmin-helidon`
+   - Notice `atp1` references in microprofile-config.properties and in OrderResource.java - todo elaborate
+   - Notice deployment yamls wallet, secret, decode, etc. - todo elaborate
+   - run `./deploy.sh` to create deployment and service
+   - demonstrate service discovery/call to order and inventory db 
+        and db access from these services using `executeonorderpdb` and `executeoninventorypdb` on frontend
+   - troubleshooting... use pf if call fails, look at logs, etc.
     
 
 Task 5 (setup AQ, order and inventory, saga, and CQRS)...
