@@ -30,6 +30,11 @@ import javax.ws.rs.core.Response;
 @ApplicationScoped
 public class JDBCConnectionResource {
 
+  static {
+    System.out.println("JDBCConnectionResource.static oracle.ucp.jdbc.PoolDataSource.atp1.password:" +
+            System.getenv("oracle.ucp.jdbc.PoolDataSource.atp1.password"));
+  }
+
   @Inject
   @Named("atp1")
   private DataSource dataSource; // .setFastConnectionFailoverEnabled(false) to get rid of benign SEVERE message
