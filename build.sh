@@ -1,7 +1,5 @@
 #!/bin/bash
 
-
-
 echo ________________________________________
 echo building and pushing frontend-helidon...
 echo ________________________________________
