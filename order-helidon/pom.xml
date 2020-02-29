@@ -31,17 +31,14 @@
     <parent>
         <groupId>io.helidon</groupId>
         <artifactId>helidon-project</artifactId>
-        <version>1.2.0</version>
+        <version>1.4.2</version>
     </parent>
 
     <properties>
-        <!--<maven.deploy.skip>true</maven.deploy.skip>-->
         <maven.sources.skip>true</maven.sources.skip>
         <maven.javadoc.skip>true</maven.javadoc.skip>
         <spotbugs.skip>true</spotbugs.skip>
         <dependenciesDirectory>libs</dependenciesDirectory>
-        <kubernetesSecretName>${project.artifactId}</kubernetesSecretName>
-        <spotbugs.exclude>${project.basedir}/src/main/spotbugs/exclusions.xml</spotbugs.exclude>
         <docker.image.prefix>docker.io/paulparkinson</docker.image.prefix>
     </properties>
     <build>
@@ -126,25 +123,11 @@
                                         <include>Dockerfile</include>
                                     </includes>
                                 </resource>
-                                <resource>
-                                    <filtering>true</filtering>
-                                    <directory>src/main/k8s</directory>
-                                    <includes>
-                                        <include>datasource.secrets.template</include>
-                                        <include>app.yaml</include>
-                                    </includes>
-                                </resource>
+
                             </resources>
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>
-            <plugin>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <configuration>
-                    <systemPropertyVariables>
-                    </systemPropertyVariables>
-                </configuration>
             </plugin>
 
         </plugins>
@@ -156,7 +139,7 @@
             <dependency>
                 <groupId>io.helidon</groupId>
                 <artifactId>helidon-bom</artifactId>
-                <version>1.2.0</version>
+                <version>1.4.2</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -190,11 +173,6 @@
         </dependency>
 
         <dependency>
-            <groupId>com.oracle</groupId>
-            <artifactId>aqapi</artifactId>
-            <version>20.1</version>
-        </dependency>
-        <dependency>
             <groupId>javax.jms</groupId>
             <artifactId>javax.jms-api</artifactId>
             <version>2.0</version>
@@ -206,44 +184,45 @@
             <scope>runtime</scope>
         </dependency>
         <dependency>
-            <groupId>com.oracle.jdbc</groupId>
-            <artifactId>ojdbc11</artifactId>
-            <version>20.1</version>
+            <groupId>com.oracle.ojdbc</groupId>
+            <artifactId>ojdbc8</artifactId>
+            <version>19.3.0.0</version>
         </dependency>
         <dependency>
-            <groupId>com.oracle.jdbc</groupId>
+            <groupId>com.oracle.ojdbc</groupId>
             <artifactId>ucp</artifactId>
-            <version>20.1</version>
+            <version>19.3.0.0</version>
         </dependency>
         <dependency>
-            <groupId>com.oracle.jdbc</groupId>
+            <groupId>com.oracle.ojdbc</groupId>
             <artifactId>osdt_core</artifactId>
-            <version>20.1</version>
+            <version>19.3.0.0</version>
         </dependency>
         <dependency>
-            <groupId>com.oracle.jdbc</groupId>
+            <groupId>com.oracle.ojdbc</groupId>
             <artifactId>osdt_cert</artifactId>
-            <version>20.1</version>
+            <version>19.3.0.0</version>
         </dependency>
         <dependency>
-            <groupId>com.oracle.jdbc</groupId>
+            <groupId>com.oracle.ojdbc</groupId>
             <artifactId>oraclepki</artifactId>
-            <version>20.1</version>
-        </dependency>
-        <dependency>
-            <groupId>com.oracle.oci.sdk</groupId>
-            <artifactId>oci-java-sdk-streaming</artifactId>
-            <version>1.9.3</version>
+            <version>19.3.0.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.kafka</groupId>
             <artifactId>kafka-clients</artifactId>
             <version>2.3.0</version>
         </dependency>
+        <!--the following two will change soon when available in public maven repos-->
         <dependency>
-            <groupId>orajsoda</groupId>
+            <groupId>com.oracle</groupId>
             <artifactId>orajsoda</artifactId>
             <version>1.1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.oracle</groupId>
+            <artifactId>aqapi</artifactId>
+            <version>20.1</version>
         </dependency>
     </dependencies>
 

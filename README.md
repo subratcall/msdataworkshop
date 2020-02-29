@@ -23,11 +23,12 @@ Task 1 (create OCI account, OKE cluster, ATP databases, and access OKE from clou
    - Create 2 atps pdbs named `inventorydb` and `orderdb` (for order and all other services)
         - If the pdbs are not named `inventorydb` and `orderdb` the deployment yamls in the examples will need to be modified to use the names given.
         - https://docs.oracle.com/en/cloud/paas/autonomous-data-warehouse-cloud/tutorial-getting-started-autonomous-db/index.html
-        - note the ocid, compartmentId, name, and admin pw of the databases
-        - download the wallet (connection info) and note the wallet password (this is optional depending on setup - todo elaborate)
+        - Note the ocid, compartmentId, name, and admin pw of the databases
+        - Download the wallet (connection info) and note the wallet password (this is optional depending on setup - todo elaborate)
    - Enter cloud shell and issue command to export kubeconfig for the OKE cluster created
-        - related blog with quick instructions here: https://blogs.oracle.com/cloud-infrastructure/announcing-oracle-cloud-shell
+        - Related blog with quick instructions here: https://blogs.oracle.com/cloud-infrastructure/announcing-oracle-cloud-shell
         - Verify OKE access using command such as `kubectl get pods --all-namespaces`
+        - Create `datademo` namespace using command `kubectl create ns datademo`
     
     
 Task 2 (create github account and build microservice image)
@@ -38,6 +39,8 @@ Task 2 (create github account and build microservice image)
         - optionally (if planning to make modifications, for example) fork this repos and run `git clone` on the forked repos
    - `cd msdataworkshop`
    - run `./build.sh`
+   - For convenience, `source shortcutaliases` or add the contents to the `~/.bash_profile` file and source it.
+        - run 'usage' for list of shortcut commands include `datademo` command which lists all resources related to the msdataworkshop
 
 
 Task 3 (push image, deploy, and access microservice)
@@ -68,30 +71,39 @@ Task 4 (Setup OCI Open Service Broker, binding to 2 existing atp instances, and 
    - run ./installOSB.sh
    - If not already created, create user API Key with password...
         - https://docs.cloud.oracle.com/en-us/iaas/Content/Functions/Tasks/functionssetupapikey.htm
+   - Note that the following instructions will create the broker in the default namespace 
+        and then create the binding and users secrets in the `datademo` namespace
    - modify `./ocicredentialsSecret` supplying values from Task 1 
    - run `./ocicredentialsSecret`
-   - run ./installOCIOSB.sh
+   - run `./installOCIOSB.sh`
    - run `svcat get brokers` 
         - recheck until broker is shown in ready state
    - run `svcat get classes` and `svcat get plans` 
-   - Do the following for each/both ATP instances...
-        - modify `oci-service-broker/samples/atp/atp-existing-instance.yaml` # provide class and plan name and pdb ocid and compartmentID
-        - run `kubectl create -f charts/oci-service-broker/samples/atp/atp-existing-instance.yaml`
-        - run `svcat get instances` '
+   - Do the following for each/both ATP instances/pdbs (*replace `order` with `inventory` for second/inventory ATP instance/pdb)
+        - cd to `oci-service-broker` directory such as oci-service-broker-1.3.3
+        - `cp samples/atp/atp-existing-instance.yaml atp-existing-instance-order.yaml`
+        - modify `atp-existing-instance-order.yaml` 
+            - provide class and plan name and pdb ocid and compartmentID
+        - run `kubectl create -f atp-existing-instance-order.yaml``
+        - run `svcat get instances` 
             - verify in ready state
-        - modify `oci-service-broker/samples/atp/atp-binding-plain.yaml` 
+        - `cp oci-service-broker/samples/atp/atp-binding-plain.yaml atp-binding-plain-order.yaml` 
+        - modify `atp-binding-plain-order.yaml` 
             - provide wallet password (either new or existing, for example if downloaded from console previously)
-        - run `kubectl create -f charts/oci-service-broker/samples/atp/atp-binding-plain.yaml`
-        - run `svcat get bindings` # verify in ready state
-        - run `kubectl get secrets atp-demo-binding -o yaml` 
-        - modify `oci-service-broker/samples/atp/atp-demo-secret.yaml` 
+        - run `kubectl create -f atp-binding-plain-order.yaml -n datademo`
+        - run `svcat get bindings` 
+            - verify in ready state
+        - run `kubectl get secrets atp-demo-binding -n datademo -o yaml` 
+        - `cp oci-service-broker/samples/atp/atp-demo-secret.yaml atp-demo-secret-order.yaml` 
+        - modify `atp-demo-secret-order.yaml` 
             - provide admin password and wallet password (use `echo -n value | base64` to encode)
-        - run `kubectl create -f oci-service-broker/samples/atp/atp-demo-secret.yaml`
+        - run `kubectl create -f atp-demo-secret-order.yaml -n datademo`
    - Insure Task 2 (create github account and build microservice image) is complete.
    - `cd msdataworkshop/osb-atp-dbadmin-helidon`
-   - Notice `atp1` references in microprofile-config.properties and in OrderResource.java - todo elaborate
-   - Notice deployment yamls wallet, secret, decode, etc. - todo elaborate
+   - Notice `atp1` references in microprofile-config.properties and @Inject dataSource in OrderResource.java 
+   - Notice deployment yamls' wallet, secret, decode initcontainer, etc. 
    - run `./deploy.sh` to create deployment and service
+   - run `datademo` command to verify existence of deployment and service and verify pod is in running state
    - demonstrate service discovery/call to order and inventory db 
         and db access from these services using `executeonorderpdb` and `executeoninventorypdb` on frontend
    - troubleshooting... use pf if call fails, look at logs, etc.
@@ -101,6 +113,7 @@ Task 5 (setup AQ, order and inventory, saga, and CQRS)...
    - setup AQ, queue-progation
    - todo from frontpage app select create orderuser
    - todo from frontpage app select create inventoryuser
+   - copy and modify secrets for orderuser and inventory user and update deployment yaml 
    - mvn install SODA and AQ jars
    - create order, inventory, and supplier deployments and services
    - todo from frontpage app select create ordertoinventory propagation
