@@ -4,7 +4,7 @@ WORKSHOP - NOTE THAT THIS IS A WORK IN PROGRESS AND WILL BE COMPLETE BY MID MARC
 
 ![demo architecture](demo-arch.png) 
 
-Task 1 (create OCI account, OKE cluster, ATP databases, and access OKE from cloud console)
+Task 1 (create OCI account, OKE cluster, ATP databases, and access OKE from cloud shell)
    - Get (free) OCI account and tenancy 
         - https://myservices.us.oraclecloud.com/mycloud/signup
         - note tenancy ocid, region name, user ocid
@@ -24,7 +24,7 @@ Task 1 (create OCI account, OKE cluster, ATP databases, and access OKE from clou
         - https://docs.oracle.com/en/cloud/paas/autonomous-data-warehouse-cloud/tutorial-getting-started-autonomous-db/index.html
         - note the ocid, compartmentId, name, and admin pw of the databases
         - download the wallet (connection info) and note the wallet password (this is optional depending on setup - todo elaborate)
-   - Enter cloud console and issue command to export kubeconfig for the OKE cluster created
+   - Enter cloud shell and issue command to export kubeconfig for the OKE cluster created
         - related blog with quick instructions here: https://blogs.oracle.com/cloud-infrastructure/announcing-oracle-cloud-shell
         - Verify OKE access using command such as `kubectl get pods --all-namespaces`
     
@@ -32,11 +32,12 @@ Task 1 (create OCI account, OKE cluster, ATP databases, and access OKE from clou
 Task 2 (create github account and build microservice image)
    - Create github account
         - http://github.com
-   - From cloud console...
+   - From cloud shell...
    - run `git clone https://github.com/paulparkinson/msdataworkshop.git`
         - optionally (if planning to make modifications, for example) fork this repos and run `git clone` on the forked repos
-   - `cd msdataworkshop/frontend-helidon/`
-   - mvn install
+   - `cd msdataworkshop`
+   - todo mvn install soda and aqapi jars from objectstore
+   - run `mvn install`
 
 
 Task 3 (push image, deploy, and access microservice)
@@ -85,7 +86,8 @@ Task 4 (Setup OCI Open Service Broker, binding to 2 existing atp instances, and 
         - modify `oci-service-broker/samples/atp/atp-demo-secret.yaml` 
             - provide admin password and wallet password (use `echo -n value | base64` to encode)
         - run `kubectl create -f oci-service-broker/samples/atp/atp-demo-secret.yaml`
-   - todo... Next steps, adding reference to binding and secrets in kubernetes deployment yaml (see helidon-atp)
+   - If not already done (eg as part of Task 2) run `git clone https://github.com/paulparkinson/msdataworkshop.git`
+   - `cd `
    - Show ref in micro-profile
     
 
@@ -134,14 +136,14 @@ Task 8 (demonstrate metrics prometheus and grafana (maybe monitoring and alert)
    - https://github.com/helm/charts/tree/master/stable/prometheus-adapter
    - helm install --name my-release stable/prometheus-adapter
 
-Task 9 (demonstrate horizontal scaling)
+Task 9 (demonstrate OKE horizontal pod scaling)
    - install metrics-server
-        DOWNLOAD_URL=$(curl -Ls "https://api.github.com/repos/kubernetes-sigs/metrics-server/releases/latest" | jq -r .tarball_url)
-        DOWNLOAD_VERSION=$(grep -o '[^/v]*$' <<< $DOWNLOAD_URL)
-        curl -Ls $DOWNLOAD_URL -o metrics-server-$DOWNLOAD_VERSION.tar.gz
-        mkdir metrics-server-$DOWNLOAD_VERSION
-        tar -xzf metrics-server-$DOWNLOAD_VERSION.tar.gz --directory metrics-server-$DOWNLOAD_VERSION --strip-components 1
-        kubectl apply -f metrics-server-$DOWNLOAD_VERSION/deploy/1.8+/
+        - DOWNLOAD_URL=$(curl -Ls "https://api.github.com/repos/kubernetes-sigs/metrics-server/releases/latest" | jq -r .tarball_url)
+        - DOWNLOAD_VERSION=$(grep -o '[^/v]*$' <<< $DOWNLOAD_URL)
+        - curl -Ls $DOWNLOAD_URL -o metrics-server-$DOWNLOAD_VERSION.tar.gz
+        - mkdir metrics-server-$DOWNLOAD_VERSION
+        - tar -xzf metrics-server-$DOWNLOAD_VERSION.tar.gz --directory metrics-server-$DOWNLOAD_VERSION --strip-components 1
+        - kubectl apply -f metrics-server-$DOWNLOAD_VERSION/deploy/1.8+/
    - kubectl get pods -n datademo |grep order-helidon
    - kubectl top pod order-helidon-74f848d85c-gxfq7 -n datademo --containers 
    - kubectl autoscale deployment order-helidon --cpu-percent=50 --min=1 --max=2 -n datademo
@@ -154,8 +156,16 @@ Task 10 (tracing)
    - install istio, demonstrate tracing (jaeger and kiali)
    - @Traced annotation
 
-Task 11 (other time permitting and future)
-   - demonstrate scaling with pdb (comes from functional aspect, no sharding orders based on phone number, more memory ?)_
+Task 11 (demonstrate scaling with pdb)
+    - autoscaling
+    - sharding
+  
+Task 12 (future)  
+   - analytics - OSE server visualization
+   - message to logic/endpoint mapping
+   - kafka streams not just in chunks theres no end
+   - rehydation / retention and compacted queues (most recent not all events) time windows
+   - comes from functional aspect, no sharding orders based on phone number, more memory ?)_
    - https://medium.com/oracledevs/how-to-keep-your-microservices-available-by-monitoring-its-metrics-d88900298025
    - nice to have: 
         - messaging when available, JPA, JTA
@@ -164,18 +174,18 @@ Task 11 (other time permitting and future)
         - apex report/callout to helidon
         - ORDS
         - Grafana of OCI https://blogs.oracle.com/cloudnative/data-source-grafana
+        - graph route planning
+        kms key monitoring
 
-Future services to be added...
-
-Data Flow 
+Task 13 (data flow) 
     - fully managed Spark service that lets you run Spark applications with almost no administrative overhead.
     - for demo: fog computing of IoT
     
-Data Science 
+Task 14 (data science)
     - enables data scientists to easily build, train, and manage machine learning models on Oracle Cloud, using Python and open source machine learning libraries
     - for demo: predictive analytics of orders to inventory/delivery locations
 
-Data Catalog 
+Task 15 (data catalog)
     - enables data consumers to easily find, understand, govern, and track Oracle Cloud data assets across the enterprise using an organized inventory of data assets
     - what data is available where in the organization and how trustworthy and fit-for-use they are
     - for demo: analytics report of order info from streaming + atp 

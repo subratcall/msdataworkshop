@@ -39,7 +39,6 @@
         <maven.javadoc.skip>true</maven.javadoc.skip>
         <spotbugs.skip>true</spotbugs.skip>
         <dependenciesDirectory>libs</dependenciesDirectory>
-        <spotbugs.exclude>${project.basedir}/src/main/spotbugs/exclusions.xml</spotbugs.exclude>
         <docker.image.prefix>us-phoenix-1.ocir.io/stevengreenberginc/paul.parkinson/msdataworkshop</docker.image.prefix>
         <narayana.lra.version>5.9.8.Final</narayana.lra.version>
     </properties>
