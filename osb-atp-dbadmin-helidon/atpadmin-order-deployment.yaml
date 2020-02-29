@@ -36,8 +36,6 @@ spec:
         - name: oracle.ucp.jdbc.PoolDataSource.atp1.user
           value: "admin"
         - name: oracle.ucp.jdbc.PoolDataSource.atp1.password
-          value: "WelcomeOrder123"
-        - name: oracle.ucp.jdbc.PoolDataSource.atp1.passwordfromsecret
           valueFrom:
             secretKeyRef:
               name: atp-user-cred
