@@ -9,7 +9,7 @@ import javax.sql.DataSource;
 
 public class OrderServiceEventConsumer {
 
-    public Object dolistenForMessages(DataSource dataSource) {
+    public Object dolistenForMessages(DataSource dataSource, String orderid) {
         QueueConnection connection = null;
         javax.jms.Queue queue;
         QueueSession session = null;
@@ -31,6 +31,7 @@ public class OrderServiceEventConsumer {
 //            session.createConsumer(queue) is used when message is produced by JMS client.
 //            MessageConsumer consumer = session.createConsumer(queue);
             MessageConsumer consumer = session.createReceiver(queue);
+            //todo add selector for orderid and action
             connection.start();
             System.out.println("listenForMessages before receive queue:" + queue);
             msg = consumer.receive();
@@ -42,6 +43,7 @@ public class OrderServiceEventConsumer {
             System.out.println("listenForMessages message action:" + action);
             int orderid = message.getIntProperty("orderid");
             System.out.println("listenForMessages message orderid:" + orderid);
+
             session.commit();
             session.close();
             connection.close();

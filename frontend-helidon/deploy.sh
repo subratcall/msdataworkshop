@@ -17,9 +17,9 @@ export IMAGE=${DEMOREGISTRY}/${IMAGE_NAME}:${IMAGE_VERSION}
 #EOF" > $SCRIPT_DIR/frontend-helidon-deployment.yaml
 
 if [ -z "$1" ]; then
-    kubectl create -f $SCRIPT_DIR/frontend-helidon-deployment.yaml -n datademo
+    kubectl create -f $SCRIPT_DIR/frontend-helidon-deployment.yaml -n msdataworkshop
 else
-    kubectl create -f <(istioctl kube-inject -f $SCRIPT_DIR/frontend-helidon-deployment.yaml) -n datademo
+    kubectl create -f <(istioctl kube-inject -f $SCRIPT_DIR/frontend-helidon-deployment.yaml) -n msdataworkshop
 fi
 
-kubectl create -f $SCRIPT_DIR/frontend-service.yaml -n datademo
+kubectl create -f $SCRIPT_DIR/frontend-service.yaml -n msdataworkshop

@@ -15,6 +15,13 @@ public class OrderServiceOSSStreamProcessor implements Runnable {
     }
 
     public void run() {
+        //this is temp until OSB issue is resolved...
+        String tenancyName = System.getenv("tenancyName");
+        String username = System.getenv("username");
+        String streamPoolId = System.getenv("streamPoolId");
+        String authToken = System.getenv("authToken");
+        String topicName = System.getenv("topicName");
+
         System.out.println("OrderServiceOSSStreamProcessor.run");
         Properties properties = new Properties();
         properties.put("bootstrap.servers", "streaming.us-phoenix-1.oci.oraclecloud.com:9092");

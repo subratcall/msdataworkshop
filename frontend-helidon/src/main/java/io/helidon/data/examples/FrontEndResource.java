@@ -47,7 +47,7 @@ public class FrontEndResource {
                              @QueryParam("itemid") String itemid) {
         System.out.println("-----> FrontEnd placeorder orderid:" + orderid + " itemid:" + itemid);
         try {
-            URL url = new URL("http://order.datademo:8080/placeOrder?orderid=" + orderid +
+            URL url = new URL("http://order.msdataworkshop:8080/placeOrder?orderid=" + orderid +
                     "&itemid=" + itemid);
             String json = makeRequest(url);
             System.out.println("FrontEndResource.placeorder json:" + json);
@@ -64,7 +64,7 @@ public class FrontEndResource {
     public String showorder(@QueryParam("orderid") String orderid) {
         System.out.println("-----> FrontEnd showorder orderid:" + orderid);
         try {
-            URL url = new URL("http://order.datademo:8080/showorder");
+            URL url = new URL("http://order.msdataworkshop:8080/showorder");
             return getFullPage(makeRequest(url));
         } catch (IOException e) {
             e.printStackTrace();
@@ -78,7 +78,7 @@ public class FrontEndResource {
     public String orderservicecall( @QueryParam("test") String test) {
         System.out.println("-----> FrontEnd orderservicecall test:" + test);
         try {
-            URL url = new URL("http://order.datademo:8080/" +test);
+            URL url = new URL("http://order.msdataworkshop:8080/" +test);
             String requestString = makeRequest(url);
             System.out.println("-----> FrontEnd orderservicecall requestString:" + requestString);
             return getFullPage(requestString);
@@ -94,7 +94,7 @@ public class FrontEndResource {
     @Path("/streamingservicetest")
     public String sendTestStreamOrders(@QueryParam("numberofitemstostream") int numberofitemstostream) {
         try {
-            URL url = new URL("http://order.datademo:8080/sendTestStreamOrders?numberofitemstostream=" + numberofitemstostream);
+            URL url = new URL("http://order.msdataworkshop:8080/sendTestStreamOrders?numberofitemstostream=" + numberofitemstostream);
             return getFullPage(makeRequest(url));
         } catch (IOException e) {
             e.printStackTrace();
@@ -109,7 +109,7 @@ public class FrontEndResource {
         try {
             System.out.println("-----> FrontEnd orderadmin sql = [" + sql + "], user = [" + user + "], password = [" + password + "]");
             sql = URLEncoder.encode(sql, "UTF-8");
-            String urlString = "http://orderadmin.datademo:8080/execute?sql=" + sql + "&user=" + user + "&password=" + password;
+            String urlString = "http://orderadmin.msdataworkshop:8080/execute?sql=" + sql + "&user=" + user + "&password=" + password;
             System.out.println("FrontEndResource.orderadmin urlString:" + urlString);
             URL url = new URL( urlString);
             return getFullPage(makeRequest(url));
@@ -126,37 +126,9 @@ public class FrontEndResource {
         try {
             System.out.println("-----> FrontEnd helidonatpinventory: [" + sql + "], user = [" + user + "], password = [" + password + "]");
             sql = URLEncoder.encode(sql, "UTF-8");
-            String urlString = "http://inventoryadmin.datademo:8080/execute?sql=" + sql + "&user=" + user + "&password=" + password;
+            String urlString = "http://inventoryadmin.msdataworkshop:8080/execute?sql=" + sql + "&user=" + user + "&password=" + password;
             System.out.println("FrontEndResource.inventoryadmin urlString:" + urlString);
             URL url = new URL( urlString);
-            return getFullPage(makeRequest(url));
-        } catch (IOException e) {
-            e.printStackTrace();
-            return home();
-        }
-    }
-
-    //Inventory service calls...
-
-    @GET
-    @Produces(MediaType.TEXT_HTML)
-    @Path("/createInventoryQueue")
-    public String createInventoryQueue() {
-        try {
-            URL url = new URL("http://inventory.datademo:8080/createQueue");
-            return getFullPage(makeRequest(url));
-        } catch (IOException e) {
-            e.printStackTrace();
-            return home();
-        }
-    }
-
-    @GET
-    @Produces(MediaType.TEXT_HTML)
-    @Path("/createInventoryTable")
-    public String createInventoryTable() {
-        try {
-            URL url = new URL("http://inventory.datademo:8080/createInventoryTable");
             return getFullPage(makeRequest(url));
         } catch (IOException e) {
             e.printStackTrace();
@@ -169,7 +141,12 @@ public class FrontEndResource {
     @Path("/inventoryservicetest")
     public String inventoryservicetest(@QueryParam("test") String test) {
         try {
-            URL url = new URL("http://inventory.datademo:8080/" + test);
+            if (test.equals("setupTablesQueuesAndPropagation")) {
+                return "setupTablesQueuesAndPropagation complete"; //todo make appropriate calls on inventory.msdataworkshop and order.msdataworkshop
+            } else   if (test.equals("createDBUsers")) {
+                return "createDBUsers complete"; //todo make appropriate calls on inventory.msdataworkshop and order.msdataworkshop
+            }
+            URL url = new URL("http://inventory.msdataworkshop:8080/" + test);
             return getFullPage(makeRequest(url));
         } catch (IOException e) {
             e.printStackTrace();
@@ -182,7 +159,7 @@ public class FrontEndResource {
     @Path("/supplierservicecall")
     public String supplierservicecall(@QueryParam("test") String test, @QueryParam("itemid") String itemid) {
         try {
-            URL url = new URL("http://supplier.datademo:8080/supplier/" + test + "?itemid=" + itemid);
+            URL url = new URL("http://supplier.msdataworkshop:8080/supplier/" + test + "?itemid=" + itemid);
             return getFullPage(makeRequest(url));
         } catch (IOException e) {
             e.printStackTrace();
@@ -219,7 +196,7 @@ public class FrontEndResource {
                 "itemid : <input type=\"text\" name=\"itemid\" size=\"5\" value=\"11\">  " +
                 "<input type=\"submit\" name =\"test\" value=\"addInventory\">" +
                 "<input type=\"submit\" name =\"test\" value=\"removeInventory\">" +
-//                "<input type=\"submit\" name =\"test\" value=\"getinventory\">" +
+                "<input type=\"submit\" name =\"test\" value=\"getinventory\">" +
                 "</form>" +
                "<h4>Event sourcing and CQRS (order service)</h4>" +
                 "<form action=\"showorder\">" +
@@ -251,6 +228,8 @@ public class FrontEndResource {
                 "<form action=\"orderservicecall\"><input type=\"submit\" name =\"test\" value=\"setupOrderServiceMessaging\"></form>" +
                 "<form action=\"inventoryservicetest\"><input type=\"submit\" name =\"test\" value=\"setupInventoryServiceMessaging\"></form>" +
                 "<form action=\"inventoryservicetest\"><input type=\"submit\" name =\"test\" value=\"listenForMessages\"></form>" +
+                "<form action=\"inventoryservicetest\"><input type=\"submit\" name =\"test\" value=\"setupTablesQueuesAndPropagation\"></form>" +
+                "<form action=\"inventoryservicetest\"><input type=\"submit\" name =\"test\" value=\"cleanUpResources\"></form>" +
                 "<h4>Cleanup (drain queues and streams, delete tables and JSON/docs, etc.)...</h4>" +
                 "<form action=\"executeonorderpdb\" id=\"executeonorderpdb\">" +
                 "<textarea form=\"executeonorderpdb\" rows=\"4\" cols=\"50\" name =\"sql\"\">GRANT PDB_DBA TO orderuser identified by orderuserPW</textarea>" +

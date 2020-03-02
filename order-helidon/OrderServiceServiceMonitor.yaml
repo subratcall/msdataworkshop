@@ -8,7 +8,7 @@ spec:
       app: order
 #  namespaceSelector:
 #    matchNames:
-#    - datademo
+#    - msdataworkshop
   endpoints:
   - port: http
 #    interval: 30s

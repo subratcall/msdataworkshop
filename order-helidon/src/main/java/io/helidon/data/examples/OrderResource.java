@@ -43,15 +43,11 @@ public class OrderResource {
     @Named("atpinventorypdb")
     PoolDataSource atpInventoryPdb;
 
-    private Connection conn = null;
-    private OrderServiceInitialization dbandMessagingInitialization= new OrderServiceInitialization();
     private OrderServiceEventConsumer orderServiceEventConsumer = new OrderServiceEventConsumer();
     private OrderServiceEventProducer orderServiceEventProducer = new OrderServiceEventProducer();
     static final String orderQueueOwner = System.getenv("oracle.ucp.jdbc.PoolDataSource.atp1.user");
     static final String orderQueueName = System.getenv("orderqueuename");
-//    static final String inventoryQueueOwner = System.getenv("oracle.ucp.jdbc.PoolDataSource.atpinventorypdb.user");
     static final String inventoryQueueName = System.getenv("inventoryqueuename");
-    private String orderTableName = "ordertable";
     private String orderStatus = "none";
     static boolean liveliness = true;
     private int orderId = -1;
@@ -109,7 +105,7 @@ public class OrderResource {
 //        itemid(Integer.valueOf(widget));
         System.out.println("--->insertOrderAndSendEvent..." +
                 orderServiceEventProducer.updateDataAndSendEvent( atpInventoryPdb,  orderid, itemid));
-        String inventoryStatus = orderServiceEventConsumer.dolistenForMessages(atpInventoryPdb).toString();
+        String inventoryStatus = orderServiceEventConsumer.dolistenForMessages(atpInventoryPdb, orderid).toString();
         if (inventoryStatus.equals("inventoryexists")) {
             orderStatus = "successful";
             suggestiveSale = suggestiveSaleItem;
