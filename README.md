@@ -122,6 +122,7 @@ Task 5 (Using OCI service broker, create binding to 2 existing atp instances, an
             
 
 Task 6 (setup AQ, order and inventory, saga, and CQRS)...
+   - 
    - follow steps to create dblink across ATP instances (put/get credential from object store etc.)
    - setup AQ, queue-progation - todo should be all one button to create orderuser, inventoryuser, tables, queue, dblink, propagation, etc...
    - create secrets for orderuser and inventoryuser and update deployment yaml 
