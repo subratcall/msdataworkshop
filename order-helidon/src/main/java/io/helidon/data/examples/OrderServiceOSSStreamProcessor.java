@@ -40,27 +40,19 @@ public class OrderServiceOSSStreamProcessor implements Runnable {
         );
         KafkaConsumer<String, String> consumer = new KafkaConsumer<String, String>(properties);
         consumer.subscribe(Collections.singletonList(topicName));
-        final int giveUp = 100;   int noRecordsCount = 0;
         boolean isStopProcessing = false;
         while (!isStopProcessing) {
-            final ConsumerRecords<String, String> consumerRecords =
-                    consumer.poll(1000);
-
+            final ConsumerRecords<String, String> consumerRecords =    consumer.poll(1000);
             if (consumerRecords.count() > 0) {
-
             consumerRecords.forEach(record -> {
-//                System.out.printf("Consume and process food order record :(%d, %s, %d, %d)\n",
-//                        record.key(), record.value(),
-//                        record.partition(), record.offset());
                 System.out.printf("Processing food order (todo all stream orders are given orderid 101 currently)" +
                                 record.key() + ":" + record.value());
                 try {
-                    orderResource.insertOrderAndSendEvent("101", "4");
+                    orderResource.placeOrder("101", "4"); //todo get orderid
                 } catch (Exception e) {
                     e.printStackTrace(); //todo handle
                 }
             });
-
             consumer.commitAsync();
             } else {
                 try {

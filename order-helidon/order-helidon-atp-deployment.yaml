@@ -61,6 +61,31 @@ spec:
             secretKeyRef:
               name: atp-user-cred
               key: walletPassword
+        - name: tenancyName
+          valueFrom:
+            secretKeyRef:
+              name: orderstream-cred
+              key: tenancyName
+        - name: username
+          valueFrom:
+            secretKeyRef:
+              name: orderstream-cred
+              key: username
+        - name: streamPoolId
+          valueFrom:
+            secretKeyRef:
+              name: orderstream-cred
+              key: streamPoolId
+        - name: authToken
+          valueFrom:
+            secretKeyRef:
+              name: orderstream-cred
+              key: authToken
+        - name: topicName
+          valueFrom:
+            secretKeyRef:
+              name: atp-user-cred
+              key: topicName
         volumeMounts:
         - name: creds
           mountPath: /db-demo/creds
