@@ -51,7 +51,7 @@ public class FrontEndResource {
                              @QueryParam("itemid") String itemid) {
         System.out.println("-----> FrontEnd placeorder orderid:" + orderid + " itemid:" + itemid);
         try {
-            URL url = new URL("http://order.msdataworkshop:8080/placeOrder?orderid=" + orderid +
+            URL url = new URL("http://order.datdademo:8080/placeOrder?orderid=" + orderid +
                     "&itemid=" + itemid);
             String json = makeRequest(url);
             System.out.println("FrontEndResource.placeorder json:" + json);
@@ -68,7 +68,7 @@ public class FrontEndResource {
     public String showorder(@QueryParam("orderid") String orderid) {
         System.out.println("-----> FrontEnd showorder orderid:" + orderid);
         try {
-            URL url = new URL("http://order.msdataworkshop:8080/showorder");
+            URL url = new URL("http://order.datdademo:8080/showorder");
             return getFullPage(makeRequest(url));
         } catch (IOException e) {
             e.printStackTrace();
@@ -113,7 +113,7 @@ public class FrontEndResource {
         try {
             System.out.println("-----> FrontEnd orderadmin sql = [" + sql + "], user = [" + user + "], password = [" + password + "]");
             sql = URLEncoder.encode(sql, "UTF-8");
-            String urlString = "http://orderadmin.msdataworkshop:8080/execute?sql=" + sql + "&user=" + user + "&password=" + password;
+            String urlString = "http://orderadmin.datdademo:8080/execute?sql=" + sql + "&user=" + user + "&password=" + password;
             System.out.println("FrontEndResource.orderadmin urlString:" + urlString);
             URL url = new URL( urlString);
             return getFullPage(makeRequest(url));
@@ -130,7 +130,7 @@ public class FrontEndResource {
         try {
             System.out.println("-----> FrontEnd helidonatpinventory: [" + sql + "], user = [" + user + "], password = [" + password + "]");
             sql = URLEncoder.encode(sql, "UTF-8");
-            String urlString = "http://inventoryadmin.msdataworkshop:8080/execute?sql=" + sql + "&user=" + user + "&password=" + password;
+            String urlString = "http://inventoryadmin.datdademo:8080/execute?sql=" + sql + "&user=" + user + "&password=" + password;
             System.out.println("FrontEndResource.inventoryadmin urlString:" + urlString);
             URL url = new URL( urlString);
             return getFullPage(makeRequest(url));
@@ -163,7 +163,7 @@ public class FrontEndResource {
     @Path("/supplierservicecall")
     public String supplierservicecall(@QueryParam("test") String test, @QueryParam("itemid") String itemid) {
         try {
-            URL url = new URL("http://supplier.msdataworkshop:8080/supplier/" + test + "?itemid=" + itemid);
+            URL url = new URL("http://supplier.datdademo:8080/supplier/" + test + "?itemid=" + itemid);
             return getFullPage(makeRequest(url));
         } catch (IOException e) {
             e.printStackTrace();

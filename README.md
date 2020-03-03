@@ -210,7 +210,8 @@ Task 12 (demonstrate scaling with pdb)
   
 Future here to end...
  
-Task 13  
+Task 13 
+   - various security both of wire, mtls, vault, etc. 
    - analytics - OSE server visualization
    - message to logic/endpoint mapping
    - kafka streams not just in chunks theres no end
