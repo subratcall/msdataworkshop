@@ -71,7 +71,9 @@ Task 4 (Setup OCI Open Service Broker)
    - Refer to https://github.com/oracle/oci-service-broker and specifically...
         - https://github.com/oracle/oci-service-broker/blob/master/charts/oci-service-broker/docs/installation.md
         - https://www.youtube.com/watch?v=qW_pw6Nd5hM&t=12s
-   - Run ./installOSB.sh
+   - Run `kubectl create clusterrolebinding cluster-admin-brokers --clusterrole=cluster-admin --user=<USER_ID>`
+        -  `--user=<USER_ID>` is id not ocid, for example, `--user=paul.parkinson`
+   - Run `./installOSB.sh`
    - If not already created, create user API Key with password...
         - https://docs.cloud.oracle.com/en-us/iaas/Content/Functions/Tasks/functionssetupapikey.htm
    - Note that the following instructions will create the broker in the default namespace 
@@ -122,7 +124,6 @@ Task 5 (Using OCI service broker, create binding to 2 existing atp instances, an
             
 
 Task 6 (setup AQ, order and inventory, saga, and CQRS)...
-   - 
    - follow steps to create dblink across ATP instances (put/get credential from object store etc.)
    - setup AQ, queue-progation - todo should be all one button to create orderuser, inventoryuser, tables, queue, dblink, propagation, etc...
    - create secrets for orderuser and inventoryuser and update deployment yaml 
