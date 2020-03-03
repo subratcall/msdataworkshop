@@ -131,12 +131,10 @@ public class InventoryServiceOrderEventConsumer implements Runnable {
                     "select * from inventory  where inventoryid = '" + itemid + "'");
             if (resultSet.next()) {
                 inventorycount = resultSet.getInt("inventorycount");
-                inventoryLocation = resultSet.getString("inventoryLocation");
+                inventoryLocation = resultSet.getString("inventorylocation");
                 System.out.println("MessagingService.doIncomingOutgoing inventorycount:" + inventorycount);
             } else inventorycount = 0;
             String status = inventorycount > 0 ? "inventoryexists" : "inventorydoesnotexist";
-//            dbConnection.createStatement().executeUpdate(
-//                    "insert into " + OrderResource.tableName + " values ('" + orderid + "', '" + inventoryid + "', " + ordercount + ", '" + status + "') ");
             System.out.println("InventoryServiceOrderEventConsumer.updateDataAndSendEventOnInventory status:" + status);
             Queue queue = ((AQjmsSession) session).getQueue(InventoryResource.inventoryQueueOwner, InventoryResource.inventoryQueueName);
             ((AQjmsDestination) queue).start(session, true, true);
