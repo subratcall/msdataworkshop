@@ -15,7 +15,8 @@
  */
 package io.helidon.data.examples;
 
-import java.sql.Connection;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -25,8 +26,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import oracle.ucp.jdbc.PoolDataSource;
-import org.eclipse.microprofile.health.Liveness;
-import org.eclipse.microprofile.health.Readiness;
 import org.eclipse.microprofile.metrics.annotation.Counted;
 import org.eclipse.microprofile.opentracing.Traced;
 
@@ -48,17 +47,10 @@ public class OrderResource {
     static final String orderQueueOwner = System.getenv("oracle.ucp.jdbc.PoolDataSource.atp1.user");
     static final String orderQueueName = System.getenv("orderqueuename");
     static final String inventoryQueueName = System.getenv("inventoryqueuename");
-    private String orderStatus = "none";
     static boolean liveliness = true;
-    private int orderId = -1;
-    private String suggestiveSaleItem = "";
-    private String suggestiveSale = "";
-    private String inventoryLocationItem = "";
-    private String inventoryLocation = "none";
-    private String shippingEstimate = "none";
-    private String shippingEstimateItem = "";
     private static String lastContainerStartTime;
     OrderServiceCPUStress orderServiceCPUStress = new OrderServiceCPUStress();
+    Map<String, OrderDetail> orders = new HashMap<>();
 
     static {
         lastContainerStartTime = new java.util.Date().toString();
@@ -81,13 +73,15 @@ public class OrderResource {
     @Path("/showorder")
     @GET
     @Produces(MediaType.TEXT_PLAIN)
-    public Response showorder(@QueryParam("order") String message) throws Exception {
-        System.out.println("--->showorder...");
+    public Response showorder(@QueryParam("order") String orderId) throws Exception {
+        System.out.println("--->showorder for orderId:" + orderId);
+        OrderDetail orderDetail = orders.get(orderId);
+        String returnString = orderDetail == null? "orderId not found:" + orderId :
+                "orderId = " + orderId + "<br>orderstatus = " + orderDetail.getOrderStatus() +
+                        "<br>suggestiveSale (event sourced from catalog) = " + orderDetail.getSuggestiveSale() +
+                        "<br>inventoryLocation (event sourced from supplier) = " + orderDetail.getInventoryLocation();
         final Response returnValue = Response.ok()
-            .entity("orderId = " + orderId + "<br>orderstatus = " + orderStatus +
-                    "<br>suggestiveSale (event sourced from catalog) = " + suggestiveSale +
-                    "<br>inventoryLocation (event sourced from supplier) = " + inventoryLocation +
-                    "<br>shipping estimate (event sourced from supplier) = " + shippingEstimate)
+            .entity(returnString)
             .build();
         return returnValue;
     }
@@ -99,28 +93,28 @@ public class OrderResource {
     @Counted(name = "placeOrder_counted") //amount of invocations
 //    @Metered(name = "placeOrder_metered") //invocation frequency
 //    @Timed(name = "placeOrder_timed") //length of time of an object
-    public Response placeOrder(@QueryParam("orderid") String orderid, @QueryParam("itemid") String itemid) throws Exception {
+    public Response placeOrder(@QueryParam("orderid") String orderid, @QueryParam("itemid") String itemid,
+                               @QueryParam("deliverylocation") String deliverylocation) throws Exception {
         System.out.println("--->placeOrder... orderid:" + orderid + " itemid:" + itemid);
-        orderId = Integer.valueOf(orderid);
 //        itemid(Integer.valueOf(widget));
         System.out.println("--->insertOrderAndSendEvent..." +
                 orderServiceEventProducer.updateDataAndSendEvent( atpInventoryPdb,  orderid, itemid));
+        OrderDetail orderDetail = new OrderDetail();
+        orderDetail.setOrderStatus("pending");
+        orderDetail.setDeliveryLocation(deliverylocation);
+        orders.put(orderid, orderDetail);
         String inventoryStatus = orderServiceEventConsumer.dolistenForMessages(atpInventoryPdb, orderid).toString();
         if (inventoryStatus.equals("inventoryexists")) {
-            orderStatus = "successful";
-            suggestiveSale = suggestiveSaleItem;
-            inventoryLocation = inventoryLocationItem;
-            shippingEstimate = shippingEstimateItem;
+            orderDetail.setOrderStatus("successful");
+            orderDetail.setSuggestiveSaleItem("suggestiveSaleItem"); //todo get from dolistenForMessages
+            orderDetail.setInventoryLocation("inventoryLocation"); //todo get from dolistenForMessages
         }
         else if (inventoryStatus.equals("inventorydoesnotexist")) {
-            orderStatus = "failed";
-            suggestiveSale = "";
-            inventoryLocation = "";
-            shippingEstimate = "";
+            orderDetail.setOrderStatus("failed");
         }
         System.out.println("--->inventoryStatus..." + inventoryStatus);
         final Response returnValue = Response.ok()
-            .entity("orderid = " + orderid + " orderstatus = " + orderStatus + " inventoryStatus = " + inventoryStatus)
+            .entity("orderid = " + orderid + " orderstatus = " + orderDetail.getOrderStatus() + " inventoryStatus = " + inventoryStatus)
             .build();
         return returnValue;
     }
@@ -179,4 +173,88 @@ public class OrderResource {
         return returnValue;
     }
 
+
+    class OrderDetail {
+        private int orderId = -1;
+        private String suggestiveSaleItem = "";
+        private String suggestiveSale = "";
+        private String inventoryLocationItem = "";
+        private String inventoryLocation = "none";
+        private String shippingEstimate = "none";
+        private String shippingEstimateItem = "";
+        private String orderStatus = "none";
+        private String deliveryLocation = "none";
+
+        public int getOrderId() {
+            return orderId;
+        }
+
+        public void setOrderId(int orderId) {
+            this.orderId = orderId;
+        }
+
+        public String getSuggestiveSaleItem() {
+            return suggestiveSaleItem;
+        }
+
+        public void setSuggestiveSaleItem(String suggestiveSaleItem) {
+            this.suggestiveSaleItem = suggestiveSaleItem;
+        }
+
+        public String getSuggestiveSale() {
+            return suggestiveSale;
+        }
+
+        public void setSuggestiveSale(String suggestiveSale) {
+            this.suggestiveSale = suggestiveSale;
+        }
+
+        public String getInventoryLocationItem() {
+            return inventoryLocationItem;
+        }
+
+        public void setInventoryLocationItem(String inventoryLocationItem) {
+            this.inventoryLocationItem = inventoryLocationItem;
+        }
+
+        public String getInventoryLocation() {
+            return inventoryLocation;
+        }
+
+        public void setInventoryLocation(String inventoryLocation) {
+            this.inventoryLocation = inventoryLocation;
+        }
+
+        public String getShippingEstimate() {
+            return shippingEstimate;
+        }
+
+        public void setShippingEstimate(String shippingEstimate) {
+            this.shippingEstimate = shippingEstimate;
+        }
+
+        public String getShippingEstimateItem() {
+            return shippingEstimateItem;
+        }
+
+        public void setShippingEstimateItem(String shippingEstimateItem) {
+            this.shippingEstimateItem = shippingEstimateItem;
+        }
+
+        public String getOrderStatus() {
+            return orderStatus;
+        }
+
+        public void setOrderStatus(String orderStatus) {
+            this.orderStatus = orderStatus;
+        }
+
+        public void setDeliveryLocation(String deliverylocation) {
+            this.deliveryLocation = deliverylocation;
+        }
+
+        public String getDeliveryLocation() {
+            return deliveryLocation;
+        }
+    }
 }
