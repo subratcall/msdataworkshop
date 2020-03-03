@@ -8,7 +8,9 @@ import javax.sql.DataSource;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 
+import oracle.soda.OracleDocument;
 import oracle.soda.OracleException;
+import oracle.soda.OracleOperationBuilder;
 import oracle.soda.rdbms.OracleRDBMSClient;
 
 public class OrderServiceEventProducer {
@@ -105,6 +107,8 @@ public class OrderServiceEventProducer {
         if (collection == null) collection = db.admin().createCollection(collectionName);
         String jsonString = "{ \"orderid\" : \"" + orderid + "\", \"item\" : " + itemid + " }";
         collection.insert(db.createDocumentFromString(jsonString));
+//        OracleOperationBuilder key = collection.find().key(orderid);
+//        OracleDocument one = key.getOne();
     }
 
 }
