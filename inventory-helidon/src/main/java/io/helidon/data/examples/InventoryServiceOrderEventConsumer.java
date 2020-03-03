@@ -124,12 +124,14 @@ public class InventoryServiceOrderEventConsumer implements Runnable {
             System.out.println("sendMessage dbConnection:" + dbConnection);
             System.out.println("-------------->MessagingService.doIncomingOutgoing connection:" + dbConnection +
                     "Session:" + session + " check inventory for inventoryid:" + itemid);
-            final int inventorycount;
+            int inventorycount;
+            String inventoryLocation = "";
             // todo this should be increment decrement, not select update...
             ResultSet resultSet = dbConnection.createStatement().executeQuery(
-                    "select inventorycount from inventory  where inventoryid = '" + itemid + "'");
+                    "select * from inventory  where inventoryid = '" + itemid + "'");
             if (resultSet.next()) {
                 inventorycount = resultSet.getInt("inventorycount");
+                inventoryLocation = resultSet.getString("inventoryLocation");
                 System.out.println("MessagingService.doIncomingOutgoing inventorycount:" + inventorycount);
             } else inventorycount = 0;
             String status = inventorycount > 0 ? "inventoryexists" : "inventorydoesnotexist";
@@ -142,6 +144,7 @@ public class InventoryServiceOrderEventConsumer implements Runnable {
             TextMessage msg = session.createTextMessage();
             msg.setStringProperty("orderid", orderid);
             msg.setStringProperty("action", status);
+            msg.setStringProperty("inventorylocation", inventoryLocation);
             sender.send(msg);
             session.commit();
             System.out.println("sendMessage committed for inventoryid:" + itemid +
