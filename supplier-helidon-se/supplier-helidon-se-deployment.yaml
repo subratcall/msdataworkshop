@@ -12,7 +12,7 @@ spec:
     spec:
       containers:
       - name: supplier
-        image: docker.io/paulparkinson/supplier-helidon-se:0.1
+        image: us-phoenix-1.ocir.io/stevengreenberginc/paul.parkinson/msdataworkshop/supplier-helidon-se:0.1
         imagePullPolicy: Always
         env:
         - name: database.url

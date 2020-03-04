@@ -23,21 +23,21 @@ spec:
           readOnly: false
         - name: creds
           mountPath: /creds
-      - name: decode-creds-inventory
+      - name: decode-creds-order
         command:
         - bash
         - -c
-        - "for i in `ls -1 /tmp/creds-inventory | grep -v user_name`; do cat /tmp/creds-inventory/$i  | base64 --decode > /creds-inventory/$i; done; ls -l /creds-inventory/*;"
+        - "for i in `ls -1 /tmp/creds-order | grep -v user_name`; do cat /tmp/creds-order/$i  | base64 --decode > /creds-order/$i; done; ls -l /creds-order/*;"
         image: oraclelinux:7.5
         volumeMounts:
-        - name: creds-raw-inventory
-          mountPath: /tmp/creds-inventory
+        - name: creds-raw-order
+          mountPath: /tmp/creds-order
           readOnly: false
-        - name: creds-inventory
-          mountPath: /creds-inventory
+        - name: creds-order
+          mountPath: /creds-order
       containers:
       - name: order
-        image: docker.io/paulparkinson/order-helidon:0.1
+        image: us-phoenix-1.ocir.io/stevengreenberginc/paul.parkinson/msdataworkshop/order-helidon:0.1
         imagePullPolicy: Always
         env:
         - name: oracle.ucp.jdbc.PoolDataSource.atp1.user
@@ -45,7 +45,7 @@ spec:
         - name: oracle.ucp.jdbc.PoolDataSource.atp1.password
           valueFrom:
             secretKeyRef:
-              name: atp-user-cred-inventoryuser
+              name: atp-user-cred-orderuser
               key: password
         - name: oracle.ucp.jdbc.PoolDataSource.atp1.URL
           value: "jdbc:oracle:thin:@db202002011726_high?TNS_ADMIN=/db-demo/creds"
@@ -54,7 +54,7 @@ spec:
         - name: WALLET_PWD
           valueFrom:
             secretKeyRef:
-              name: atp-user-cred-inventoryuser
+              name: atp-user-cred-orderuser
               key: walletPassword
         - name: tenancyName
           valueFrom:
@@ -84,8 +84,8 @@ spec:
         volumeMounts:
         - name: creds
           mountPath: /db-demo/creds
-        - name: creds-inventory
-          mountPath: /db-demo/creds-inventory
+        - name: creds-order
+          mountPath: /db-demo/creds-order
         ports:
         - containerPort: 8080
         livenessProbe:
