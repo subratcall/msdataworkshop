@@ -10,9 +10,6 @@ spec:
         app: inventory
         version: helidon-mp
     spec:
-      # The credential files in the secret are base64 encoded twice and hence they need to be decoded for the programs to use them.
-      # This decode-creds initContainer takes care of decoding the files and writing them to a shared volume from which jdbc-app contianer
-      # can read them and use it for connecting to ATP.
       initContainers:
       - name: decode-creds
         command:
@@ -26,58 +23,71 @@ spec:
           readOnly: false
         - name: creds
           mountPath: /creds
-      - name: decode-creds-inventory
-        command:
-        - bash
-        - -c
-        - "for i in `ls -1 /tmp/creds-inventory | grep -v user_name`; do cat /tmp/creds-inventory/$i  | base64 --decode > /creds-inventory/$i; done; ls -l /creds-inventory/*;"
-        image: oraclelinux:7.5
-        volumeMounts:
-        - name: creds-raw-inventory
-          mountPath: /tmp/creds-inventory
-          readOnly: false
-        - name: creds-inventory
-          mountPath: /creds-inventory
       containers:
       - name: inventory
         image: us-phoenix-1.ocir.io/stevengreenberginc/paul.parkinson/msdataworkshop/inventory-helidon:0.1
         imagePullPolicy: Always
         env:
         - name: oracle.ucp.jdbc.PoolDataSource.atp1.user
-          value: "orderuser"
+          value: "inventoryuser"
         - name: oracle.ucp.jdbc.PoolDataSource.atp1.password
-          value: "Welcome12345"
+          valueFrom:
+            secretKeyRef:
+              name: atp-user-cred-inventoryuser
+              key: password
         - name: oracle.ucp.jdbc.PoolDataSource.atp1.URL
-          value: "jdbc:oracle:thin:@db202002011726_high?TNS_ADMIN=/db-demo/creds"
-        - name: oracle.ucp.jdbc.PoolDataSource.atpinventorypdb.user
-          value: "demouser"
-        - name: oracle.ucp.jdbc.PoolDataSource.atpinventorypdb.password
-          value: "Welcome12345"
-        - name: oracle.ucp.jdbc.PoolDataSource.atpinventorypdb.URL
-          value: "jdbc:oracle:thin:@inventorydb_high?TNS_ADMIN=/db-demo/creds-inventory"
-        # Pass  Wallet password to enable application to read Oracle wallet. The password is managed by the user and hence not part of the secret created by the binding request.
-        # In this example we read the password form secret atp-user-cred that is required to be created by the user.
+          value: "jdbc:oracle:thin:@inventorydb_high?TNS_ADMIN=/msdataworkshop/creds"
+        - name: inventoryqueuename
+          value: "inventoryqueue"
         - name: WALLET_PWD
           valueFrom:
             secretKeyRef:
-              name: atp-user-cred
+              name: atp-user-cred-inventoryuser
               key: walletPassword
+        - name: tenancyName
+          valueFrom:
+            secretKeyRef:
+              name: inventorystream-cred
+              key: tenancyName
+        - name: username
+          valueFrom:
+            secretKeyRef:
+              name: inventorystream-cred
+              key: username
+        - name: streamPoolId
+          valueFrom:
+            secretKeyRef:
+              name: inventorystream-cred
+              key: streamPoolId
+        - name: authToken
+          valueFrom:
+            secretKeyRef:
+              name: inventorystream-cred
+              key: authToken
+        - name: topicName
+          valueFrom:
+            secretKeyRef:
+              name: inventorystream-cred
+              key: topicName
         volumeMounts:
         - name: creds
-          mountPath: /db-demo/creds
-        - name: creds-inventory
-          mountPath: /db-demo/creds-inventory
+          mountPath: /msdataworkshop/creds
+        ports:
+        - containerPort: 8080
+        livenessProbe:
+          httpGet: #alternatives include exec with command, etc.
+            path: /health/live
+            port: 8080
+          initialDelaySeconds: 20
+        readinessProbe:
+          httpGet:
+            path: /health/ready
+            port: 8080
+          initialDelaySeconds: 40
+      restartPolicy: Always
       volumes:
-      # Volume for mouting the credentials file from Secret created by binding request.
       - name: creds-raw
         secret:
-          secretName: atp-demo-binding
-      # Shared Volume in which init-container will save the decoded credential files and the jdbc-app container reads.
-      - name: creds
-        emptyDir: {}
-        # same for inventory
-      - name: creds-raw-inventory
-        secret:
           secretName: atp-demo-binding-inventory
-      - name: creds-inventory
+      - name: creds
         emptyDir: {}
