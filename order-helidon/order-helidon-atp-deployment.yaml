@@ -10,9 +10,6 @@ spec:
         app: order
         version: helidon-mp
     spec:
-      # The credential files in the secret are base64 encoded twice and hence they need to be decoded for the programs to use them.
-      # This decode-creds initContainer takes care of decoding the files and writing them to a shared volume from which jdbc-app contianer
-      # can read them and use it for connecting to ATP.
       initContainers:
       - name: decode-creds
         command:
@@ -44,22 +41,20 @@ spec:
         imagePullPolicy: Always
         env:
         - name: oracle.ucp.jdbc.PoolDataSource.atp1.user
-          value: "orderuser"
+          value: "demouser" # todo change to orderuser when using propagation
         - name: oracle.ucp.jdbc.PoolDataSource.atp1.password
           valueFrom:
             secretKeyRef:
-              name: atp-user-cred
+              name: atp-user-cred-inventoryuser
               key: password
         - name: oracle.ucp.jdbc.PoolDataSource.atp1.URL
           value: "jdbc:oracle:thin:@db202002011726_high?TNS_ADMIN=/db-demo/creds"
         - name: orderqueuename
           value: "orderqueue"
-        # Pass  Wallet password to enable application to read Oracle wallet. The password is managed by the user and hence not part of the secret created by the binding request.
-        # In this example we read the password form secret atp-user-cred that is required to be created by the user.
         - name: WALLET_PWD
           valueFrom:
             secretKeyRef:
-              name: atp-user-cred
+              name: atp-user-cred-inventoryuser
               key: walletPassword
         - name: tenancyName
           valueFrom:
@@ -84,7 +79,7 @@ spec:
         - name: topicName
           valueFrom:
             secretKeyRef:
-              name: atp-user-cred
+              name: orderstream-cred
               key: topicName
         volumeMounts:
         - name: creds
@@ -105,10 +100,8 @@ spec:
           initialDelaySeconds: 40
       restartPolicy: Always
       volumes:
-      # Volume for mouting the credentials file from Secret created by binding request.
       - name: creds-raw
         secret:
           secretName: atp-demo-binding
-      # Shared Volume in which init-container will save the decoded credential files and the jdbc-app container reads.
       - name: creds
         emptyDir: {}
