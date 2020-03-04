@@ -33,11 +33,7 @@ public class InventoryResource {
 
     @Inject
     @Named("atp1")
-    PoolDataSource atpOrderPdb;
-
-    @Inject
-    @Named("atpinventorypdb")
-    PoolDataSource atpInventoryPdb;
+    PoolDataSource atpInventoryPDB;
 
     private Connection conn = null;
     private InventoryServiceInitialization dbandMessagingInitialization= new InventoryServiceInitialization();

@@ -1,7 +1,6 @@
 package io.helidon.data.examples;
 
 import oracle.jms.AQjmsDestination;
-import oracle.jms.AQjmsDestinationProperty;
 import oracle.jms.AQjmsFactory;
 import oracle.jms.AQjmsSession;
 
@@ -30,8 +29,8 @@ public class InventoryServiceOrderEventConsumer implements Runnable {
         TopicSession session = null;
         try {
             System.out.println("listenForMessages on order queue...");
-            TopicConnectionFactory topicConnectionFactory = AQjmsFactory.getTopicConnectionFactory(inventoryResource.atpInventoryPdb);
-//            TopicConnectionFactory topicConnectionFactory = AQjmsFactory.getTopicConnectionFactory(inventoryResource.atpOrderPdb);
+            TopicConnectionFactory topicConnectionFactory = AQjmsFactory.getTopicConnectionFactory(inventoryResource.atpInventoryPDB);
+//            TopicConnectionFactory topicConnectionFactory = AQjmsFactory.getTopicConnectionFactory(inventoryResource.atpInventoryPDB);
             connection = topicConnectionFactory.createTopicConnection();
             session = connection.createTopicSession(true, Session.CLIENT_ACKNOWLEDGE);
             topic = ((AQjmsSession) session).getTopic("inventoryuser", "ordertopic");
@@ -75,7 +74,7 @@ public class InventoryServiceOrderEventConsumer implements Runnable {
         QueueSession session = null;
         try {
             System.out.println("listenForMessages on order queue...");
-            QueueConnectionFactory queueConnectionFactory = AQjmsFactory.getQueueConnectionFactory(inventoryResource.atpInventoryPdb);
+            QueueConnectionFactory queueConnectionFactory = AQjmsFactory.getQueueConnectionFactory(inventoryResource.atpInventoryPDB);
             connection = queueConnectionFactory.createQueueConnection();
             session = connection.createQueueSession(true, Session.CLIENT_ACKNOWLEDGE);
             queue = ((AQjmsSession) session).getQueue("demouser", "orderqueue");
@@ -117,7 +116,7 @@ public class InventoryServiceOrderEventConsumer implements Runnable {
         try {
             System.out.println("InventoryServiceOrderEventConsumer.updateDataAndSendEventOnInventory " +
                     "itemid = [" + itemid + "], orderid = [" + orderid + "]");
-            QueueConnectionFactory q_cf = AQjmsFactory.getQueueConnectionFactory(inventoryResource.atpInventoryPdb);
+            QueueConnectionFactory q_cf = AQjmsFactory.getQueueConnectionFactory(inventoryResource.atpInventoryPDB);
             QueueConnection q_conn = q_cf.createQueueConnection();
             session = q_conn.createQueueSession(true, Session.CLIENT_ACKNOWLEDGE);
             Connection dbConnection = ((AQjmsSession) session).getDBConnection();
