@@ -1,0 +1,68 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: supplier-helidon-se
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: supplier
+        version: helidon-se
+    spec:
+      initContainers:
+      - name: decode-creds
+        command:
+        - bash
+        - -c
+        - "for i in `ls -1 /tmp/creds | grep -v user_name`; do cat /tmp/creds/$i  | base64 --decode > /creds/$i; done; ls -l /creds/*;"
+        image: oraclelinux:7.5
+        volumeMounts:
+        - name: creds-raw
+          mountPath: /tmp/creds
+          readOnly: false
+        - name: creds
+          mountPath: /creds
+      containers:
+      - name: inventory
+        image: us-phoenix-1.ocir.io/stevengreenberginc/paul.parkinson/msdataworkshop/supplier-helidon-se:0.1
+        imagePullPolicy: Always
+        env:
+        - name: oracle.ucp.jdbc.PoolDataSource.atp1.user
+          value: "inventoryuser"
+        - name: oracle.ucp.jdbc.PoolDataSource.atp1.password
+          valueFrom:
+            secretKeyRef:
+              name: atp-user-cred-inventoryuser
+              key: password
+        - name: oracle.ucp.jdbc.PoolDataSource.atp1.URL
+          value: "jdbc:oracle:thin:@inventorydb_high?TNS_ADMIN=/msdataworkshop/creds"
+        - name: inventoryqueuename
+          value: "inventoryqueue"
+        - name: WALLET_PWD
+          valueFrom:
+            secretKeyRef:
+              name: atp-user-cred-inventoryuser
+              key: walletPassword
+        volumeMounts:
+        - name: creds
+          mountPath: /msdataworkshop/creds
+        ports:
+        - containerPort: 8080
+        livenessProbe:
+          httpGet: #alternatives include exec with command, etc.
+            path: /health/live
+            port: 8080
+          initialDelaySeconds: 20
+        readinessProbe:
+          httpGet:
+            path: /health/ready
+            port: 8080
+          initialDelaySeconds: 40
+      restartPolicy: Always
+      volumes:
+      - name: creds-raw
+        secret:
+          secretName: atp-demo-binding-inventory
+      - name: creds
+        emptyDir: {}

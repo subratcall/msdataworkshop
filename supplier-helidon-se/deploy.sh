@@ -2,7 +2,7 @@
 
 SCRIPT_DIR=$(dirname $0)
 
-IMAGE_NAME=order-helidon
+IMAGE_NAME=supplier-helidon-se
 IMAGE_VERSION=0.1
 
 if [ -z "DOCKER_REGISTRY" ]; then
@@ -13,9 +13,9 @@ fi
 export IMAGE=${DOCKER_REGISTRY}/${IMAGE_NAME}:${IMAGE_VERSION}
 
 if [ -z "$1" ]; then
-    kubectl create -f $SCRIPT_DIR/frontend-helidon-deployment.yaml -n msdataworkshop
+    kubectl create -f $SCRIPT_DIR/supplier-helidon-se-atp-deployment.yaml -n msdataworkshop
 else
-    kubectl create -f <(istioctl kube-inject -f $SCRIPT_DIR/frontend-helidon-deployment.yaml) -n msdataworkshop
+    kubectl create -f <(istioctl kube-inject -f $SCRIPT_DIR/supplier-helidon-se-atp-deployment.yaml ) -n msdataworkshop
 fi
 
-kubectl create -f $SCRIPT_DIR/frontend-service.yaml -n msdataworkshop
+kubectl create -f $SCRIPT_DIR/supplier-helidon-se-service.yaml  -n msdataworkshop
