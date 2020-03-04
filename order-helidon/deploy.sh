@@ -13,9 +13,9 @@ fi
 export IMAGE=${DOCKER_REGISTRY}/${IMAGE_NAME}:${IMAGE_VERSION}
 
 if [ -z "$1" ]; then
-    kubectl create -f $SCRIPT_DIR/order-helidon-deployment.yaml -n msdataworkshop
+    kubectl create -f $SCRIPT_DIR/order-helidon-atp-deployment.yaml -n msdataworkshop
 else
-    kubectl create -f <(istioctl kube-inject -f $SCRIPT_DIR/order-helidon-deployment.yaml) -n msdataworkshop
+    kubectl create -f <(istioctl kube-inject -f $SCRIPT_DIR/order-helidon-atp-deployment.yaml) -n msdataworkshop
 fi
 
 kubectl create -f $SCRIPT_DIR/order-service.yaml -n msdataworkshop
