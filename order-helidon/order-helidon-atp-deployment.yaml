@@ -29,7 +29,7 @@ spec:
         imagePullPolicy: Always
         env:
         - name: oracle.ucp.jdbc.PoolDataSource.atp1.user
-          value: "demouser" # todo change to orderuser when using propagation
+          value: "orderuser"
         - name: oracle.ucp.jdbc.PoolDataSource.atp1.password
           valueFrom:
             secretKeyRef:
