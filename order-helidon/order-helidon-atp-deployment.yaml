@@ -23,18 +23,6 @@ spec:
           readOnly: false
         - name: creds
           mountPath: /creds
-      - name: decode-creds-order
-        command:
-        - bash
-        - -c
-        - "for i in `ls -1 /tmp/creds-order | grep -v user_name`; do cat /tmp/creds-order/$i  | base64 --decode > /creds-order/$i; done; ls -l /creds-order/*;"
-        image: oraclelinux:7.5
-        volumeMounts:
-        - name: creds-raw-order
-          mountPath: /tmp/creds-order
-          readOnly: false
-        - name: creds-order
-          mountPath: /creds-order
       containers:
       - name: order
         image: us-phoenix-1.ocir.io/stevengreenberginc/paul.parkinson/msdataworkshop/order-helidon:0.1
@@ -48,7 +36,7 @@ spec:
               name: atp-user-cred-orderuser
               key: password
         - name: oracle.ucp.jdbc.PoolDataSource.atp1.URL
-          value: "jdbc:oracle:thin:@db202002011726_high?TNS_ADMIN=/db-demo/creds"
+          value: "jdbc:oracle:thin:@db202002011726_high?TNS_ADMIN=/msdataworkshop/creds"
         - name: orderqueuename
           value: "orderqueue"
         - name: WALLET_PWD
@@ -83,9 +71,7 @@ spec:
               key: topicName
         volumeMounts:
         - name: creds
-          mountPath: /db-demo/creds
-        - name: creds-order
-          mountPath: /db-demo/creds-order
+          mountPath: /msdataworkshop/creds
         ports:
         - containerPort: 8080
         livenessProbe:
@@ -102,6 +88,6 @@ spec:
       volumes:
       - name: creds-raw
         secret:
-          secretName: atp-demo-binding
+          secretName: atp-demo-binding-order
       - name: creds
         emptyDir: {}
