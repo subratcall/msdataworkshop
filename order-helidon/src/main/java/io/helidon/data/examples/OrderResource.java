@@ -38,10 +38,6 @@ public class OrderResource {
     @Named("atp1")
     PoolDataSource atpOrderPdb;
 
-    @Inject
-    @Named("atpinventorypdb")
-    PoolDataSource atpInventoryPdb;
-
     private OrderServiceEventConsumer orderServiceEventConsumer = new OrderServiceEventConsumer();
     private OrderServiceEventProducer orderServiceEventProducer = new OrderServiceEventProducer();
     static final String orderQueueOwner = System.getenv("oracle.ucp.jdbc.PoolDataSource.atp1.user");
@@ -56,6 +52,7 @@ public class OrderResource {
         lastContainerStartTime = new java.util.Date().toString();
         System.out.println("____________________________________________________");
         System.out.println("----------->OrderResource (container) starting at: " + lastContainerStartTime );
+        System.out.println("----------->OrderResource oracle.ucp.jdbc.PoolDataSource.atp1.URL: " + System.getenv("oracle.ucp.jdbc.PoolDataSource.atp1.URL") );
         System.out.println("____________________________________________________");
     }
 
@@ -98,12 +95,12 @@ public class OrderResource {
         System.out.println("--->placeOrder... orderid:" + orderid + " itemid:" + itemid);
 //        itemid(Integer.valueOf(widget));
         System.out.println("--->insertOrderAndSendEvent..." +
-                orderServiceEventProducer.updateDataAndSendEvent( atpInventoryPdb,  orderid, itemid));
+                orderServiceEventProducer.updateDataAndSendEvent( atpOrderPdb,  orderid, itemid));
         OrderDetail orderDetail = new OrderDetail();
         orderDetail.setOrderStatus("pending");
         orderDetail.setDeliveryLocation(deliverylocation);
         orders.put(orderid, orderDetail);
-        String inventoryStatus = orderServiceEventConsumer.dolistenForMessages(atpInventoryPdb, orderid).toString();
+        String inventoryStatus = orderServiceEventConsumer.dolistenForMessages(atpOrderPdb, orderid).toString();
         if (inventoryStatus.equals("inventoryexists")) {
             orderDetail.setOrderStatus("successful");
             orderDetail.setSuggestiveSaleItem("suggestiveSaleItem"); //todo get from dolistenForMessages

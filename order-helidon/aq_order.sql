@@ -21,7 +21,7 @@ connect orderuser/
  # this can likely be done by any user as it is shared, I did it with admin
  BEGIN
  DBMS_CLOUD.GET_OBJECT(
- object_uri => 'https://objectstorage.us-phoenix-1.oraclecloud.com/n/stevengreenberginc/b/datademo_bucket/o/cwallet.sso',
+ object_uri => 'https://objectstorage.us-phoenix-1.oraclecloud.com/n/stevengreenberginc/b/msdataworkshop_bucket/o/cwallet.sso',
  directory_name => 'DATA_PUMP_DIR');
  END;
  /
