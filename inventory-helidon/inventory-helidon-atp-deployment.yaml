@@ -44,31 +44,6 @@ spec:
             secretKeyRef:
               name: atp-user-cred-inventoryuser
               key: walletPassword
-        - name: tenancyName
-          valueFrom:
-            secretKeyRef:
-              name: inventorystream-cred
-              key: tenancyName
-        - name: username
-          valueFrom:
-            secretKeyRef:
-              name: inventorystream-cred
-              key: username
-        - name: streamPoolId
-          valueFrom:
-            secretKeyRef:
-              name: inventorystream-cred
-              key: streamPoolId
-        - name: authToken
-          valueFrom:
-            secretKeyRef:
-              name: inventorystream-cred
-              key: authToken
-        - name: topicName
-          valueFrom:
-            secretKeyRef:
-              name: inventorystream-cred
-              key: topicName
         volumeMounts:
         - name: creds
           mountPath: /msdataworkshop/creds
