@@ -48,7 +48,7 @@ public class OrderServiceOSSStreamProcessor implements Runnable {
                 System.out.printf("Processing food order (todo all stream orders are given orderid 101 currently)" +
                                 record.key() + ":" + record.value());
                 try {
-                    orderResource.placeOrder("101", "4"); //todo get orderid
+                    orderResource.placeOrder("101", "4", "536 N. Erial Rd., Sickerville, NJ 080801"); //todo get orderid etc
                 } catch (Exception e) {
                     e.printStackTrace(); //todo handle
                 }

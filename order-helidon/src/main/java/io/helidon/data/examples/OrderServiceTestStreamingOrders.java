@@ -14,6 +14,12 @@ import java.util.*;
 public class OrderServiceTestStreamingOrders implements Runnable{
 
     int numberofitemstostream;
+    //this is temp until OSB issue is resolved...
+    String tenancyName = System.getenv("tenancyName");
+    String username = System.getenv("username");
+    String streamPoolId = System.getenv("streamPoolId");
+    String authToken = System.getenv("authToken");
+    String topicName = System.getenv("topicName");
 
     public OrderServiceTestStreamingOrders(int numberofitemstostream) {
         this.numberofitemstostream = numberofitemstostream;
@@ -37,7 +43,6 @@ public class OrderServiceTestStreamingOrders implements Runnable{
                         + "password=\""
                         + authToken + "\";"
         );
-
         properties.put("retries", 5); // retries on transient errors and load balancing disconnection
         properties.put("max.request.size", 1024 * 1024); // limit request size to 1MB
 
