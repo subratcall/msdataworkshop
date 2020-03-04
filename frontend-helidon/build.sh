@@ -5,12 +5,12 @@ SCRIPT_DIR=$(dirname $0)
 IMAGE_NAME=frontend-helidon
 IMAGE_VERSION=0.1
 
-if [ -z "DEMOREGISTRY" ]; then
-    echo "Error: DEMOREGISTRY env variable needs to be set!"
+if [ -z "DOCKER_REGISTRY" ]; then
+    echo "Error: DOCKER_REGISTRY env variable needs to be set!"
     exit 1
 fi
 
-export IMAGE=${DEMOREGISTRY}/${IMAGE_NAME}:${IMAGE_VERSION}
+export IMAGE=${DOCKER_REGISTRY}/${IMAGE_NAME}:${IMAGE_VERSION}
 export IMAGE=us-phoenix-1.ocir.io/stevengreenberginc/paul.parkinson/msdataworkshop/${IMAGE_NAME}:${IMAGE_VERSION}
 
 mvn install

@@ -2,7 +2,7 @@
 
 SCRIPT_DIR=$(dirname $0)
 
-IMAGE_NAME=frontend-helidon
+IMAGE_NAME=order-helidon
 IMAGE_VERSION=0.1
 
 if [ -z "DOCKER_REGISTRY" ]; then

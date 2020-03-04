@@ -39,8 +39,7 @@
         <maven.javadoc.skip>true</maven.javadoc.skip>
         <spotbugs.skip>true</spotbugs.skip>
         <dependenciesDirectory>libs</dependenciesDirectory>
-        <docker.image.prefix>us-phoenix-1.ocir.io/stevengreenberginc/paul.parkinson/msdataworkshop</docker.image.prefix>
-        <narayana.lra.version>5.9.8.Final</narayana.lra.version>
+        <docker.image.prefix>${env.DOCKER_REGISTRY}</docker.image.prefix>
     </properties>
     <build>
         <resources>

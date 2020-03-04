@@ -10,10 +10,6 @@ import java.util.Set;
 @ApplicationPath("/")
 public class FrontEndApplication extends Application {
 
-    public FrontEndApplication() {
-        System.out.println("FrontEndApplication (includes io.narayana.lra.filter.FilterRegistration)");
-    }
-
     @Override
     public Set<Class<?>> getClasses() {
         Set<Class<?>> s = new HashSet<Class<?>>();

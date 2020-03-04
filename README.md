@@ -50,8 +50,8 @@ Task 3 (push image, deploy, and access microservice)
    - `docker login` 
         - https://docs.cloud.oracle.com/en-us/iaas/Content/Registry/Tasks/registrypushingimagesusingthedockercli.htm
         - example `docker login us-phoenix-1.ocir.io` user: msdataworkshoptenancy/msdataworkshopuser password: [authtoken]
-   - Modify the following files... (todo get this from single location such as DEMOREGISTRY env var)
-        - export DEMOREGISTRY setting it to OCIR repos location such as us-phoenix-1.ocir.io/stevengreenberginc/paul.parkinson/msdataworkshop
+   - Modify the following files... (todo get this from single location such as DOCKER_REGISTRY env var)
+        - export DOCKER_REGISTRY setting it to OCIR repos location such as us-phoenix-1.ocir.io/stevengreenberginc/paul.parkinson/msdataworkshop
         - edit pom.xml and replace <docker.image.prefix>us-phoenix-1.ocir.io/stevengreenberginc/paul.parkinson/msdataworkshop</docker.image.prefix>
         - edit `./deploy.sh` and replace us-phoenix-1.ocir.io/stevengreenberginc/paul.parkinson/msdataworkshop/frontend-helidon:0.1
    - Run `./build.sh` to push images to OCIR

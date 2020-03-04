@@ -11,10 +11,6 @@ import java.util.Set;
 @ApplicationPath("/")
 public class OrderApplication extends Application {
 
-    public OrderApplication() {
-        System.out.println("OrderApplication (includes io.narayana.lra.filter.FilterRegistration)");
-    }
-
     @Override
     public Set<Class<?>> getClasses() {
         Set<Class<?>> s = new HashSet<Class<?>>();

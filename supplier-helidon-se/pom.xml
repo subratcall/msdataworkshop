@@ -35,7 +35,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<argLine>-Dfile.encoding=UTF-8</argLine>
-		<docker.image.prefix>docker.io/paulparkinson</docker.image.prefix>
+		<docker.image.prefix>${env.DOCKER_REGISTRY}</docker.image.prefix>
 	</properties>
 
 	<build>

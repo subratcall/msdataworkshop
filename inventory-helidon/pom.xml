@@ -42,7 +42,7 @@
         <dependenciesDirectory>libs</dependenciesDirectory>
         <kubernetesSecretName>${project.artifactId}</kubernetesSecretName>
         <spotbugs.exclude>${project.basedir}/src/main/spotbugs/exclusions.xml</spotbugs.exclude>
-        <docker.image.prefix>docker.io/paulparkinson</docker.image.prefix>
+        <docker.image.prefix>${env.DOCKER_REGISTRY}</docker.image.prefix>
     </properties>
     <build>
         <resources>
