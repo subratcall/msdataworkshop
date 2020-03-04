@@ -39,7 +39,7 @@
         <maven.javadoc.skip>true</maven.javadoc.skip>
         <spotbugs.skip>true</spotbugs.skip>
         <dependenciesDirectory>libs</dependenciesDirectory>
-        <docker.image.prefix>docker.io/paulparkinson</docker.image.prefix>
+        <docker.image.prefix>${env.DOCKER_REGISTRY}</docker.image.prefix>
     </properties>
     <build>
         <resources>
