@@ -28,14 +28,14 @@ spec:
         image: us-phoenix-1.ocir.io/stevengreenberginc/paul.parkinson/msdataworkshop/supplier-helidon-se:0.1
         imagePullPolicy: Always
         env:
-        - name: oracle.ucp.jdbc.PoolDataSource.atp1.user
+        - name: user
           value: "inventoryuser"
-        - name: oracle.ucp.jdbc.PoolDataSource.atp1.password
+        - name: password
           valueFrom:
             secretKeyRef:
               name: atp-user-cred-inventoryuser
               key: password
-        - name: oracle.ucp.jdbc.PoolDataSource.atp1.URL
+        - name: url
           value: "jdbc:oracle:thin:@inventorydb_high?TNS_ADMIN=/msdataworkshop/creds"
         - name: inventoryqueuename
           value: "inventoryqueue"
