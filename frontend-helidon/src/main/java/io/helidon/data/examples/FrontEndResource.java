@@ -163,7 +163,9 @@ public class FrontEndResource {
     @Path("/supplierservicecall")
     public String supplierservicecall(@QueryParam("test") String test, @QueryParam("itemid") String itemid) {
         try {
-            URL url = new URL("http://supplier.msdataworkshop:8080/supplier/" + test + "?itemid=" + itemid);
+            String urlString = "http://supplier.msdataworkshop:8080/supplier/" + test + "?itemid=" + itemid;
+            System.out.println("FrontEndResource.supplierservicecall urlString:" + urlString);
+            URL url = new URL(urlString);
             return getFullPage(makeRequest(url));
         } catch (IOException e) {
             e.printStackTrace();
