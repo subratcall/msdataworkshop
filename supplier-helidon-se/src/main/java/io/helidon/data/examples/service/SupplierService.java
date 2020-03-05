@@ -33,11 +33,17 @@ public class SupplierService implements Service {
     @Override
     public void update(Rules rules) {
         rules
+                .get("/test", this::test)
                 .get("/addInventory", this::addInventory)
                 .get("/removeInventory", this::removeInventory)
                 .get("/getInventoryCount", this::getInventoryCount);
     }
 
+
+    void test(ServerRequest serverRequest, ServerResponse serverResponse) {
+        System.out.println("SupplierService.addInventory test");
+        serverResponse.send("test reply");
+    }
 
     void addInventory(ServerRequest serverRequest, ServerResponse serverResponse) {
         String response;

@@ -24,7 +24,7 @@ spec:
         - name: creds
           mountPath: /creds
       containers:
-      - name: inventory
+      - name: supplier
         image: us-phoenix-1.ocir.io/stevengreenberginc/paul.parkinson/msdataworkshop/supplier-helidon-se:0.1
         imagePullPolicy: Always
         env:
