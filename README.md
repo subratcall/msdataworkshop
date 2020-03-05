@@ -204,17 +204,18 @@ Task 11 (tracing)
    - install istio, demonstrate tracing (jaeger and kiali)
    - @Traced annotation
 
+Future here to end...
+
 Task 12 (demonstrate scaling with pdb)
     - autoscaling
     - sharding
   
-  
-  
-Future here to end...
- 
 Task 13 
    - various security both of wire, mtls, vault, etc. 
    - analytics - OSE server visualization
+   - potential converged database additions slide goes here
+   - eg show drivers/robots in all locations and do analytics 
+   - multi-region and other HA
    - message to logic/endpoint mapping
    - kafka streams not just in chunks theres no end
    - rehydation / retention and compacted queues (most recent not all events) time windows
@@ -225,7 +226,7 @@ Task 13
         - fn
         - cloud developer service
         - apex report/callout to helidon
-        - ORDS
+        - ORDS/DaaM (data as a microservice)
         - Grafana of OCI https://blogs.oracle.com/cloudnative/data-source-grafana
         - graph route planning
         kms key monitoring

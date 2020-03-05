@@ -39,6 +39,10 @@ public class JDBCConnectionResource {
   @Named("atp1")
   private DataSource dataSource; // .setFastConnectionFailoverEnabled(false) to get rid of benign SEVERE message
 
+  @Inject
+  @Named("inventorypdb")
+  private DataSource inventorypdbDataSource; // .setFastConnectionFailoverEnabled(false) to get rid of benign SEVERE message
+
   @Path("/")
   @GET
   @Produces(MediaType.TEXT_HTML)
