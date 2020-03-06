@@ -8,12 +8,15 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 public class PropagationSetup {
+    // todo get these from env
     String topicuser = "orderuser";
     String topicpw = "Welcome12345";
     String queueuser = "inventoryuser";
     String queuepw = "Welcome12345";
     String orderToInventoryLinkName = "ORDERTOINVENTORYLINK";
     String inventoryToOrderLinkName = "INVENTORYTOORDERLINK";
+    String orderdb_tnsname = "db202002011726_high";
+    String inventorydb_tnsname = "inventorydb_high";
 
 
     public String createUsers(DataSource orderpdbDataSource, DataSource inventorypdbDataSource) throws SQLException  {
@@ -42,12 +45,31 @@ public class PropagationSetup {
         return outputString + " successful";
     }
 
-    public void createDBLinks(DataSource orderpdbDataSource, DataSource inventorypdbDataSource) throws SQLException  {
-        createDBLink(orderpdbDataSource, topicuser, topicpw, orderToInventoryLinkName);
-//        createDBLink(inventorypdbDataSource, queueuser, queuepw, inventoryToOrderLinkName);
+    public String createDBLinks(DataSource orderpdbDataSource, DataSource inventorypdbDataSource) throws SQLException  {
+        String outputString = "\ncreateDBLinks...";
+        outputString += createDBLink(orderpdbDataSource, topicuser, topicpw, queueuser, queuepw, inventorydb_tnsname, orderToInventoryLinkName);
+        outputString += createDBLink(inventorypdbDataSource, queueuser, queuepw, topicuser, topicpw, orderdb_tnsname, inventoryToOrderLinkName);
+        return outputString;
     }
 
-    private void createDBLink(DataSource dataSource, String user, String pw, String linkName) throws SQLException  {
+    private String createDBLink(DataSource dataSource,
+                              String fromuser, String frompw,
+                              String touser, String topw, String tnsnamesName, String linkName) throws SQLException  {
+        String outputString = "\nPropagationSetup.createDBLink dataSource = [" + dataSource + "], " +
+                "fromuser = [" + fromuser + "], frompw = [" + frompw + "], " +
+                "touser = [" + touser + "], topw = [" + topw + "], " +
+                "tnsnamesName = [" + tnsnamesName + "], linkName = [" + linkName + "]";
+        System.out.println(outputString);
+        Connection connection = dataSource.getConnection(fromuser, frompw);
+        connection.createStatement().execute("BEGIN" +
+                "DBMS_CLOUD_ADMIN.CREATE PUBLIC DATABASE LINK " + linkName + " " +
+                "CONNECT TO " + touser + " IDENTIFIED BY " + topw + " " +
+                "USING '" + tnsnamesName + "'; " +
+                "END;");
+        return outputString;
+    }
+
+    private void createDBLinkLonghand(DataSource dataSource, String user, String pw, String linkName) throws SQLException  {
         String outputString = "\nPropagationSetup.createDBLink dataSource = [" + dataSource + "], " +
                 "user = [" + user + "], pw = [" + pw + "], linkName = [" + linkName + "]";
         System.out.println(outputString);
