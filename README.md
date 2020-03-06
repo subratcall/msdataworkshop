@@ -3,6 +3,7 @@
 WORKSHOP - NOTE THAT THIS IS A WORK IN PROGRESS AND WILL BE COMPLETE BY MID MARCH 2020
 
 ![demo architecture](demo-arch.png) 
+![demo ERD](demo-erd.png) 
 
 Task 1 (create OCI account, OKE cluster, ATP databases, and access OKE from cloud shell)
    - Get (free) OCI account and tenancy 

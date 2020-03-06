@@ -95,7 +95,7 @@ public class OrderResource {
         System.out.println("--->placeOrder... orderid:" + orderid + " itemid:" + itemid);
 //        itemid(Integer.valueOf(widget));
         System.out.println("--->insertOrderAndSendEvent..." +
-                orderServiceEventProducer.updateDataAndSendEvent( atpOrderPdb,  orderid, itemid));
+                orderServiceEventProducer.updateDataAndSendEvent( atpOrderPdb,  orderid, itemid, deliverylocation));
         OrderDetail orderDetail = new OrderDetail();
         orderDetail.setOrderStatus("pending");
         orderDetail.setDeliveryLocation(deliverylocation);

@@ -63,7 +63,7 @@ public class PropagationSetup {
         System.out.println(outputString);
         Connection connection = dataSource.getConnection(fromuser, frompw);
         connection.createStatement().execute("BEGIN " +
-                "DBMS_CLOUD_ADMIN.CREATE PUBLIC DATABASE LINK " + linkName + " " +
+                "DBMS_CLOUD_ADMIN.CREATE_DATABASE_LINK " + linkName + " " +
                 "CONNECT TO " + touser + " IDENTIFIED BY " + topw + " " +
                 "USING '" + tnsnamesName + "'; " +
                 "END;");
