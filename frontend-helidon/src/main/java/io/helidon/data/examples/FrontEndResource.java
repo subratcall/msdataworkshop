@@ -160,6 +160,21 @@ public class FrontEndResource {
 
     @GET
     @Produces(MediaType.TEXT_HTML)
+    @Path("/adminservicetest")
+    public String adminservicetest(@QueryParam("test") String test) {
+        try {
+            String urlString = "http://orderandinventoryadmin.msdataworkshop:8080/" + test;
+            System.out.println("FrontEndResource.adminservicetest calling");
+            URL url = new URL(urlString);
+            return getFullPage(makeRequest(url));
+        } catch (IOException e) {
+            e.printStackTrace();
+            return home();
+        }
+    }
+
+    @GET
+    @Produces(MediaType.TEXT_HTML)
     @Path("/supplierservicecall")
     public String supplierservicecall(@QueryParam("test") String test, @QueryParam("itemid") String itemid) {
         try {
@@ -297,7 +312,7 @@ public class FrontEndResource {
                 "<form action=\"orderservicecall\"><input type=\"submit\" name =\"test\" value=\"setupOrderServiceMessaging\"></form>" +
                 "<form action=\"inventoryservicetest\"><input type=\"submit\" name =\"test\" value=\"setupInventoryServiceMessaging\"></form>" +
                 "<form action=\"inventoryservicetest\"><input type=\"submit\" name =\"test\" value=\"listenForMessages\"></form>" +
-                "<form action=\"inventoryservicetest\"><input type=\"submit\" name =\"test\" value=\"setupTablesQueuesAndPropagation\"></form>" +
+                "<form action=\"adminservicetest\"><input type=\"submit\" name =\"test\" value=\"setupTablesQueuesAndPropagation\"></form>" +
                 "<form action=\"inventoryservicetest\"><input type=\"submit\" name =\"test\" value=\"cleanUpResources\"></form>" +
                 "<h4>Cleanup (drain queues and streams, delete tables and JSON/docs, etc.)...</h4>" +
                 "<form action=\"executeonorderpdb\" id=\"executeonorderpdb\">" +

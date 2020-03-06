@@ -3,24 +3,93 @@ package oracle.db.microservices;
 import oracle.AQ.*;
 import oracle.jms.*;
 import javax.jms.*;
-//import java.lang.*;
-import java.util.Properties;
-import java.io.Console;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 public class PropagationSetup {
-    public static void main (String args [])
-            throws java.sql.SQLException, ClassNotFoundException, JMSException
-    {
-        Console console = System.console();
+    String topicuser = "orderuser";
+    String topicpw = "Welcome12345";
+    String queueuser = "inventoryuser";
+    String queuepw = "Welcome12345";
 
-        console.printf("Enter Jms  User: ");
-        String username = console.readLine();
-        console.printf("Enter Jms user  password: ");
-        char[] passwordChars = console.readPassword();
-        String password = new String(passwordChars);
 
+    public String createUsers(DataSource orderpdbDataSource, DataSource inventorypdbDataSource) throws SQLException  {
+        String returnValue = "";
+        returnValue += createAQUser(orderpdbDataSource, topicuser, topicpw);
+        returnValue += createAQUser(inventorypdbDataSource, queueuser, queuepw);
+        return returnValue;
+    }
+
+
+    Object createAQUser(DataSource ds, String queueOwner, String queueOwnerPW) throws SQLException {
+        String outputString = "PropagationSetup.createAQUser ds = [" + ds + "], queueOwner = [" + queueOwner + "], queueOwnerPW = [" + queueOwnerPW + "]";
+        System.out.println(outputString);
+        Connection sysDBAConnection = ds.getConnection();
+//        sysDBAConnection.createStatement().execute("grant dba to " + queueOwner + " identified by " + queueOwnerPW);
+        sysDBAConnection.createStatement().execute("GRANT EXECUTE ON DBMS_CLOUD_ADMIN TO " + queueOwner + " identified by " + queueOwnerPW);
+        sysDBAConnection.createStatement().execute("GRANT EXECUTE ON DBMS_CLOUD TO " + queueOwner + " identified by " + queueOwnerPW);
+        sysDBAConnection.createStatement().execute("GRANT CREATE DATABASE LINK TO " + queueOwner + " identified by " + queueOwnerPW);
+        sysDBAConnection.createStatement().execute("grant unlimited tablespace to " + queueOwner);
+        sysDBAConnection.createStatement().execute("grant connect, resource TO " + queueOwner);
+        sysDBAConnection.createStatement().execute("grant aq_user_role TO " + queueOwner);
+        sysDBAConnection.createStatement().execute("GRANT EXECUTE ON sys.dbms_aqadm TO " + queueOwner);
+        sysDBAConnection.createStatement().execute("GRANT EXECUTE ON sys.dbms_aq TO " + queueOwner);
+        sysDBAConnection.createStatement().execute("GRANT EXECUTE ON sys.dbms_aq TO " + queueOwner);
+        //    sysDBAConnection.createStatement().execute("create table tracking (state number)");
+        return outputString + " successful\n";
+    }
+
+    public void createDBLinks(DataSource orderpdbDataSource, DataSource inventorypdbDataSource) throws SQLException  {
+//        createDBLink(orderpdbDataSource, topicuser, topicpw, orderToInventoryLinkName);
+//        createDBLink(inventorypdbDataSource, queueuser, queuepw, inventoryToOrderLinkName);
+    }
+
+//    CREATE PUBLIC DATABASE LINK cdb2_remote
+//    CONNECT TO aquser IDENTIFIED BY aquser
+//    USING 'cdb1_pdb2'; // as orderuser...
+
+// BEGIN
+// DBMS_CLOUD.CREATE_CREDENTIAL (
+// 'objectstore_cred',
+// 'paul.parkinson',
+// 'Q:4qWo:7PYDph9KZomZQ');
+// END;
+// /
+//
+// # had to make bucket public as paul.parkinson/authtoken wasnt working thus no `credential_name => 'objectstore_cred',` arg
+// # this can likely be done by any user as it is shared, I did it with admin
+// BEGIN
+// DBMS_CLOUD.GET_OBJECT(
+// object_uri => 'https://objectstorage.us-phoenix-1.oraclecloud.com/n/stevengreenberginc/b/msdataworkshop_bucket/o/cwallet.sso',
+// directory_name => 'DATA_PUMP_DIR');
+// END;
+// /
+//
+// BEGIN
+// DBMS_CLOUD.CREATE_CREDENTIAL(
+// credential_name => 'DB_LINK_CRED_TEST1',
+// username => 'INVENTORYUSER',
+// password => 'Welcome12345'
+// );
+// END;
+// /
+//
+// BEGIN
+// DBMS_CLOUD_ADMIN.CREATE_DATABASE_LINK(
+// db_link_name => 'TESTLINK1',
+// hostname => 'adb.us-phoenix-1.oraclecloud.com',
+// port => '1522',
+// service_name => 'mnisopbygm56hii_inventorydb_high.atp.oraclecloud.com',
+// ssl_server_cert_dn => 'CN=adwc.uscom-east-1.oraclecloud.com,OU=Oracle BMCS US,O=Oracle Corporation,L=Redwood City,ST=California,C=US',
+// credential_name => 'DB_LINK_CRED_TEST1',
+// directory_name => 'DATA_PUMP_DIR');
+// END;
+// /
+//
+// SELECT count(*) FROM inventory@TESTLINK1;
+
+    public void setup(DataSource orderpdbDataSource, DataSource inventorypdbDataSource) {
 
         TopicSession  tsess = null;
         TopicConnectionFactory tcfact=null;
@@ -31,36 +100,28 @@ public class PropagationSetup {
 
         try
         {
-            String myjdbcURL = System.getProperty("JDBC_URL");
-            myjdbcURL = "jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS=(PROTOCOL=tcp)(PORT=1521)(HOST=den02tgo))(CONNECT_DATA=(SERVICE_NAME=cdb1_pdb1.regress.rdbms.dev.us.oracle.com)))";
-            String myjdbcURL_remote = "jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS=(PROTOCOL=tcp)(PORT=1521)(HOST=den02tgo))(CONNECT_DATA=(SERVICE_NAME=cdb1_pdb2.regress.rdbms.dev.us.oracle.com)))";
-            if (myjdbcURL == null )
-                System.out.println("The system property JDBC_URL has not been set, Usage:java -DJDBC_URL=xxx filename ");
-            else {
-                Properties myProperties = new Properties();
-                myProperties.put("user", username);
-                myProperties.put("password", password);
+//                tcfact = AQjmsFactory.getTopicConnectionFactory(myjdbcURL, myProperties);
+                tcfact = AQjmsFactory.getTopicConnectionFactory(orderpdbDataSource);
+                tconn = tcfact.createTopicConnection( topicuser, topicpw);
 
-                tcfact = AQjmsFactory.getTopicConnectionFactory(myjdbcURL, myProperties);
-                tconn = tcfact.createTopicConnection( username,password);
-
-                qcfact = AQjmsFactory.getQueueConnectionFactory(myjdbcURL_remote, myProperties);
-                qconn = qcfact.createQueueConnection(username,password);
+                qcfact = AQjmsFactory.getQueueConnectionFactory(inventorypdbDataSource);
+                qconn = qcfact.createQueueConnection(queueuser, queuepw);
 
                 /* Create a Topic Session */
                 tsess = tconn.createTopicSession(true, Session.CLIENT_ACKNOWLEDGE);
+            System.out.println("PropagationSetup.setup tsess:" + tsess);
                 qsess = qconn.createQueueSession(true, Session.CLIENT_ACKNOWLEDGE);
+            System.out.println("PropagationSetup.setup qsess:" + qsess);
 
                 tconn.start() ;
                 qconn.start();
-                setupTopicQueue(tsess,qsess,username) ;
-                performJmsOperations(tsess,qsess,username);
+                setupTopicQueue(tsess,qsess,topicuser, queueuser) ;
+                performJmsOperations(tsess,qsess,topicuser, queueuser);
                 tsess.close();
                 tconn.close();
                 qsess.close();
                 qconn.close();
                 System.out.println("End of Demo") ;
-            }
         }
         catch (Exception ex)
         {
@@ -69,7 +130,7 @@ public class PropagationSetup {
         }
     }
 
-    public static void setupTopicQueue(TopicSession tsess,QueueSession qsess, String user) throws Exception
+    public static void setupTopicQueue(TopicSession tsess,QueueSession qsess, String topicuser, String queueuser) throws Exception
     {
         AQQueueTableProperty qtprop1,qtprop2 ;
         AQQueueTable qtable,table1, table2;
@@ -82,11 +143,11 @@ public class PropagationSetup {
 
             /* Drop the queue if already exists */
             try {
-                qtable=((AQjmsSession)tsess).getQueueTable(user, "INPUT_QUEUE_TABLE" );
+                qtable=((AQjmsSession)tsess).getQueueTable(topicuser, "INPUT_QUEUE_TABLE" );
                 qtable.drop(true);
             } catch (Exception e) {} ;
             try {
-                qtable=((AQjmsSession)qsess).getQueueTable(user, "PROP_QUEUE_TABLE" );
+                qtable=((AQjmsSession)qsess).getQueueTable(queueuser, "PROP_QUEUE_TABLE" );
                 qtable.drop(true);
             } catch (Exception e) { System.out.println("Exception in droppign prop_queue_table " + e); e.printStackTrace();} ;
 
@@ -95,21 +156,22 @@ public class PropagationSetup {
             qtprop1.setMultiConsumer(true) ;
             qtprop1.setCompatible("8.1") ;
             qtprop1.setPayloadType("SYS.AQ$_JMS_TEXT_MESSAGE") ;
-            table1 = ((AQjmsSession)tsess).createQueueTable(user, "INPUT_QUEUE_TABLE", qtprop1) ;
+            table1 = ((AQjmsSession)tsess).createQueueTable(topicuser, "INPUT_QUEUE_TABLE", qtprop1) ;
 
             System.out.println("Creating Propagation Queue Table...") ;
             qtprop2 = new AQQueueTableProperty ("SYS.AQ$_JMS_TEXT_MESSAGE") ;
-            qtprop2.setComment("Popagation queue") ;
+            qtprop2.setComment("Propagation queue") ;
             qtprop2.setPayloadType("SYS.AQ$_JMS_TEXT_MESSAGE") ;
             qtprop2.setMultiConsumer(false) ;
             qtprop2.setCompatible("8.1") ;
-            table2 = ((AQjmsSession)qsess).createQueueTable(user, "PROP_QUEUE_TABLE", qtprop2) ;
+            table2 = ((AQjmsSession)qsess).createQueueTable(queueuser, "PROP_QUEUE_TABLE", qtprop2) ;
 
             System.out.println ("Creating Topic input_queue...");
             dprop = new AQjmsDestinationProperty() ;
             dprop.setComment("create topic 1") ;
             topic1=((AQjmsSession)tsess).createTopic(table1,"INPUT_QUEUE",dprop) ;
 
+            System.out.println ("Creating queue prop_queue...");
             dprop.setComment("create Queue 1") ;
             queue1 =((AQjmsSession)qsess).createQueue( table2,"PROP_QUEUE",dprop) ;
 
@@ -126,7 +188,7 @@ public class PropagationSetup {
     }
 
 
-    public static void performJmsOperations(TopicSession tsess, QueueSession qsess, String user)
+    public static void performJmsOperations(TopicSession tsess, QueueSession qsess, String topicuser, String queueuser)
             throws Exception
     {
         Topic topic1;
@@ -141,9 +203,9 @@ public class PropagationSetup {
         {
 
             System.out.println("Get Topics...") ;
-            topic1 = ((AQjmsSession)tsess).getTopic(user, "INPUT_QUEUE") ;
+            topic1 = ((AQjmsSession)tsess).getTopic(topicuser, "INPUT_QUEUE") ;
 
-            queue1 = ((AQjmsSession)qsess).getQueue(user, "PROP_QUEUE") ;
+            queue1 = ((AQjmsSession)qsess).getQueue(queueuser, "PROP_QUEUE") ;
 
             System.out.println("Creating Topic Subscribers...") ;
 
@@ -199,6 +261,7 @@ public class PropagationSetup {
 //                sobj.setName("message# "+i) ;
 //                sobj.setData(500);
 //                objmsg.setText(sobj.getId()+":"+sobj.getName()+":"+sobj.getData()) ;
+                objmsg.setText("test message text") ;
                 objmsg.setJMSCorrelationID(""+i) ;
                 objmsg.setJMSPriority(1+(i%3)) ;
                 publisher.publish(topic1,objmsg, DeliveryMode.PERSISTENT,
@@ -250,6 +313,6 @@ public class PropagationSetup {
             System.out.println("Error in performJmsOperations: " + e) ;
             throw e;
         }
-    } /* end of demo06 */
+    }
 }
 

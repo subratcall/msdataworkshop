@@ -37,17 +37,35 @@ public class JDBCConnectionResource {
 
   @Inject
   @Named("atp1")
-  private DataSource dataSource; // .setFastConnectionFailoverEnabled(false) to get rid of benign SEVERE message
+  private DataSource orderpdbDataSource; // .setFastConnectionFailoverEnabled(false) to get rid of benign SEVERE message
 
   @Inject
   @Named("inventorypdb")
-  private DataSource inventorypdbDataSource; // .setFastConnectionFailoverEnabled(false) to get rid of benign SEVERE message
+  private DataSource inventorypdbDataSource;
 
   @Path("/")
   @GET
   @Produces(MediaType.TEXT_HTML)
   public String home() {
     return getHTMLString("", "");
+  }
+
+  @Path("/setupTablesQueuesAndPropagation")
+  @GET
+  @Produces(MediaType.TEXT_HTML)
+  public String setupTablesQueuesAndPropagation() {
+    try {
+      System.out.println("setupTablesQueuesAndPropagation createUsers");
+      String returnValue = "";
+      PropagationSetup propagationSetup = new PropagationSetup();
+      returnValue += propagationSetup.createUsers(orderpdbDataSource, inventorypdbDataSource);
+//      new PropagationSetup().createDBLinks(orderpdbDataSource, inventorypdbDataSource);
+//      new PropagationSetup().setup(orderpdbDataSource, inventorypdbDataSource);
+      return " result of setupTablesQueuesAndPropagation : success... " + returnValue;
+    } catch (Exception e) {
+      e.printStackTrace();
+      return " result of setupTablesQueuesAndPropagation : " + e;
+    }
   }
 
   @Path("/execute")
@@ -58,7 +76,7 @@ public class JDBCConnectionResource {
       System.out.println("execute sql = [" + sql + "], user = [" + user + "]");
       boolean isUserPWPresent = user != null && password != null && !user.equals("") && !password.equals("");
       System.out.println("execute sql = [" + sql + "], user = [" + user + "] isUserPWPresent:" + isUserPWPresent);
-      Connection connection = isUserPWPresent ?  dataSource.getConnection(user, password):dataSource.getConnection();
+      Connection connection = isUserPWPresent ?  orderpdbDataSource.getConnection(user, password): orderpdbDataSource.getConnection();
       System.out.println("connection:" + connection);
       connection.createStatement().execute(sql);
       return " result of sql = [" + sql + "], user = [" + user + "]" + " : " + "success";
@@ -75,7 +93,7 @@ public class JDBCConnectionResource {
     try {
       System.out.println("execute sql = [" + sql + "], user = [" + user + "], password = [" + password + "]");
       Connection connection = (user != null && password != null && !user.equals("") && !password.equals(""))?
-              dataSource.getConnection(user, password):dataSource.getConnection();
+              orderpdbDataSource.getConnection(user, password): orderpdbDataSource.getConnection();
       System.out.println("connection:" + connection);
       connection.createStatement().execute(sql);
       return getHTMLString(sql, "success");
@@ -157,7 +175,7 @@ public class JDBCConnectionResource {
   @Produces(MediaType.TEXT_PLAIN)
   public Response getConnectionMetaData() throws SQLException {
     final Response returnValue = Response.ok()
-            .entity("Connection obtained successfully metadata:" + dataSource.getConnection().getMetaData())
+            .entity("Connection obtained successfully metadata:" + orderpdbDataSource.getConnection().getMetaData())
             .build();
     return returnValue;
   }
@@ -168,7 +186,7 @@ public class JDBCConnectionResource {
   public Response createAQUser(@QueryParam("queueOwner") String queueOwner,
                                @QueryParam("queueOwnerPW") String queueOwnerPW) throws SQLException {
     System.out.println("createAQUser queueOwner = [" + queueOwner + "], queueOwnerPW = [" + queueOwnerPW + "]");
-    Connection sysDBAConnection = dataSource.getConnection();
+    Connection sysDBAConnection = orderpdbDataSource.getConnection();
     sysDBAConnection.createStatement().execute(
             "grant pdb_dba to " + queueOwner + " identified by " + queueOwnerPW);
     sysDBAConnection.createStatement().execute("grant unlimited tablespace to " + queueOwner);
