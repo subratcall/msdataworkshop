@@ -62,7 +62,7 @@ public class PropagationSetup {
                 "tnsnamesName = [" + tnsnamesName + "], linkName = [" + linkName + "]";
         System.out.println(outputString);
         Connection connection = dataSource.getConnection(fromuser, frompw);
-        connection.createStatement().execute("BEGIN" +
+        connection.createStatement().execute("BEGIN " +
                 "DBMS_CLOUD_ADMIN.CREATE PUBLIC DATABASE LINK " + linkName + " " +
                 "CONNECT TO " + touser + " IDENTIFIED BY " + topw + " " +
                 "USING '" + tnsnamesName + "'; " +
@@ -75,7 +75,7 @@ public class PropagationSetup {
                 "user = [" + user + "], pw = [" + pw + "], linkName = [" + linkName + "]";
         System.out.println(outputString);
         Connection connection = dataSource.getConnection(user, pw);
-        connection.createStatement().execute("BEGIN" +
+        connection.createStatement().execute("BEGIN " +
                 "DBMS_CLOUD_ADMIN.CREATE_DATABASE_LINK(" +
                 "db_link_name => '" + linkName +"'," +
                 "hostname => 'adb.us-phoenix-1.oraclecloud.com'," +
