@@ -53,8 +53,7 @@ public class JDBCConnectionResource {
       System.out.println("setupTablesQueuesAndPropagation createUsers");
       PropagationSetup propagationSetup = new PropagationSetup();
       returnValue += propagationSetup.createUsers(orderpdbDataSource, inventorypdbDataSource);
-//      new PropagationSetup().createDBLinks(orderpdbDataSource, inventorypdbDataSource);
-//      new PropagationSetup().setup(orderpdbDataSource, inventorypdbDataSource);
+      returnValue += propagationSetup.createDBLinks(orderpdbDataSource, inventorypdbDataSource);
       return " result of setupTablesQueuesAndPropagation : success... " + returnValue;
     } catch (Exception e) {
       e.printStackTrace();

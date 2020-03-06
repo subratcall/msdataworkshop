@@ -47,6 +47,7 @@ public class PropagationSetup {
 
     public String createDBLinks(DataSource orderpdbDataSource, DataSource inventorypdbDataSource) throws SQLException  {
         String outputString = "\ncreateDBLinks...";
+        System.out.println(outputString);
         outputString += createDBLink(orderpdbDataSource, topicuser, topicpw, queueuser, queuepw, inventorydb_tnsname, orderToInventoryLinkName);
         outputString += createDBLink(inventorypdbDataSource, queueuser, queuepw, topicuser, topicpw, orderdb_tnsname, inventoryToOrderLinkName);
         return outputString;
