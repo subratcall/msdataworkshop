@@ -26,10 +26,10 @@ public class PropagationSetup {
         String outputString = "PropagationSetup.createAQUser ds = [" + ds + "], queueOwner = [" + queueOwner + "], queueOwnerPW = [" + queueOwnerPW + "]";
         System.out.println(outputString);
         Connection sysDBAConnection = ds.getConnection();
-//        sysDBAConnection.createStatement().execute("grant dba to " + queueOwner + " identified by " + queueOwnerPW);
-        sysDBAConnection.createStatement().execute("GRANT EXECUTE ON DBMS_CLOUD_ADMIN TO " + queueOwner + " identified by " + queueOwnerPW);
-        sysDBAConnection.createStatement().execute("GRANT EXECUTE ON DBMS_CLOUD TO " + queueOwner + " identified by " + queueOwnerPW);
-        sysDBAConnection.createStatement().execute("GRANT CREATE DATABASE LINK TO " + queueOwner + " identified by " + queueOwnerPW);
+        sysDBAConnection.createStatement().execute("grant pdb_dba to " + queueOwner + " identified by " + queueOwnerPW);
+        sysDBAConnection.createStatement().execute("GRANT EXECUTE ON DBMS_CLOUD_ADMIN TO " + queueOwner );
+        sysDBAConnection.createStatement().execute("GRANT EXECUTE ON DBMS_CLOUD TO " + queueOwner);
+        sysDBAConnection.createStatement().execute("GRANT CREATE DATABASE LINK TO " + queueOwner);
         sysDBAConnection.createStatement().execute("grant unlimited tablespace to " + queueOwner);
         sysDBAConnection.createStatement().execute("grant connect, resource TO " + queueOwner);
         sysDBAConnection.createStatement().execute("grant aq_user_role TO " + queueOwner);
