@@ -12,6 +12,8 @@ public class PropagationSetup {
     String topicpw = "Welcome12345";
     String queueuser = "inventoryuser";
     String queuepw = "Welcome12345";
+    String orderToInventoryLinkName = "ORDERTOINVENTORYLINK";
+    String inventoryToOrderLinkName = "INVENTORYTOORDERLINK";
 
 
     public String createUsers(DataSource orderpdbDataSource, DataSource inventorypdbDataSource) throws SQLException  {
@@ -23,10 +25,10 @@ public class PropagationSetup {
 
 
     Object createAQUser(DataSource ds, String queueOwner, String queueOwnerPW) throws SQLException {
-        String outputString = "PropagationSetup.createAQUser ds = [" + ds + "], queueOwner = [" + queueOwner + "], queueOwnerPW = [" + queueOwnerPW + "]";
+        String outputString = "\nPropagationSetup.createAQUser ds = [" + ds + "], queueOwner = [" + queueOwner + "], queueOwnerPW = [" + queueOwnerPW + "]";
         System.out.println(outputString);
         Connection sysDBAConnection = ds.getConnection();
-        sysDBAConnection.createStatement().execute("grant pdb_dba to " + queueOwner + " identified by " + queueOwnerPW);
+//        sysDBAConnection.createStatement().execute("grant pdb_dba to " + queueOwner + " identified by " + queueOwnerPW);
         sysDBAConnection.createStatement().execute("GRANT EXECUTE ON DBMS_CLOUD_ADMIN TO " + queueOwner );
         sysDBAConnection.createStatement().execute("GRANT EXECUTE ON DBMS_CLOUD TO " + queueOwner);
         sysDBAConnection.createStatement().execute("GRANT CREATE DATABASE LINK TO " + queueOwner);
@@ -37,13 +39,31 @@ public class PropagationSetup {
         sysDBAConnection.createStatement().execute("GRANT EXECUTE ON sys.dbms_aq TO " + queueOwner);
         sysDBAConnection.createStatement().execute("GRANT EXECUTE ON sys.dbms_aq TO " + queueOwner);
         //    sysDBAConnection.createStatement().execute("create table tracking (state number)");
-        return outputString + " successful\n";
+        return outputString + " successful";
     }
 
     public void createDBLinks(DataSource orderpdbDataSource, DataSource inventorypdbDataSource) throws SQLException  {
-//        createDBLink(orderpdbDataSource, topicuser, topicpw, orderToInventoryLinkName);
+        createDBLink(orderpdbDataSource, topicuser, topicpw, orderToInventoryLinkName);
 //        createDBLink(inventorypdbDataSource, queueuser, queuepw, inventoryToOrderLinkName);
     }
+
+    private void createDBLink(DataSource dataSource, String user, String pw, String linkName) throws SQLException  {
+        String outputString = "\nPropagationSetup.createDBLink dataSource = [" + dataSource + "], " +
+                "user = [" + user + "], pw = [" + pw + "], linkName = [" + linkName + "]";
+        System.out.println(outputString);
+        Connection connection = dataSource.getConnection(user, pw);
+        connection.createStatement().execute("BEGIN" +
+                "DBMS_CLOUD_ADMIN.CREATE_DATABASE_LINK(" +
+                "db_link_name => '" + linkName +"'," +
+                "hostname => 'adb.us-phoenix-1.oraclecloud.com'," +
+                "port => '1522'," +
+                "service_name => 'mnisopbygm56hii_inventorydb_high.atp.oraclecloud.com'," +
+                "ssl_server_cert_dn => 'CN=adwc.uscom-east-1.oraclecloud.com,OU=Oracle BMCS US,O=Oracle Corporation,L=Redwood City,ST=California,C=US'," +
+                "credential_name => 'DB_LINK_CRED_TEST1'," +
+                "directory_name => 'DATA_PUMP_DIR');" +
+                "END;");
+    }
+
 
 //    CREATE PUBLIC DATABASE LINK cdb2_remote
 //    CONNECT TO aquser IDENTIFIED BY aquser
@@ -314,5 +334,44 @@ public class PropagationSetup {
             throw e;
         }
     }
+
+    private String dropUser() {
+        return "<h2>Drop User...</h2>" +
+                "<form action=\"execute\" method=\"get\">" +
+                "    user <input type=\"text\" name=\"user\" size=\"20\" value=\"\"><br>" +
+                "    password <input type=\"text\" name=\"password\" size=\"20\" value=\"\"><br>" +
+                "<textarea id=\"w3mission\" rows=\"50\" cols=\"20\">" +
+                "execute dbms_aqadm.unschedule_propagation(queue_name => 'paul.orders', " +
+                "destination => 'inventorydb_link', destination_queue => 'paul.orders_propqueue');" +
+                " execute dbms_lock.sleep(10);" +
+                " DROP USER paul CASCADE" +
+                " /" +
+                "" +
+                " GRANT DBA TO paul IDENTIFIED BY paul" +
+                " /" +
+                "</textarea>" +
+                "</form>";
+    }
+
+    private String createDBLinkHTML() {
+        return "<h2>Create DB Link...</h2>" +
+                "<form action=\"execute\" method=\"get\">" +
+                "    user <input type=\"text\" name=\"user\" size=\"20\" value=\"\"><br>" +
+                "    password <input type=\"text\" name=\"password\" size=\"20\" value=\"\"><br>" +
+                "<textarea id=\"w3mission\" rows=\"50\" cols=\"20\">" +
+                "create database link inventorylink" +
+                "  connect to inventorydb_high identified by paul " +
+                "  using " +
+                "  '(DESCRIPTION=" +
+                "    (ADDRESS=" +
+                "     (PROTOCOL=TCP)" +
+                "     (HOST=10.2.10.18)" +
+                "     (PORT=1525))" +
+                "    (CONNECT_DATA=" +
+                "     (SID=test10)))'" +
+                "</textarea>" +
+                "</form>";
+    }
+
 }
 

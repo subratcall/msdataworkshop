@@ -43,20 +43,14 @@ public class JDBCConnectionResource {
   @Named("inventorypdb")
   private DataSource inventorypdbDataSource;
 
-  @Path("/")
-  @GET
-  @Produces(MediaType.TEXT_HTML)
-  public String home() {
-    return getHTMLString("", "");
-  }
 
   @Path("/setupTablesQueuesAndPropagation")
   @GET
   @Produces(MediaType.TEXT_HTML)
   public String setupTablesQueuesAndPropagation() {
+    String returnValue = "";
     try {
       System.out.println("setupTablesQueuesAndPropagation createUsers");
-      String returnValue = "";
       PropagationSetup propagationSetup = new PropagationSetup();
       returnValue += propagationSetup.createUsers(orderpdbDataSource, inventorypdbDataSource);
 //      new PropagationSetup().createDBLinks(orderpdbDataSource, inventorypdbDataSource);
@@ -64,19 +58,21 @@ public class JDBCConnectionResource {
       return " result of setupTablesQueuesAndPropagation : success... " + returnValue;
     } catch (Exception e) {
       e.printStackTrace();
-      return " result of setupTablesQueuesAndPropagation : " + e;
+      returnValue += e;
+      return " result of setupTablesQueuesAndPropagation : " + returnValue;
     }
   }
 
   @Path("/execute")
   @GET
   @Produces(MediaType.TEXT_HTML)
-  public String execute(@QueryParam("sql") String sql, @QueryParam("user") String user, @QueryParam("password") String password) {
+  public String execute(@QueryParam("pdb") String pdb, @QueryParam("sql") String sql, @QueryParam("user") String user, @QueryParam("password") String password) {
     try {
       System.out.println("execute sql = [" + sql + "], user = [" + user + "]");
       boolean isUserPWPresent = user != null && password != null && !user.equals("") && !password.equals("");
       System.out.println("execute sql = [" + sql + "], user = [" + user + "] isUserPWPresent:" + isUserPWPresent);
-      Connection connection = isUserPWPresent ?  orderpdbDataSource.getConnection(user, password): orderpdbDataSource.getConnection();
+      DataSource dataSource = "order".endsWith(pdb) ?orderpdbDataSource:inventorypdbDataSource;
+      Connection connection = isUserPWPresent ?  dataSource.getConnection(user, password): dataSource.getConnection();
       System.out.println("connection:" + connection);
       connection.createStatement().execute(sql);
       return " result of sql = [" + sql + "], user = [" + user + "]" + " : " + "success";
@@ -86,89 +82,6 @@ public class JDBCConnectionResource {
     }
   }
 
-  @Path("/executeSQLFromForm")
-  @GET
-  @Produces(MediaType.TEXT_HTML)
-  public String executeSQLFromForm(@QueryParam("sql") String sql, @QueryParam("user") String user, @QueryParam("password") String password) {
-    try {
-      System.out.println("execute sql = [" + sql + "], user = [" + user + "], password = [" + password + "]");
-      Connection connection = (user != null && password != null && !user.equals("") && !password.equals(""))?
-              orderpdbDataSource.getConnection(user, password): orderpdbDataSource.getConnection();
-      System.out.println("connection:" + connection);
-      connection.createStatement().execute(sql);
-      return getHTMLString(sql, "success");
-    } catch (Exception e) {
-      e.printStackTrace();
-      return getHTMLString(sql, e.toString());
-    }
-  }
-
-  public String getHTMLString(@QueryParam("sql") String sql, String sqlExecuteReturnString) {
-    return "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">" +
-            "    <title>Home</title>" +
-            "    <link rel=\"stylesheet\" href=\"./oracledbdemo_files/style.css\">" +
-            "  </head>" +
-            "  <body>" +
-            "    <h1>Helidon ATP Query</h1>" +
-            "<h2>Execute SQL...</h2>" +
-            "<form action=\"executeSQLFromForm\" method=\"get\">" +
-            "    user <input type=\"text\" name=\"user\" size=\"20\" value=\"\"><br>" +
-            "    password <input type=\"text\" name=\"password\" size=\"20\" value=\"\"><br>" +
-            "    SQL <input type=\"text\" name=\"sql\" size=\"300\" value=\"select count(*) from dual\"><br>" +
-            "    <input type=\"submit\" value=\"execute\">" +
-            "</form>" +
-            "<br>" +
-            " result of sql:" + sql + " : " + sqlExecuteReturnString +
-            "<br>" +
-            "<h2>Create AQ User...</h2>" +
-            "<form action=\"createAQUser\" method=\"get\">" +
-            "    queueOwner <input type=\"text\" name=\"queueOwner\" size=\"20\" value=\"\"><br>" +
-            "    queueOwnerPW <input type=\"text\" name=\"queueOwnerPW\" size=\"20\" value=\"\"><br>" +
-            "    <input type=\"submit\" value=\"createAQUser\">" +
-            "</form>" +
-            createDBLinkHTML() +
-            "<p><a href=\"getConnectionMetaData\">getConnectionMetaData</a></p>" +
-            "<p><a href=\"createAQUser\">createAQUser</a></p>" +
-            "</body></html>";
-  }
-
-  private String dropUser() {
-    return "<h2>Drop User...</h2>" +
-            "<form action=\"execute\" method=\"get\">" +
-            "    user <input type=\"text\" name=\"user\" size=\"20\" value=\"\"><br>" +
-            "    password <input type=\"text\" name=\"password\" size=\"20\" value=\"\"><br>" +
-            "<textarea id=\"w3mission\" rows=\"50\" cols=\"20\">" +
-            "execute dbms_aqadm.unschedule_propagation(queue_name => 'paul.orders', " +
-            "destination => 'inventorydb_link', destination_queue => 'paul.orders_propqueue');" +
-            " execute dbms_lock.sleep(10);" +
-            " DROP USER paul CASCADE\n" +
-            " /\n" +
-            "\n" +
-            " GRANT DBA TO paul IDENTIFIED BY paul\n" +
-            " /" +
-            "</textarea>" +
-            "</form>";
-  }
-
-  private String createDBLinkHTML() {
-    return "<h2>Create DB Link...</h2>" +
-            "<form action=\"execute\" method=\"get\">" +
-            "    user <input type=\"text\" name=\"user\" size=\"20\" value=\"\"><br>" +
-            "    password <input type=\"text\" name=\"password\" size=\"20\" value=\"\"><br>" +
-            "<textarea id=\"w3mission\" rows=\"50\" cols=\"20\">\n" +
-            "create database link inventorylink" +
-            "  connect to inventorydb_high identified by paul " +
-            "  using " +
-            "  '(DESCRIPTION=" +
-            "    (ADDRESS=" +
-            "     (PROTOCOL=TCP)" +
-            "     (HOST=10.2.10.18)" +
-            "     (PORT=1525))" +
-            "    (CONNECT_DATA=" +
-            "     (SID=test10)))'" +
-            "</textarea>" +
-            "</form>";
-  }
 
   @Path("/getConnectionMetaData")
   @GET
@@ -180,26 +93,6 @@ public class JDBCConnectionResource {
     return returnValue;
   }
 
-  @Path("/createAQUser")
-  @GET
-  @Produces(MediaType.TEXT_PLAIN)
-  public Response createAQUser(@QueryParam("queueOwner") String queueOwner,
-                               @QueryParam("queueOwnerPW") String queueOwnerPW) throws SQLException {
-    System.out.println("createAQUser queueOwner = [" + queueOwner + "], queueOwnerPW = [" + queueOwnerPW + "]");
-    Connection sysDBAConnection = orderpdbDataSource.getConnection();
-    sysDBAConnection.createStatement().execute(
-            "grant pdb_dba to " + queueOwner + " identified by " + queueOwnerPW);
-    sysDBAConnection.createStatement().execute("grant unlimited tablespace to " + queueOwner);
-    sysDBAConnection.createStatement().execute("grant connect, resource TO " + queueOwner);
-    sysDBAConnection.createStatement().execute("grant aq_user_role TO " + queueOwner);
-    sysDBAConnection.createStatement().execute("GRANT EXECUTE ON sys.dbms_aqadm TO " + queueOwner);
-    sysDBAConnection.createStatement().execute("GRANT EXECUTE ON sys.dbms_aq TO " + queueOwner);
-    sysDBAConnection.createStatement().execute("GRANT EXECUTE ON sys.dbms_aq TO " + queueOwner);
-    final Response returnValue = Response.ok()
-            .entity("createAQUser successful")
-            .build();
-    return returnValue;
-  }
 
 }
 

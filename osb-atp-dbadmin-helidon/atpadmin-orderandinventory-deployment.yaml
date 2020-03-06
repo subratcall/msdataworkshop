@@ -21,11 +21,11 @@ spec:
         - "for i in `ls -1 /tmp/creds | grep -v user_name`; do cat /tmp/creds/$i  | base64 --decode > /creds/$i; done; ls -l /creds/*;"
         image: oraclelinux:7.5
         volumeMounts:
-        - name: creds-raw
-          mountPath: /tmp/creds
+        - name: creds-raw-order
+          mountPath: /tmp/creds-order
           readOnly: false
-        - name: creds
-          mountPath: /creds
+        - name: creds-order
+          mountPath: /creds-order
       - name: decode-creds-inventory
         command:
         - bash
@@ -38,6 +38,19 @@ spec:
           readOnly: false
         - name: creds-inventory
           mountPath: /creds-inventory
+      - name: combine-tnsnamesora # as a  convenience for creating dblinks
+        command:
+        - bash
+        - -c
+        - "cat /tmp/creds-order/tnsnames.ora >> /tmp/creds-inventory/tnsnames.ora ; cp /tmp/creds-inventory/tnsnames.ora /tmp/creds-order/tnsnames.ora ;"
+        image: oraclelinux:7.5
+        volumeMounts:
+        - name: creds-order
+          mountPath: /tmp/creds-order
+          readOnly: false
+        - name: creds-inventory
+          mountPath: /tmp/creds-inventory
+          readOnly: false
       containers:
       - name: helidonatp
         image: us-phoenix-1.ocir.io/stevengreenberginc/paul.parkinson/msdataworkshop/helidonatp:0.1
@@ -54,7 +67,7 @@ spec:
               name: atp-user-cred-orderadmin
               key: password
         - name: oracle.ucp.jdbc.PoolDataSource.atp1.URL
-          value: "jdbc:oracle:thin:@db202002011726_high?TNS_ADMIN=/msdataworkshop/creds"
+          value: "jdbc:oracle:thin:@db202002011726_high?TNS_ADMIN=/msdataworkshop/creds-order"
         - name: WALLET_PWD
           valueFrom:
             secretKeyRef:
@@ -69,22 +82,22 @@ spec:
               name: atp-user-cred-inventoryadmin
               key: password
         - name: oracle.ucp.jdbc.PoolDataSource.inventorypdb.URL
-          value: "jdbc:oracle:thin:@inventorydb_high?TNS_ADMIN=/msdataworkshop/creds"
+          value: "jdbc:oracle:thin:@inventorydb_high?TNS_ADMIN=/msdataworkshop/creds-inventory"
         - name: WALLET_PWD
           valueFrom:
             secretKeyRef:
               name: atp-user-cred-orderadmin
               key: walletPassword
         volumeMounts:
-        - name: creds
-          mountPath: /msdataworkshop/creds
+        - name: creds-order
+          mountPath: /msdataworkshop/creds-order
         - name: creds-inventory
           mountPath: /msdataworkshop/creds-inventory
       volumes:
-      - name: creds-raw
+      - name: creds-raw-order
         secret:
           secretName: atp-demo-binding-order
-      - name: creds
+      - name: creds-order
         emptyDir: {}
       - name: creds-raw-inventory
         secret:
