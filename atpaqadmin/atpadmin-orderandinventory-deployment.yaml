@@ -59,14 +59,14 @@ spec:
         - containerPort: 8080
         env:
         # orderpdb...
-        - name: oracle.ucp.jdbc.PoolDataSource.atp1.user
+        - name: oracle.ucp.jdbc.PoolDataSource.orderpdb.user
           value: "admin"
-        - name: oracle.ucp.jdbc.PoolDataSource.atp1.password
+        - name: oracle.ucp.jdbc.PoolDataSource.orderpdb.password
           valueFrom:
             secretKeyRef:
               name: atp-user-cred-orderadmin
               key: password
-        - name: oracle.ucp.jdbc.PoolDataSource.atp1.URL
+        - name: oracle.ucp.jdbc.PoolDataSource.orderpdb.URL
           value: "jdbc:oracle:thin:@db202002011726_high?TNS_ADMIN=/msdataworkshop/creds-order"
         - name: WALLET_PWD
           valueFrom:

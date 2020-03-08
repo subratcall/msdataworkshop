@@ -308,11 +308,12 @@ public class FrontEndResource {
                 "<br> </th>" +
                 "    <th width=\"50%\" align=\"left\" valign=\"top\">" +
                 "<h4>Setup...</h4>" +
-                "<form action=\"adminservicetest\"><input type=\"submit\" name =\"test\" value=\"createDBUsers\"></form>" +
-                "<form action=\"orderservicecall\"><input type=\"submit\" name =\"test\" value=\"setupOrderServiceMessaging\"></form>" +
-                "<form action=\"inventoryservicetest\"><input type=\"submit\" name =\"test\" value=\"setupInventoryServiceMessaging\"></form>" +
+                "<form action=\"adminservicetest\">" +
+                "   <input type=\"submit\" name =\"test\" value=\"createUsers\">" +
+                "   <input type=\"submit\" name =\"test\" value=\"createDBLinks\">" +
+                "   <input type=\"submit\" name =\"test\" value=\"setupTablesQueuesAndPropagation\">" +
+                "</form>" +
                 "<form action=\"inventoryservicetest\"><input type=\"submit\" name =\"test\" value=\"listenForMessages\"></form>" +
-                "<form action=\"adminservicetest\"><input type=\"submit\" name =\"test\" value=\"setupTablesQueuesAndPropagation\"></form>" +
                 "<form action=\"inventoryservicetest\"><input type=\"submit\" name =\"test\" value=\"cleanUpResources\"></form>" +
                 "<h4>Cleanup (drain queues and streams, delete tables and JSON/docs, etc.)...</h4>" +
                 "<form action=\"executeonorderpdb\" id=\"executeonorderpdb\">" +
