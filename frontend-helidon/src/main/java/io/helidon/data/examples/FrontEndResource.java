@@ -55,6 +55,9 @@ public class FrontEndResource {
                     "&itemid=" + itemid); // + "&deliverylocation=" + URLEncoder.encode(deliverylocation, "UTF-8"));
             String json = makeRequest(url);
             System.out.println("FrontEndResource.placeorder json:" + json);
+            url = new URL("http://order.msdataworkshop:8080/showorder?orderid=" + orderid +
+                    "&itemid=" + itemid); // + "&deliverylocation=" + URLEncoder.encode(deliverylocation, "UTF-8"));
+            json = makeRequest(url);
             return getFullPage(json);
         } catch (IOException e) {
             e.printStackTrace();
