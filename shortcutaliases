@@ -12,12 +12,3 @@ alias logpod='log.sh'
 alias pf='pf.sh'
 alias d='kubectl get deployments --all-namespaces'
 alias msdataworkshop='echo deployments... ; d|grep msdataworkshop ; echo pods... ; p|grep msdataworkshop ; echo services... ; s | grep msdataworkshop ; echo secrets... ; secrets|grep msdataworkshop'
-
-kubectl delete secret atp-demo-binding-order -n msdataworkshop
-kubectl delete -f atp-binding-plain-order.yaml
-kubectl create -f atp-binding-plain-order.yaml
-kubectl get secret atp-demo-binding-order --export -o yaml |  kubectl apply --namespace=msdataworkshop -f -
-kubectl delete secret atp-demo-binding-inventory -n msdataworkshop
-kubectl delete -f atp-binding-plain-inventory.yaml
-kubectl create -f atp-binding-plain-inventory.yaml
-kubectl get secret atp-demo-binding-inventory --export -o yaml |  kubectl apply --namespace=msdataworkshop -f -

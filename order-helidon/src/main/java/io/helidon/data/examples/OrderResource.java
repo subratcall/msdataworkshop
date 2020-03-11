@@ -73,6 +73,19 @@ public class OrderResource {
     public Response showorder(@QueryParam("order") String orderId) throws Exception {
         System.out.println("--->showorder for orderId:" + orderId);
         OrderDetail orderDetail = orders.get(orderId);
+        if (orderDetail == null) {
+            String inventoryStatus = orderServiceEventConsumer.dolistenForMessages(atpOrderPdb, orderId).toString();
+            orderDetail = new OrderDetail();
+            orders.put(orderId, orderDetail);
+            if (inventoryStatus.equals("inventoryexists")) {
+                orderDetail.setOrderStatus("successful");
+                orderDetail.setSuggestiveSaleItem("suggestiveSaleItem"); //todo get from dolistenForMessages
+                orderDetail.setInventoryLocation("inventoryLocation"); //todo get from dolistenForMessages
+            } else if (inventoryStatus.equals("inventorydoesnotexist")) {
+                orderDetail.setOrderStatus("failed");
+            }
+        }
+//        System.out.println("--->inventoryStatus..." + inventoryStatus);
         String returnString = orderDetail == null? "orderId not found:" + orderId :
                 "orderId = " + orderId + "<br>orderstatus = " + orderDetail.getOrderStatus() +
                         "<br>suggestiveSale (event sourced from catalog) = " + orderDetail.getSuggestiveSale() +
@@ -100,18 +113,8 @@ public class OrderResource {
         orderDetail.setOrderStatus("pending");
         orderDetail.setDeliveryLocation(deliverylocation);
         orders.put(orderid, orderDetail);
-        String inventoryStatus = orderServiceEventConsumer.dolistenForMessages(atpOrderPdb, orderid).toString();
-        if (inventoryStatus.equals("inventoryexists")) {
-            orderDetail.setOrderStatus("successful");
-            orderDetail.setSuggestiveSaleItem("suggestiveSaleItem"); //todo get from dolistenForMessages
-            orderDetail.setInventoryLocation("inventoryLocation"); //todo get from dolistenForMessages
-        }
-        else if (inventoryStatus.equals("inventorydoesnotexist")) {
-            orderDetail.setOrderStatus("failed");
-        }
-        System.out.println("--->inventoryStatus..." + inventoryStatus);
         final Response returnValue = Response.ok()
-            .entity("orderid = " + orderid + " orderstatus = " + orderDetail.getOrderStatus() + " inventoryStatus = " + inventoryStatus)
+            .entity("orderid = " + orderid + " orderstatus = " + orderDetail.getOrderStatus() + " order placed")
             .build();
         return returnValue;
     }

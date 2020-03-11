@@ -36,7 +36,7 @@ spec:
               name: atp-user-cred-orderuser
               key: password
         - name: oracle.ucp.jdbc.PoolDataSource.atp1.URL
-          value: "jdbc:oracle:thin:@db202002011726_high?TNS_ADMIN=/msdataworkshop/creds"
+          value: "jdbc:oracle:thin:@orderpdb_high?TNS_ADMIN=/msdataworkshop/creds"
         - name: orderqueuename
           value: "orderqueue"
         - name: WALLET_PWD

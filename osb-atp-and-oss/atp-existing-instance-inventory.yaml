@@ -11,6 +11,6 @@ spec:
   clusterServicePlanExternalName: standard
   parameters:
     name: osb-atp-existing-instance-inventory
-    ocid: ocid1.autonomousdatabase.oc1.phx.aby....
-    compartmentId: ocid1.compartment.oc1..aaa....
+    ocid: ${inventorypdb_ocid}
+    compartmentId: ${inventorypdb_compartmentId}
     provisioning: false

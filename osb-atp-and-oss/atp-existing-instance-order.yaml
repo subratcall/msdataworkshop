@@ -11,6 +11,6 @@ spec:
   clusterServicePlanExternalName: standard
   parameters:
     name: osb-atp-existing-instance-order
-    ocid: ocid1.autonomousdatabase.oc1.phx.aby....
-    compartmentId: ocid1.compartment.oc1..aaa....
+    ocid: ${orderpdb_ocid}
+    compartmentId: ${orderpdb_compartmentId}
     provisioning: false

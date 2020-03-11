@@ -15,8 +15,8 @@
  */
 package oracle.db.microservices;
 
-import java.sql.Connection;
-import java.sql.SQLException;
+
+import java.sql.*;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -25,6 +25,7 @@ import javax.sql.DataSource;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
 
 @Path("/")
 @ApplicationScoped
@@ -39,7 +40,25 @@ public class ATPAQAdminResource {
   @Named("inventorypdb")
   private DataSource inventorypdbDataSource;
 
-  @Path("/setupAll")
+  @Path("/test")
+  @GET
+  @Produces(MediaType.TEXT_HTML)
+  public String test() {
+      System.out.println("test datasources...");
+      try {
+          System.out.println("ATPAQAdminResource.test inventorypdbDataSource connection:" + inventorypdbDataSource.getConnection());
+      } catch (Exception e) {
+          e.printStackTrace();
+      }
+      try {
+          System.out.println("ATPAQAdminResource.test orderpdbDataSource connection:" + orderpdbDataSource.getConnection());
+      } catch (Exception e) {
+          e.printStackTrace();
+      }
+      return "success";
+  }
+
+    @Path("/setupAll")
   @GET
   @Produces(MediaType.TEXT_HTML)
   public String setupAll() {
@@ -65,7 +84,6 @@ public class ATPAQAdminResource {
     try {
       System.out.println("createUsers ...");
       returnValue += propagationSetup.createUsers(orderpdbDataSource, inventorypdbDataSource);
-      returnValue += propagationSetup.setup(orderpdbDataSource, inventorypdbDataSource);
       return " result of createUsers : success... " + returnValue;
     } catch (Exception e) {
       e.printStackTrace();
@@ -111,9 +129,9 @@ public class ATPAQAdminResource {
   @Produces(MediaType.TEXT_HTML)
   public String execute(@QueryParam("pdb") String pdb, @QueryParam("sql") String sql, @QueryParam("user") String user, @QueryParam("password") String password) {
     try {
-      System.out.println("execute sql = [" + sql + "], user = [" + user + "]");
+      System.out.println("pdb:"+pdb+" execute sql = [" + sql + "], user = [" + user + "]");
       boolean isUserPWPresent = user != null && password != null && !user.equals("") && !password.equals("");
-      System.out.println("execute sql = [" + sql + "], user = [" + user + "] isUserPWPresent:" + isUserPWPresent);
+      System.out.println("pdb:"+pdb+" execute sql = [" + sql + "], user = [" + user + "] isUserPWPresent:" + isUserPWPresent);
       DataSource dataSource = "order".endsWith(pdb) ?orderpdbDataSource:inventorypdbDataSource;
       Connection connection = isUserPWPresent ?  dataSource.getConnection(user, password): dataSource.getConnection();
       System.out.println("connection:" + connection);
@@ -123,6 +141,17 @@ public class ATPAQAdminResource {
       e.printStackTrace();
       return " result of sql = [" + sql + "], user = [" + user + "]" + " : " + e;
     }
+  }
+
+
+  @Path("/unschedulePropagation")
+  @GET
+  @Produces(MediaType.TEXT_PLAIN)
+  public Response unschedulePropagation() throws SQLException {
+    final Response returnValue = Response.ok()
+            .entity("Connection obtained successfully metadata:" + propagationSetup.unscheduleOrderToInventoryPropagation(orderpdbDataSource))
+            .build();
+    return returnValue;
   }
 
 
