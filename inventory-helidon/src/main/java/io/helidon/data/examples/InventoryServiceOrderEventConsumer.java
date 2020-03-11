@@ -1,8 +1,6 @@
 package io.helidon.data.examples;
 
-import oracle.jms.AQjmsDestination;
-import oracle.jms.AQjmsFactory;
-import oracle.jms.AQjmsSession;
+import oracle.jms.*;
 
 import javax.jms.*;
 import java.sql.Connection;
@@ -19,96 +17,51 @@ public class InventoryServiceOrderEventConsumer implements Runnable {
     @Override
     public void run() {
         while (true) {
-            listenForOrderEvents();
-        }
-    }
-
-    public Object listenForOrderEventsOnTopic() {
-        TopicConnection connection = null;
-        javax.jms.Topic topic;
-        TopicSession session = null;
-        try {
-            System.out.println("listenForMessages on order queue...");
-            TopicConnectionFactory topicConnectionFactory = AQjmsFactory.getTopicConnectionFactory(inventoryResource.atpInventoryPDB);
-//            TopicConnectionFactory topicConnectionFactory = AQjmsFactory.getTopicConnectionFactory(inventoryResource.atpInventoryPDB);
-            connection = topicConnectionFactory.createTopicConnection();
-            session = connection.createTopicSession(true, Session.CLIENT_ACKNOWLEDGE);
-            topic = ((AQjmsSession) session).getTopic("inventoryuser", "ordertopic");
-//            topic = ((AQjmsSession) session).getTopic("orderuser", "orderqueue");
-            TopicSubscriber topicSubscriber  =
-                    ((AQjmsSession) session).createDurableSubscriber(topic, "the name used to identify this subscription"); // ((AQjmsSession) session).createTopicReceiver(topic);
-            connection.start();
-            System.out.println("listenForMessages before topicSubscriber topic:" + topic);
-            Message msg = topicSubscriber.receive();
-            System.out.println("listenForMessages message received:" + msg);
-//            updateDataAndSendEventOnInventory( "inventoryitem1", "66");
-            session.commit();
-            session.close();
-            connection.close();
-            return "got message";
-        } catch (Exception e) {
-            e.printStackTrace();
             try {
-                if (session != null) session.rollback();
-            } catch (JMSException e1) {
-                e1.printStackTrace();
-            }
-        } finally {
-            try {
-                if (session != null) {
-                    session.close();
-                }
-                if (connection != null) {
-                    connection.close();
-                }
-            } catch (JMSException e) {
+                listenForOrderEvents();
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        return null;
     }
 
-    public Object listenForOrderEvents() {
-        QueueConnection connection = null;
-        javax.jms.Queue queue;
-        QueueSession session = null;
-        try {
-            System.out.println("listenForMessages on order queue...");
-            QueueConnectionFactory queueConnectionFactory = AQjmsFactory.getQueueConnectionFactory(inventoryResource.atpInventoryPDB);
-            connection = queueConnectionFactory.createQueueConnection();
-            session = connection.createQueueSession(true, Session.CLIENT_ACKNOWLEDGE);
-            queue = ((AQjmsSession) session).getQueue("demouser", "orderqueue");
-            MessageConsumer consumer = session.createConsumer(queue);
-            connection.start();
-            System.out.println("listenForMessages before receive queue:" + queue);
-            Message msg = consumer.receive();
-            System.out.println("listenForMessages message received:" + msg);
-            updateDataAndSendEventOnInventory(
-                    msg.getStringProperty("itemid"), msg.getStringProperty("orderid"));
-            session.commit();
-            session.close();
-            connection.close();
-            return "got message";
-        } catch (Exception e) {
-            e.printStackTrace();
+    public void listenForOrderEvents() throws Exception {
+        QueueConnectionFactory qcfact = AQjmsFactory.getQueueConnectionFactory(inventoryResource.atpInventoryPDB);
+        QueueConnection qconn = qcfact.createQueueConnection(inventoryResource.inventoryuser, inventoryResource.inventorypw);
+        QueueSession qsess = qconn.createQueueSession(true, Session.CLIENT_ACKNOWLEDGE);
+        System.out.println("PropagationSetup.setup qsess:" + qsess);
+        qconn.start();
+        receiveMessages(qsess);
+    }
+
+    private void receiveMessages(QueueSession qsess) throws JMSException {
+        System.out.println("Receive Messages...");
+        Queue queue1 = ((AQjmsSession) qsess).getQueue("inventoryuser", "orderqueue");
+        AQjmsConsumer sub = (AQjmsConsumer) qsess.createConsumer(queue1);
+        System.out.println("\n\nMessages for subscriber : " + sub + "  with selector: " + sub.getMessageSelector());
+        boolean done = false;
+        while (!done) {
             try {
-                if (session != null) session.rollback();
-            } catch (JMSException e1) {
-                e1.printStackTrace();
-            }
-        } finally {
-            try {
-                if (session != null) {
-                    session.close();
+                TextMessage robjmsg = (TextMessage) (sub.receiveNoWait());
+                if (robjmsg != null) {
+                    String rTextMsg = robjmsg.getText();
+                    System.out.println("rTextMsg " + rTextMsg);
+                    System.out.print(" Pri: " + robjmsg.getJMSPriority());
+                    System.out.print(" Message: " + robjmsg.getIntProperty("Id"));
+                    System.out.print(" " + robjmsg.getStringProperty("City"));
+                    System.out.println(" " + robjmsg.getIntProperty("Priority"));
+                    System.out.println("((AQjmsSession) qsess).getDBConnection(): " + ((AQjmsSession) qsess).getDBConnection());
+                    if (false) updateDataAndSendEventOnInventory(
+                            robjmsg.getStringProperty("itemid"), robjmsg.getStringProperty("orderid"));
+                } else {
+                    done = true;
                 }
-                if (connection != null) {
-                    connection.close();
-                }
-            } catch (JMSException e) {
-                e.printStackTrace();
+                qsess.commit();
+            } catch (Exception e) {
+                System.out.println("Error in performJmsOperations: " + e);
+                done = true;
             }
         }
-        return null;
     }
 
     public String updateDataAndSendEventOnInventory(String itemid, String orderid) {
@@ -135,7 +88,7 @@ public class InventoryServiceOrderEventConsumer implements Runnable {
             } else inventorycount = 0;
             String status = inventorycount > 0 ? "inventoryexists" : "inventorydoesnotexist";
             System.out.println("InventoryServiceOrderEventConsumer.updateDataAndSendEventOnInventory status:" + status);
-            Queue queue = ((AQjmsSession) session).getQueue(InventoryResource.inventoryQueueOwner, InventoryResource.inventoryQueueName);
+            Queue queue = ((AQjmsSession) session).getQueue(InventoryResource.inventoryuser, InventoryResource.inventoryQueueName);
             ((AQjmsDestination) queue).start(session, true, true);
             QueueSender sender = ((AQjmsSession) session).createSender(queue);
             TextMessage msg = session.createTextMessage();
@@ -163,5 +116,24 @@ public class InventoryServiceOrderEventConsumer implements Runnable {
             }
             return null;
         }
+    }
+
+
+    private static void sendMessages(TopicSession tsess, Topic topic1) throws JMSException {
+        System.out.println("Publish messages...");
+        TextMessage objmsg = tsess.createTextMessage();
+        TopicPublisher publisher = tsess.createPublisher(topic1);
+        int i = 1;
+        objmsg.setIntProperty("Id", i);
+        objmsg.setStringProperty("City", "Philadelphia");
+        objmsg.setIntProperty("Priority", (1 + (i % 3)));
+        objmsg.setText(i + ":" + "message# " + i + ":" + 500);
+        objmsg.setJMSCorrelationID("" + i);
+        objmsg.setJMSPriority(1 + (i % 3));
+        publisher.publish(topic1, objmsg, DeliveryMode.PERSISTENT,
+                1 + (i % 3), AQjmsConstants.EXPIRATION_NEVER);
+        publisher.publish(topic1, objmsg, DeliveryMode.PERSISTENT, 3, AQjmsConstants.EXPIRATION_NEVER);
+        System.out.println("Commit now and sleep...");
+        tsess.commit();
     }
 }

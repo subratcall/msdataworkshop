@@ -32,29 +32,16 @@ public class InventoryResource {
 
 
     @Inject
-    @Named("atp1")
+    @Named("inventorypdb")
     PoolDataSource atpInventoryPDB;
 
     private Connection conn = null;
     private InventoryServiceInitialization dbandMessagingInitialization= new InventoryServiceInitialization();
     private InventoryServiceOrderEventConsumer oracleAQEventListener;
-    static final String orderQueueOwner;
-    static final String inventoryQueueOwner;
-    static final String inventoryQueueName = "inventoryqueue";
-
-    static {
-        inventoryQueueOwner = System.getenv("oracle.ucp.jdbc.PoolDataSource.atpinventorypdb.user");
-        System.out.println("InventoryResource inventoryQueueOwner:" + inventoryQueueOwner);
-        orderQueueOwner = System.getenv("oracle.ucp.jdbc.PoolDataSource.atp1.user");
-        System.out.println("InventoryResource orderQueueOwner:" + orderQueueOwner);
-    }
-
-    public InventoryResource() {
-        super();
-//        oracleAQEventListener=  new InventoryServiceOrderEventConsumer(this);
-//        new Thread(oracleAQEventListener).start();
-        System.out.println("InventoryResource.InventoryResource listening for messages...");
-    }
+    // todo get these from env
+    static String inventoryuser = "inventoryuser";
+    static String inventorypw = "Welcome12345";
+    static String inventoryQueueName = "inventoryqueue";
 
     @Path("/listenForMessages")
     @GET

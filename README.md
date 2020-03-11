@@ -27,13 +27,14 @@ Task 1 (create OCI account, OKE cluster, ATP databases, and access OKE from clou
         - https://docs.oracle.com/en/cloud/paas/autonomous-data-warehouse-cloud/tutorial-getting-started-autonomous-db/index.html 
         - Note the ocid, compartmentId, name, and admin pw of the databases
         - Download the regional wallet (connection info) and note the wallet password (this is optional depending on setup - todo elaborate)
-   - Enter cloud shell and issue command to export kubeconfig for the OKE cluster created
+
+Task 2 (Use cloud Shell to access OKE cluster and create `msdataworkshop` namespace)
+        - Enter cloud shell and issue command to export kubeconfig for the OKE cluster created
         - Related blog with quick instructions here: https://blogs.oracle.com/cloud-infrastructure/announcing-oracle-cloud-shell
         - Verify OKE access using command such as `kubectl get pods --all-namespaces`
         - Create `msdataworkshop` namespace using command `kubectl create ns msdataworkshop`
     
-    
-Task 2 (create github account and build microservice image)
+Task 3 (create github account and build microservice image)
    - Create github account
         - http://github.com
    - From cloud shell...
@@ -43,8 +44,7 @@ Task 2 (create github account and build microservice image)
    - Run `./build.sh`
    - For convenience, `source shortcutaliases` and add the `utils` directory to the path.
 
-
-Task 3 (push image, deploy, and access microservice)
+Task 4 (push image, deploy, and access microservice)
    - Setup OCIR, create authkey
    - From cloud shell...
    - `docker login` 
@@ -66,23 +66,22 @@ Task 3 (push image, deploy, and access microservice)
             - `kubectl port-forward [frontend pod] -n msdataworkshop 8080:8080`
             - and access http://localhost:8080
 
-
-Task 4 (Setup OCI Open Service Broker)
+Task 5 (Setup OCI Open Service Broker)
    - `cd atpaqadmin`
    - Set ocid, etc. values in `setupOSB.sh` and run `./setupOSB.sh`
    - Refererences... 
         - https://github.com/oracle/oci-service-broker/blob/master/charts/oci-service-broker/docs/installation.md
         - https://www.youtube.com/watch?v=qW_pw6Nd5hM
    
-Task 5 (Using OCI service broker, create binding to 2 existing atp instances)
-   - Insure Task 4 (Setup OCI Open Service Broker) is complete 
+Task 6 (Using OCI service broker, create binding to 2 existing atp instances)
+   - Pre-requisite: Task 1 and 4 are is complete 
    - Set ocid and password values in `setupATP.sh` and run `./setupATP.sh`
    - References...
         - https://github.com/oracle/oci-service-broker/blob/master/charts/oci-service-broker/docs/atp.md
         - https://www.youtube.com/watch?v=qW_pw6Nd5hM
   
-Task 6 (Verify and understand ATP connectivity via Helidon microservice deployment in OKE)
-   - Insure Task 2, 3, 4, and 5 are complete.
+Task 7 (Verify and understand ATP connectivity via Helidon microservice deployment in OKE)
+   - Pre-requisite: Task 1 through 5 are complete.
    - `cd msdataworkshop/osb-atp-dbadmin-helidon`
    - Notice atpadmin-deployment.yaml wallet, secret, decode initcontainer, etc. 
    - Notice `atp*` references in microprofile-config.properties and @Inject dataSource in ATPAQAdminResource.java 
@@ -97,7 +96,7 @@ Task 6 (Verify and understand ATP connectivity via Helidon microservice deployme
             - http://localhost:8080/test
             
 
-Task 6 (setup AQ, order and inventory, saga, and CQRS)...
+Task 8 (setup AQ, order and inventory, saga, and CQRS)...
    - follow steps to create dblink across ATP instances (put/get credential from object store etc.)
    - setup AQ, queue-progation - todo should be all one button to create orderuser, inventoryuser, tables, queue, dblink, propagation, etc...
    - create secrets for orderuser and inventoryuser and update deployment yaml 
@@ -108,7 +107,7 @@ Task 6 (setup AQ, order and inventory, saga, and CQRS)...
    - demonstrate placeorder for choreography saga (success and fail/compensate)
    - demonstrate showorder for CQRS
    
-Task 7 (Using OCI service broker, provision and create binding to stream, and verify with app)
+Task 9 (Using OCI service broker, provision and create binding to stream, and verify with app)
    - Insure Task 4 is complete and refer to https://github.com/oracle/oci-service-broker and specifically...
         - https://github.com/oracle/oci-service-broker/blob/master/charts/oci-service-broker/docs/oss.md
    - In Cloud Console and streaming policy
@@ -129,7 +128,7 @@ Task 7 (Using OCI service broker, provision and create binding to stream, and ve
    - Run `kubectl get secrets test-stream-binding-order -o yaml -n msdataworkshop`
    - Demonstrate streaming orders in frontend app by hitting `producerstream` button
 
-Task 8 (demonstrate health/readiness) 
+Task 10 (demonstrate health/readiness) 
    - eg order service is not ready until some data load (from view or eventsourcing or lazily) is done
    - show src and probes in deployment
    - https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
@@ -138,7 +137,7 @@ Task 8 (demonstrate health/readiness)
    - https://github.com/oracle/helidon/blob/master/docs/src/main/docs/guides/07_health_se_guide.adoc
    - https://dmitrykornilov.net/2019/08/08/helidon-brings-microprofile-2-2-support/
     
-Task 9 (demonstrate metrics prometheus and grafana (maybe monitoring and alert)
+Task 11 (demonstrate metrics prometheus and grafana (maybe monitoring and alert)
    - show compute auto-scaling in console before explaining horizontal scaling of pods.
         - for reference re compute instance scaling... https://docs.cloud.oracle.com/en-us/iaas/Content/Compute/Tasks/autoscalinginstancepools.htm
    - https://medium.com/oracledevs/how-to-keep-your-microservices-available-by-monitoring-its-metrics-d88900298025
@@ -158,7 +157,7 @@ Task 9 (demonstrate metrics prometheus and grafana (maybe monitoring and alert)
    - https://github.com/helm/charts/tree/master/stable/prometheus-adapter
    - helm install --name my-release stable/prometheus-adapter
 
-Task 10 (demonstrate OKE horizontal pod scaling)
+Task 12 (demonstrate OKE horizontal pod scaling)
    - install metrics-server
         - DOWNLOAD_URL=$(curl -Ls "https://api.github.com/repos/kubernetes-sigs/metrics-server/releases/latest" | jq -r .tarball_url)
         - DOWNLOAD_VERSION=$(grep -o '[^/v]*$' <<< $DOWNLOAD_URL)
@@ -174,17 +173,15 @@ Task 10 (demonstrate OKE horizontal pod scaling)
             order-helidon   Deployment/order-helidon   <unknown>/50%   1         2         0          16s
    - increase cpu, notice cpu increase and scale to 2 pods
 
-Task 11 (tracing)
+Task 13 (tracing)
    - install istio, demonstrate tracing (jaeger and kiali)
    - @Traced annotation
 
 Future here to end...
 
-Task 12 (demonstrate scaling with pdb)
-    - autoscaling
-    - sharding
-  
-Task 13 
+Task 14 
+   - autoscaling
+   - sharding
    - various security both of wire, mtls, vault, etc. 
    - analytics - OSE server visualization
    - potential converged database additions slide goes here
@@ -205,15 +202,15 @@ Task 13
         - graph route planning
         kms key monitoring
 
-Task 14 (data flow) 
+Task 15 (data flow) 
     - fully managed Spark service that lets you Run Spark applications with almost no administrative overhead.
     - for demo: fog computing of IoT
     
-Task 15 (data science)
+Task 16 (data science)
     - enables data scientists to easily build, train, and manage machine learning models on Oracle Cloud, using Python and open source machine learning libraries
     - for demo: predictive analytics of orders to inventory/delivery locations
 
-Task 16 (data catalog)
+Task 17 (data catalog)
     - enables data consumers to easily find, understand, govern, and track Oracle Cloud data assets across the enterprise using an organized inventory of data assets
     - what data is available where in the organization and how trustworthy and fit-for-use they are
     - for demo: analytics report of order info from streaming + atp 

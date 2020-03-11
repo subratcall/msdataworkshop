@@ -1,13 +1,13 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: orderandinventoryadmin
+  name: atpaqadmin
   labels:
-    app: orderandinventoryadmin
+    app: atpaqadmin
 spec:
   type: NodePort
   ports:
   - port: 8080
     name: http
   selector:
-    app: orderandinventoryadmin
+    app: atpaqadmin

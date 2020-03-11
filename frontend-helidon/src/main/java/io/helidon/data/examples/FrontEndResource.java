@@ -116,7 +116,7 @@ public class FrontEndResource {
         try {
             System.out.println("-----> FrontEnd orderadmin sql = [" + sql + "], user = [" + user + "], password = [" + password + "]");
             sql = URLEncoder.encode(sql, "UTF-8");
-            String urlString = "http://orderadmin.msdataworkshop:8080/execute?sql=" + sql + "&user=" + user + "&password=" + password;
+            String urlString = "http://atpaqadmin.msdataworkshop:8080/execute?sql=" + sql + "&user=" + user + "&password=" + password;
             System.out.println("FrontEndResource.orderadmin urlString:" + urlString);
             URL url = new URL( urlString);
             return getFullPage(makeRequest(url));
@@ -133,7 +133,7 @@ public class FrontEndResource {
         try {
             System.out.println("-----> FrontEnd helidonatpinventory: [" + sql + "], user = [" + user + "], password = [" + password + "]");
             sql = URLEncoder.encode(sql, "UTF-8");
-            String urlString = "http://inventoryadmin.msdataworkshop:8080/execute?sql=" + sql + "&user=" + user + "&password=" + password;
+            String urlString = "http://atpaqadmin.msdataworkshop:8080/execute?sql=" + sql + "&user=" + user + "&password=" + password;
             System.out.println("FrontEndResource.inventoryadmin urlString:" + urlString);
             URL url = new URL( urlString);
             return getFullPage(makeRequest(url));
@@ -166,7 +166,7 @@ public class FrontEndResource {
     @Path("/adminservicetest")
     public String adminservicetest(@QueryParam("test") String test) {
         try {
-            String urlString = "http://orderandinventoryadmin.msdataworkshop:8080/" + test;
+            String urlString = "http://atpaqadmin.msdataworkshop:8080/" + test;
             System.out.println("FrontEndResource.adminservicetest calling");
             URL url = new URL(urlString);
             return getFullPage(makeRequest(url));

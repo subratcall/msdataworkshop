@@ -195,14 +195,15 @@ public class PropagationSetup {
             System.out.println("PropagationSetup.setup qsess:" + qsess);
             tconn.start();
             qconn.start();
-            setupTopicAndQueue(tsess, qsess, sourcename, destinationuser, sourcequeuename, sourcequeuetable);
+//            setupTopicAndQueue(tsess, qsess, sourcename, destinationuser, sourcequeuename, sourcequeuetable);
             performJmsOperations(tsess, qsess, sourcename, destinationuser, sourcequeuename, linkName);
             tsess.close();
             tconn.close();
             qsess.close();
             qconn.close();
             System.out.println("success");
-            return returnString += "\n ...success";
+            returnString += "\n ...success";
+            return returnString;
         } catch (Exception ex) {
             System.out.println("Exception-1: " + ex);
             ex.printStackTrace();
@@ -271,13 +272,12 @@ public class PropagationSetup {
             String name,
             String linkName)
             throws Exception {
-        AQjmsConsumer[] subs;
         try {
             System.out.println("Setup topic/source and queue/destination for propagation...");
             Topic topic1 = ((AQjmsSession) tsess).getTopic(sourcetopicuser, name);
             Queue queue1 = ((AQjmsSession) qsess).getQueue(destinationqueueuser, name);
             System.out.println("Creating Topic Subscribers... queue1:" + queue1.getQueueName());
-            subs = new AQjmsConsumer[1];
+            AQjmsConsumer[] subs = new AQjmsConsumer[1];
             subs[0] = (AQjmsConsumer) qsess.createConsumer(queue1);
             System.out.println("_____________________________________________");
             System.out.println("PropagationSetup.performJmsOperations queue1.getQueueName():" + queue1.getQueueName());
@@ -289,8 +289,8 @@ public class PropagationSetup {
                     tsess, linkName, null, null, null, new Double(0));
             sendMessages(tsess, topic1);
             Thread.sleep(50000);
-            receiveMessages(tsess, qsess, subs);
-            ((AQjmsDestination) topic1).unschedulePropagation(tsess, linkName);
+//            receiveMessages(qsess, subs);
+//            ((AQjmsDestination) topic1).unschedulePropagation(tsess, linkName);
         } catch (Exception e) {
             System.out.println("Error in performJmsOperations: " + e);
             throw e;
@@ -333,7 +333,7 @@ public class PropagationSetup {
         tsess.commit();
     }
 
-    private static void receiveMessages(TopicSession tsess, QueueSession qsess, AQjmsConsumer[] subs) throws JMSException {
+    private static void receiveMessages(QueueSession qsess, AQjmsConsumer[] subs) throws JMSException {
         System.out.println("Receive Messages...");
         for (int i = 0; i < subs.length; i++) {
             System.out.println("\n\nMessages for subscriber : " + i);
@@ -355,7 +355,6 @@ public class PropagationSetup {
                         System.out.println("No more messages.");
                         done = true;
                     }
-                    tsess.commit();
                     qsess.commit();
                 } catch (Exception e) {
                     System.out.println("Error in performJmsOperations: " + e);
