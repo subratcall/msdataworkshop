@@ -41,8 +41,7 @@ Task 2 (create github account and build microservice image)
         - optionally (if planning to make modifications, for example) fork this repos and Run `git clone` on the forked repos
    - `cd msdataworkshop`
    - Run `./build.sh`
-   - For convenience, `source shortcutaliases` or add the contents to the `~/.bash_profile` file and source it.
-        - Run 'usage' for list of shortcut commands include `msdataworkshop` command which lists all resources related to the msdataworkshop
+   - For convenience, `source shortcutaliases` and add the `utils` directory to the path.
 
 
 Task 3 (push image, deploy, and access microservice)
@@ -69,59 +68,33 @@ Task 3 (push image, deploy, and access microservice)
 
 
 Task 4 (Setup OCI Open Service Broker)
-   - Refer to https://github.com/oracle/oci-service-broker and specifically...
+   - `cd atpaqadmin`
+   - Set ocid, etc. values in `setupOSB.sh` and run `./setupOSB.sh`
+   - Refererences... 
         - https://github.com/oracle/oci-service-broker/blob/master/charts/oci-service-broker/docs/installation.md
-        - https://www.youtube.com/watch?v=qW_pw6Nd5hM&t=12s
-   - Run `kubectl create clusterrolebinding cluster-admin-brokers --clusterrole=cluster-admin --user=<USER_ID>`
-        -  `--user=<USER_ID>` is id not ocid, for example, `--user=paul.parkinson`
-   - Run `./installOSB.sh`
-   - If not already created, create user API Key with password...
-        - https://docs.cloud.oracle.com/en-us/iaas/Content/Functions/Tasks/functionssetupapikey.htm
-   - Note that the following instructions will create the broker in the default namespace 
-        and then create the binding and users secrets in the `msdataworkshop` namespace
-   - Modify `./ocicredentialsSecret` supplying values from Task 1 
-   - Run `./ocicredentialsSecret`
-   - Run `./installOCIOSB.sh`
-   - Run `svcat get brokers` 
-        - recheck until broker is shown in ready state
-   - Run `svcat get classes` and `svcat get plans` 
+        - https://www.youtube.com/watch?v=qW_pw6Nd5hM
    
-Task 5 (Using OCI service broker, create binding to 2 existing atp instances, and verify with test/admin app for both)
-   - Insure Task 4 is complete and refer to https://github.com/oracle/oci-service-broker and specifically...
+Task 5 (Using OCI service broker, create binding to 2 existing atp instances)
+   - Insure Task 4 (Setup OCI Open Service Broker) is complete 
+   - Set ocid and password values in `setupATP.sh` and run `./setupATP.sh`
+   - References...
         - https://github.com/oracle/oci-service-broker/blob/master/charts/oci-service-broker/docs/atp.md
-        - https://www.youtube.com/watch?v=qW_pw6Nd5hM&t=12s
-   - Do the following for each/both ATP instances/pdbs (*replace `order` with `inventory` for second/inventory ATP instance/pdb)
-        - cd to `oci-service-broker` directory such as oci-service-broker-1.3.3
-        - `cp samples/atp/atp-existing-instance.yaml atp-existing-instance-order.yaml`
-        - modify `atp-existing-instance-order.yaml` 
-            - provide class and plan name and pdb ocid and compartmentID
-        - Run `kubectl create -f atp-existing-instance-order.yaml``
-        - Run `svcat get instances` 
-            - verify in ready state
-        - `cp oci-service-broker/samples/atp/atp-binding-plain.yaml atp-binding-plain-order.yaml` 
-        - modify `atp-binding-plain-order.yaml` 
-            - provide wallet password (either new or existing, for example if downloaded from console previously)
-        - Run `kubectl create -f atp-binding-plain-order.yaml -n msdataworkshop`
-        - Run `svcat get bindings` 
-            - verify in ready state
-        - Run `kubectl get secrets atp-demo-binding -n msdataworkshop -o yaml` 
-        - `cp oci-service-broker/samples/atp/atp-demo-secret.yaml atp-demo-secret-order.yaml` 
-        - modify `atp-demo-secret-order.yaml` 
-            - provide admin password and wallet password (use `echo -n value | base64` to encode)
-        - Run `kubectl create -f atp-demo-secret-order.yaml -n msdataworkshop`
-   - Insure Task 2 (create github account and build microservice image) is complete.
+        - https://www.youtube.com/watch?v=qW_pw6Nd5hM
+  
+Task 6 (Verify and understand ATP connectivity via Helidon microservice deployment in OKE)
+   - Insure Task 2, 3, 4, and 5 are complete.
    - `cd msdataworkshop/osb-atp-dbadmin-helidon`
-   - Notice `atp1` references in microprofile-config.properties and @Inject dataSource in OrderResource.java 
-   - Notice deployment yamls' wallet, secret, decode initcontainer, etc. 
+   - Notice atpadmin-deployment.yaml wallet, secret, decode initcontainer, etc. 
+   - Notice `atp*` references in microprofile-config.properties and @Inject dataSource in ATPAQAdminResource.java 
    - Run `./deploy.sh` to create deployment and service
    - Run `msdataworkshop` command to verify existence of deployment and service and verify pod is in Running state
    - Demonstrate service discovery/call to order and inventory db 
         and db access from these services using `executeonorderpdb` and `executeoninventorypdb` on frontend
    - Troubleshooting... 
         - Look at logs... `kubectl logs [podname] -n msdataworkshop`
-        - If no request is show in logs, try accessing the pod directly using port-forward
-            - `kubectl port-forward [order pod] -n msdataworkshop 8080:8080`
-            - http://localhost:8080/placeOrder
+        - If no request is shown in logs, try accessing the pod directly using port-forward
+            - `kubectl port-forward [atpadmin pod] -n msdataworkshop 8080:8080`
+            - http://localhost:8080/test
             
 
 Task 6 (setup AQ, order and inventory, saga, and CQRS)...
