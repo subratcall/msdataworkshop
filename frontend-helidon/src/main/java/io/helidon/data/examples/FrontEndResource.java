@@ -312,9 +312,10 @@ public class FrontEndResource {
                 "    <th width=\"50%\" align=\"left\" valign=\"top\">" +
                 "<h4>Setup...</h4>" +
                 "<form action=\"adminservicetest\">" +
-                "   <input type=\"submit\" name =\"test\" value=\"createUsers\">" +
-                "   <input type=\"submit\" name =\"test\" value=\"createDBLinks\">" +
-                "   <input type=\"submit\" name =\"test\" value=\"setupTablesQueuesAndPropagation\">" +
+                "   <input type=\"submit\" name =\"test\" value=\"setupAll\">" +
+//                "   <input type=\"submit\" name =\"test\" value=\"createUsers\">" +
+//                "   <input type=\"submit\" name =\"test\" value=\"createDBLinks\">" +
+//                "   <input type=\"submit\" name =\"test\" value=\"setupTablesQueuesAndPropagation\">" +
                 "</form>" +
                 "<form action=\"inventoryservicetest\"><input type=\"submit\" name =\"test\" value=\"listenForMessages\"></form>" +
                 "<form action=\"inventoryservicetest\"><input type=\"submit\" name =\"test\" value=\"cleanUpResources\"></form>" +

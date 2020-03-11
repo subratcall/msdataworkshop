@@ -81,14 +81,14 @@ Task 6 (Using OCI service broker, create binding to 2 existing atp instances)
         - https://www.youtube.com/watch?v=qW_pw6Nd5hM
   
 Task 7 (Verify and understand ATP connectivity via Helidon microservice deployment in OKE)
-   - Pre-requisite: Task 1 through 5 are complete.
+   - Pre-requisite: Task 1 through 6 are complete.
    - `cd msdataworkshop/osb-atp-dbadmin-helidon`
    - Notice atpadmin-deployment.yaml wallet, secret, decode initcontainer, etc. 
    - Notice `atp*` references in microprofile-config.properties and @Inject dataSource in ATPAQAdminResource.java 
    - Run `./deploy.sh` to create deployment and service
    - Run `msdataworkshop` command to verify existence of deployment and service and verify pod is in Running state
    - Demonstrate service discovery/call to order and inventory db 
-        and db access from these services using `executeonorderpdb` and `executeoninventorypdb` on frontend
+        and db access from these services using `executeonorderpdb` and `executeoninventorypdb` on Frontend page
    - Troubleshooting... 
         - Look at logs... `kubectl logs [podname] -n msdataworkshop`
         - If no request is shown in logs, try accessing the pod directly using port-forward
@@ -97,17 +97,14 @@ Task 7 (Verify and understand ATP connectivity via Helidon microservice deployme
             
 
 Task 8 (setup AQ, order and inventory, saga, and CQRS)...
-   - follow steps to create dblink across ATP instances (put/get credential from object store etc.)
-   - setup AQ, queue-progation - todo should be all one button to create orderuser, inventoryuser, tables, queue, dblink, propagation, etc...
-   - create secrets for orderuser and inventoryuser and update deployment yaml 
-   - mvn install SODA and AQ jars
-   - create order, inventory, and supplier deployments and services
-   - todo from frontpage app select create ordertoinventory propagation
-   - todo from frontpage app select create inventorytoorder propagation
+   - Pre-requisite: Task 1 through 7 are complete.
+   - Submit `setupAll` button on Frontend page
+                
+Task 9 (Using OCI service broker, provision and create binding to stream, and verify with app)
    - demonstrate placeorder for choreography saga (success and fail/compensate)
    - demonstrate showorder for CQRS
    
-Task 9 (Using OCI service broker, provision and create binding to stream, and verify with app)
+Task 10 (Using OCI service broker, provision and create binding to stream, and verify with app)
    - Insure Task 4 is complete and refer to https://github.com/oracle/oci-service-broker and specifically...
         - https://github.com/oracle/oci-service-broker/blob/master/charts/oci-service-broker/docs/oss.md
    - In Cloud Console and streaming policy

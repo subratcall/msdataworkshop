@@ -22,6 +22,20 @@ public class PropagationSetup {
     String inventoryQueueTableName = "inventoryqueuetable";
 
 
+    public String createInventoryTable(DataSource inventorypdbDataSource) throws SQLException {
+        System.out.println("PropagationSetup.createInventoryTable");
+        String returnValue = "PropagationSetup.createInventoryTable\n";
+        try {
+            inventorypdbDataSource.getConnection().createStatement().executeUpdate(
+                    "create table inventory (inventoryid varchar(16), inventorylocation varchar(32), inventorycount integer)");
+            returnValue += "success";
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            returnValue += ex.toString();
+        }
+        return returnValue;
+    }
+
     public String createUsers(DataSource orderpdbDataSource, DataSource inventorypdbDataSource) throws SQLException {
         String returnValue = "";
         try {
@@ -195,7 +209,7 @@ public class PropagationSetup {
             System.out.println("PropagationSetup.setup qsess:" + qsess);
             tconn.start();
             qconn.start();
-//            setupTopicAndQueue(tsess, qsess, sourcename, destinationuser, sourcequeuename, sourcequeuetable);
+            setupTopicAndQueue(tsess, qsess, sourcename, destinationuser, sourcequeuename, sourcequeuetable);
             performJmsOperations(tsess, qsess, sourcename, destinationuser, sourcequeuename, linkName);
             tsess.close();
             tconn.close();
@@ -289,7 +303,7 @@ public class PropagationSetup {
                     tsess, linkName, null, null, null, new Double(0));
             sendMessages(tsess, topic1);
             Thread.sleep(50000);
-//            receiveMessages(qsess, subs);
+            receiveMessages(qsess, subs);
 //            ((AQjmsDestination) topic1).unschedulePropagation(tsess, linkName);
         } catch (Exception e) {
             System.out.println("Error in performJmsOperations: " + e);

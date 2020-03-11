@@ -66,6 +66,7 @@ public class ATPAQAdminResource {
     try {
       System.out.println("setupAll ...");
       returnValue += propagationSetup.createUsers(orderpdbDataSource, inventorypdbDataSource);
+      returnValue += propagationSetup.createInventoryTable(inventorypdbDataSource);
       returnValue += propagationSetup.createDBLinks(orderpdbDataSource, inventorypdbDataSource);
       returnValue += propagationSetup.setup(orderpdbDataSource, inventorypdbDataSource);
       return " result of setupAll : success... " + returnValue;
