@@ -281,30 +281,30 @@ public class PropagationSetup {
 
 
     public static void performJmsOperations(
-            TopicSession tsess, QueueSession qsess,
+            TopicSession topicSession, QueueSession queueSession,
             String sourcetopicuser, String destinationqueueuser,
             String name,
             String linkName)
             throws Exception {
         try {
             System.out.println("Setup topic/source and queue/destination for propagation...");
-            Topic topic1 = ((AQjmsSession) tsess).getTopic(sourcetopicuser, name);
-            Queue queue1 = ((AQjmsSession) qsess).getQueue(destinationqueueuser, name);
+            Topic topic1 = ((AQjmsSession) topicSession).getTopic(sourcetopicuser, name);
+            Queue queue1 = ((AQjmsSession) queueSession).getQueue(destinationqueueuser, name);
             System.out.println("Creating Topic Subscribers... queue1:" + queue1.getQueueName());
             AQjmsConsumer[] subs = new AQjmsConsumer[1];
-            subs[0] = (AQjmsConsumer) qsess.createConsumer(queue1);
+            subs[0] = (AQjmsConsumer) queueSession.createConsumer(queue1);
             System.out.println("_____________________________________________");
             System.out.println("PropagationSetup.performJmsOperations queue1.getQueueName():" + queue1.getQueueName());
             System.out.println("PropagationSetup.performJmsOperations name (adding inventoryuser. to this):" + name);
             System.out.println("_____________________________________________");
             AQjmsAgent agt = new AQjmsAgent("", "inventoryuser." + name + "@" + linkName);
-            ((AQjmsSession) tsess).createRemoteSubscriber( topic1, agt, "JMSPriority = 2");
+            ((AQjmsSession) topicSession).createRemoteSubscriber( topic1, agt, "JMSPriority = 2");
             ((AQjmsDestination) topic1).schedulePropagation(
-                    tsess, linkName, null, null, null, new Double(0));
-            sendMessages(tsess, topic1);
+                    topicSession, linkName, null, null, null, new Double(0));
+            sendMessages(topicSession, topic1);
             Thread.sleep(50000);
-            receiveMessages(qsess, subs);
-//            ((AQjmsDestination) topic1).unschedulePropagation(tsess, linkName);
+            receiveMessages(queueSession, subs);
+//            ((AQjmsDestination) topic1).unschedulePropagation(topicSession, linkName);
         } catch (Exception e) {
             System.out.println("Error in performJmsOperations: " + e);
             throw e;
@@ -328,23 +328,22 @@ public class PropagationSetup {
         return "success";
     }
 
-    private static void sendMessages(TopicSession tsess, Topic topic1) throws JMSException {
+    private static void sendMessages(TopicSession topicSession, Topic topic) throws JMSException {
         System.out.println("Publish messages...");
-        TextMessage objmsg = tsess.createTextMessage();
-        TopicPublisher publisher = tsess.createPublisher(topic1);
+        TextMessage objmsg = topicSession.createTextMessage();
+        TopicPublisher publisher = topicSession.createPublisher(topic);
         int i = 1;
-        String[] cities={"BELMONT","REDWOOD SHORES", "SUNNYVALE", "BURLINGAME" };
+        String[] cities={"Philadelphia" };
             objmsg.setIntProperty("Id",i) ;
             objmsg.setStringProperty("City",cities[3]) ;
             objmsg.setIntProperty("Priority",(1+ (i%3))) ;
             objmsg.setText(i+":"+"message# "+i+":"+500) ;
             objmsg.setJMSCorrelationID(""+i) ;
             objmsg.setJMSPriority(1+(i%3)) ;
-            publisher.publish(topic1,objmsg, DeliveryMode.PERSISTENT,
-                    1 +(i%3), AQjmsConstants.EXPIRATION_NEVER);
-        publisher.publish(topic1, objmsg, DeliveryMode.PERSISTENT,3, AQjmsConstants.EXPIRATION_NEVER);
+            publisher.publish(topic, objmsg, DeliveryMode.PERSISTENT, 2, AQjmsConstants.EXPIRATION_NEVER);
+        publisher.publish(topic, objmsg, DeliveryMode.PERSISTENT,3, AQjmsConstants.EXPIRATION_NEVER);
         System.out.println("Commit now and sleep...");
-        tsess.commit();
+        topicSession.commit();
     }
 
     private static void receiveMessages(QueueSession qsess, AQjmsConsumer[] subs) throws JMSException {

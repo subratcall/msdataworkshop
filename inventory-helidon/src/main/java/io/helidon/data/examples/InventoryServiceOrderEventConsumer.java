@@ -16,29 +16,25 @@ public class InventoryServiceOrderEventConsumer implements Runnable {
 
     @Override
     public void run() {
-        while (true) {
+        System.out.println("Receive Messages...");
             try {
                 listenForOrderEvents();
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }
     }
 
     public void listenForOrderEvents() throws Exception {
         QueueConnectionFactory qcfact = AQjmsFactory.getQueueConnectionFactory(inventoryResource.atpInventoryPDB);
         QueueConnection qconn = qcfact.createQueueConnection(inventoryResource.inventoryuser, inventoryResource.inventorypw);
         QueueSession qsess = qconn.createQueueSession(true, Session.CLIENT_ACKNOWLEDGE);
-        System.out.println("PropagationSetup.setup qsess:" + qsess);
         qconn.start();
         receiveMessages(qsess);
     }
 
     private void receiveMessages(QueueSession qsess) throws JMSException {
-        System.out.println("Receive Messages...");
         Queue queue1 = ((AQjmsSession) qsess).getQueue("inventoryuser", "orderqueue");
         AQjmsConsumer sub = (AQjmsConsumer) qsess.createConsumer(queue1);
-        System.out.println("\n\nMessages for subscriber : " + sub + "  with selector: " + sub.getMessageSelector());
         boolean done = false;
         while (!done) {
             try {
@@ -54,9 +50,10 @@ public class InventoryServiceOrderEventConsumer implements Runnable {
                     if (false) updateDataAndSendEventOnInventory(
                             robjmsg.getStringProperty("itemid"), robjmsg.getStringProperty("orderid"));
                 } else {
-                    done = true;
+                  //  done = true;
                 }
                 qsess.commit();
+                Thread.sleep(500);
             } catch (Exception e) {
                 System.out.println("Error in performJmsOperations: " + e);
                 done = true;

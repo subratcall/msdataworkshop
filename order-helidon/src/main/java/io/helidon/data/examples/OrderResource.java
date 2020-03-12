@@ -35,14 +35,14 @@ import org.eclipse.microprofile.opentracing.Traced;
 public class OrderResource {
 
     @Inject
-    @Named("atp1")
+    @Named("orderpdb")
     PoolDataSource atpOrderPdb;
 
     private OrderServiceEventConsumer orderServiceEventConsumer = new OrderServiceEventConsumer();
     private OrderServiceEventProducer orderServiceEventProducer = new OrderServiceEventProducer();
-    static final String orderQueueOwner = System.getenv("oracle.ucp.jdbc.PoolDataSource.atp1.user");
-    static final String orderQueueName = System.getenv("orderqueuename");
-    static final String inventoryQueueName = System.getenv("inventoryqueuename");
+    static final String orderQueueOwner = "orderuser"; // System.getenv("oracle.ucp.jdbc.PoolDataSource.orderpdb.user");
+    static final String orderQueueName = "orderqueue"; // System.getenv("orderqueuename");
+    static final String inventoryQueueName = "inventoryqueue"; // System.getenv("inventoryqueuename");
     static boolean liveliness = true;
     private static String lastContainerStartTime;
     OrderServiceCPUStress orderServiceCPUStress = new OrderServiceCPUStress();
@@ -107,12 +107,12 @@ public class OrderResource {
                                @QueryParam("deliverylocation") String deliverylocation) throws Exception {
         System.out.println("--->placeOrder... orderid:" + orderid + " itemid:" + itemid);
 //        itemid(Integer.valueOf(widget));
-        System.out.println("--->insertOrderAndSendEvent..." +
-                orderServiceEventProducer.updateDataAndSendEvent( atpOrderPdb,  orderid, itemid, deliverylocation));
         OrderDetail orderDetail = new OrderDetail();
         orderDetail.setOrderStatus("pending");
         orderDetail.setDeliveryLocation(deliverylocation);
         orders.put(orderid, orderDetail);
+        System.out.println("--->insertOrderAndSendEvent..." +
+                orderServiceEventProducer.updateDataAndSendEvent( atpOrderPdb,  orderid, itemid, deliverylocation));
         final Response returnValue = Response.ok()
             .entity("orderid = " + orderid + " orderstatus = " + orderDetail.getOrderStatus() + " order placed")
             .build();

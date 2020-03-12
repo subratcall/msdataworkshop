@@ -28,17 +28,19 @@ spec:
         image: us-phoenix-1.ocir.io/stevengreenberginc/paul.parkinson/msdataworkshop/order-helidon:0.1
         imagePullPolicy: Always
         env:
-        - name: oracle.ucp.jdbc.PoolDataSource.atp1.user
+        - name: oracle.ucp.jdbc.PoolDataSource.orderpdb.user
           value: "orderuser"
-        - name: oracle.ucp.jdbc.PoolDataSource.atp1.password
+        - name: oracle.ucp.jdbc.PoolDataSource.orderpdb.password
           valueFrom:
             secretKeyRef:
               name: atp-user-cred-orderuser
               key: password
-        - name: oracle.ucp.jdbc.PoolDataSource.atp1.URL
+        - name: oracle.ucp.jdbc.PoolDataSource.orderpdb.URL
           value: "jdbc:oracle:thin:@orderpdb_high?TNS_ADMIN=/msdataworkshop/creds"
         - name: orderqueuename
           value: "orderqueue"
+        - name: inventoryqueuename
+          value: "inventoryqueue"
         - name: WALLET_PWD
           valueFrom:
             secretKeyRef:
