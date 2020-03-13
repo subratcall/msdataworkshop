@@ -52,7 +52,6 @@ public class OrderResource {
         lastContainerStartTime = new java.util.Date().toString();
         System.out.println("____________________________________________________");
         System.out.println("----------->OrderResource (container) starting at: " + lastContainerStartTime );
-        System.out.println("----------->OrderResource oracle.ucp.jdbc.PoolDataSource.atp1.URL: " + System.getenv("oracle.ucp.jdbc.PoolDataSource.atp1.URL") );
         System.out.println("____________________________________________________");
     }
 
@@ -67,6 +66,18 @@ public class OrderResource {
         return returnValue;
     }
 
+    @Path("/listenForMessages")
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response dequeue() throws Exception {
+        orderServiceEventConsumer.dataSource = atpOrderPdb;
+        new Thread(orderServiceEventConsumer).start();
+        final Response returnValue = Response.ok()
+                .entity("listening for messages on inventory queue...")
+                .build();
+        return returnValue;
+    }
+
     @Path("/showorder")
     @GET
     @Produces(MediaType.TEXT_PLAIN)
@@ -74,7 +85,7 @@ public class OrderResource {
         System.out.println("--->showorder for orderId:" + orderId);
         OrderDetail orderDetail = orders.get(orderId);
         if (orderDetail == null) {
-            String inventoryStatus = orderServiceEventConsumer.dolistenForMessages(atpOrderPdb, orderId).toString();
+            String inventoryStatus = "nullstatus"; // orderServiceEventConsumer.dolistenForMessages(atpOrderPdb, orderId).toString();
             orderDetail = new OrderDetail();
             orders.put(orderId, orderDetail);
             if (inventoryStatus.equals("inventoryexists")) {

@@ -44,9 +44,9 @@ public class OrderServiceEventProducer {
             objmsg.setJMSCorrelationID("" + 1);
             objmsg.setJMSPriority(2);
             publisher.publish(topic, objmsg, DeliveryMode.PERSISTENT,2, AQjmsConstants.EXPIRATION_NEVER);
-            System.out.println("Commit now and sleep...");
             session.commit();
-
+            System.out.println("OrderServiceEventProducer.updateDataAndSendEvent committed message with payload:" +
+                    jsonString);
             return topic.toString();
         } catch (Exception e) {
             System.out.println("sendMessage failed " +

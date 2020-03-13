@@ -78,7 +78,7 @@ public class PropagationSetup {
         outputString += createDBLinks(orderpdbDataSource, inventorypdbDataSource,
                 orderuser, orderpw, inventoryuser, inventorypw,
                 orderToInventoryLinkName, inventoryToOrderLinkName);
-        outputString+="\nverifyDBLinks...";
+        outputString += "\nverifyDBLinks...";
         System.out.println(outputString);
         outputString += verifyDBLinks(orderpdbDataSource, inventorypdbDataSource,
                 orderuser, orderpw, inventoryuser, inventorypw,
@@ -102,16 +102,16 @@ public class PropagationSetup {
         Connection iventoryconnection = inventorydataSource.getConnection(inventoryuser, inventorypassword);
         orderconnection.createStatement().execute("create table templinktest (id varchar(32))");
         iventoryconnection.createStatement().execute("create table templinktest (id varchar(32))");
-        orderconnection.createStatement().execute("select count(*) from inventoryuser.templinktest@"+orderToInventoryLinkName);
-        iventoryconnection.createStatement().execute("select count(*) from orderuser.templinktest@"+inventoryToOrderLinkName);
+        orderconnection.createStatement().execute("select count(*) from inventoryuser.templinktest@" + orderToInventoryLinkName);
+        iventoryconnection.createStatement().execute("select count(*) from orderuser.templinktest@" + inventoryToOrderLinkName);
         orderconnection.createStatement().execute("drop table templinktest");
         iventoryconnection.createStatement().execute("drop table templinktest");
         return outputString;
     }
 
     private String createDBLinks(DataSource orderdataSource, DataSource inventorydataSource,
-                                String orderuser, String orderpassword, String inventoryuser, String inventorypassword,
-                                String orderToInventoryLinkName, String inventoryToOrderLinkName) throws SQLException {
+                                 String orderuser, String orderpassword, String inventoryuser, String inventorypassword,
+                                 String orderToInventoryLinkName, String inventoryToOrderLinkName) throws SQLException {
         String outputString = "\nPropagationSetup.createDBLink " +
                 "orderdataSource = [" + orderdataSource + "], " +
                 "inventorydataSource = [" + inventorydataSource + "], " +
@@ -144,7 +144,7 @@ public class PropagationSetup {
                 "credential_name => 'INVENTORYPDB_CRED'," +
                 "directory_name => 'DATA_PUMP_DIR');" +
                 "END;");
-        outputString+= "link from order to inventory complete, create link from inventory to order...";
+        outputString += "link from order to inventory complete, create link from inventory to order...";
         System.out.println(outputString);
         // create link from inventory to order ...
         connection = inventorydataSource.getConnection(inventoryuser, inventorypassword);
@@ -170,7 +170,7 @@ public class PropagationSetup {
                 "credential_name => 'ORDERPDB_CRED'," +
                 "directory_name => 'DATA_PUMP_DIR');" +
                 "END;");
-        outputString+= "link from inventory to order complete";
+        outputString += "link from inventory to order complete";
         System.out.println(outputString);
         return outputString;
     }
@@ -183,34 +183,34 @@ public class PropagationSetup {
                 orderQueueTableName, inventoryuser, inventorypw, orderToInventoryLinkName);
         //propagation of inventory queue from inventorypdb to orderpdb
         returnString += setup(inventorypdbDataSource, orderpdbDataSource, inventoryuser, inventorypw, inventoryQueueName,
-                inventoryQueueTableName, orderuser, orderpw, orderToInventoryLinkName);
+                inventoryQueueTableName, orderuser, orderpw, inventoryToOrderLinkName);
         return returnString;
     }
 
     private String setup(
-            DataSource orderpdbDataSource, DataSource inventorypdbDataSource, String sourcename, String sourcepw,
-            String sourcequeuename, String sourcequeuetable, String destinationuser, String destinationpw,
+            DataSource sourcepdbDataSource, DataSource targetpdbDataSource, String sourcename, String sourcepw,
+            String sourcequeuename, String sourcequeuetable, String targetuser, String targetpw,
             String linkName) {
-        String returnString = "orderpdbDataSource = [" + orderpdbDataSource + "], " +
-                "inventorypdbDataSource = [" + inventorypdbDataSource + "], " +
+        String returnString = "sourcepdbDataSource = [" + sourcepdbDataSource + "], " +
+                "targetpdbDataSource = [" + targetpdbDataSource + "], " +
                 "sourcename = [" + sourcename + "], sourcepw = [" + sourcepw + "], " +
                 "sourcequeuename = [" + sourcequeuename + "], " +
-                "sourcequeuetable = [" + sourcequeuetable + "], destinationuser = [" + destinationuser + "], " +
-                "destinationpw = [" + destinationpw + "], linkName = [" + linkName + "]";
+                "sourcequeuetable = [" + sourcequeuetable + "], targetuser = [" + targetuser + "], " +
+                "targetpw = [" + targetpw + "], linkName = [" + linkName + "]";
         System.out.println(returnString);
         try {
-            TopicConnectionFactory tcfact = AQjmsFactory.getTopicConnectionFactory(orderpdbDataSource);
+            TopicConnectionFactory tcfact = AQjmsFactory.getTopicConnectionFactory(sourcepdbDataSource);
             TopicConnection tconn = tcfact.createTopicConnection(sourcename, sourcepw);
-            QueueConnectionFactory qcfact = AQjmsFactory.getQueueConnectionFactory(inventorypdbDataSource);
-            QueueConnection qconn = qcfact.createQueueConnection(destinationuser, destinationpw);
+            QueueConnectionFactory qcfact = AQjmsFactory.getQueueConnectionFactory(targetpdbDataSource);
+            QueueConnection qconn = qcfact.createQueueConnection(targetuser, targetpw);
             TopicSession tsess = tconn.createTopicSession(true, Session.CLIENT_ACKNOWLEDGE);
-            System.out.println("PropagationSetup.setup tsess:" + tsess);
+            System.out.println("PropagationSetup.setup source topicsession:" + tsess);
             QueueSession qsess = qconn.createQueueSession(true, Session.CLIENT_ACKNOWLEDGE);
-            System.out.println("PropagationSetup.setup qsess:" + qsess);
+            System.out.println("PropagationSetup.setup destination queuesession:" + qsess);
             tconn.start();
             qconn.start();
-            setupTopicAndQueue(tsess, qsess, sourcename, destinationuser, sourcequeuename, sourcequeuetable);
-            performJmsOperations(tsess, qsess, sourcename, destinationuser, sourcequeuename, linkName);
+            setupTopicAndQueue(tsess, qsess, sourcename, targetuser, sourcequeuename, sourcequeuetable);
+            performJmsOperations(tsess, qsess, sourcename, targetuser, sourcequeuename, linkName);
             tsess.close();
             tconn.close();
             qsess.close();
@@ -289,18 +289,11 @@ public class PropagationSetup {
         try {
             System.out.println("Setup topic/source and queue/destination for propagation...");
             Topic topic1 = ((AQjmsSession) topicSession).getTopic(sourcetopicuser, name);
-            Queue queue1 = ((AQjmsSession) queueSession).getQueue(destinationqueueuser, name);
-            System.out.println("Creating Topic Subscribers... queue1:" + queue1.getQueueName());
+            Queue queue = ((AQjmsSession) queueSession).getQueue(destinationqueueuser, name);
+            System.out.println("Creating Topic Subscribers... queue:" + queue.getQueueName());
             AQjmsConsumer[] subs = new AQjmsConsumer[1];
-            subs[0] = (AQjmsConsumer) queueSession.createConsumer(queue1);
-            System.out.println("_____________________________________________");
-            System.out.println("PropagationSetup.performJmsOperations queue1.getQueueName():" + queue1.getQueueName());
-            System.out.println("PropagationSetup.performJmsOperations name (adding inventoryuser. to this):" + name);
-            System.out.println("_____________________________________________");
-            AQjmsAgent agt = new AQjmsAgent("", "inventoryuser." + name + "@" + linkName);
-            ((AQjmsSession) topicSession).createRemoteSubscriber( topic1, agt, "JMSPriority = 2");
-            ((AQjmsDestination) topic1).schedulePropagation(
-                    topicSession, linkName, null, null, null, new Double(0));
+            subs[0] = (AQjmsConsumer) queueSession.createConsumer(queue);
+            createRemoteSubAndSchedulePropagation(topicSession, destinationqueueuser, name, linkName, topic1, queue);
             sendMessages(topicSession, topic1);
             Thread.sleep(50000);
             receiveMessages(queueSession, subs);
@@ -311,16 +304,27 @@ public class PropagationSetup {
         }
     }
 
+    private static void createRemoteSubAndSchedulePropagation(TopicSession topicSession, String destinationqueueuser, String name, String linkName, Topic topic1, Queue queue) throws JMSException, SQLException {
+        System.out.println("_____________________________________________");
+        System.out.println("PropagationSetup.performJmsOperations queue.getQueueName():" + queue.getQueueName());
+        System.out.println("PropagationSetup.performJmsOperations name (prefixing " + destinationqueueuser + ". to this):" + name);
+        System.out.println("_____________________________________________");
+        AQjmsAgent agt = new AQjmsAgent("", destinationqueueuser + "." + name + "@" + linkName);
+        ((AQjmsSession) topicSession).createRemoteSubscriber(topic1, agt, "JMSPriority = 2");
+        ((AQjmsDestination) topic1).schedulePropagation(
+                topicSession, linkName, null, null, null, new Double(0));
+    }
 
-    String unscheduleOrderToInventoryPropagation(DataSource orderpdbDataSource)  {
+
+    String unscheduleOrderToInventoryPropagation(DataSource orderpdbDataSource) {
         System.out.println("PropagationSetup.unscheduleOrderToInventoryPropagation");
         TopicConnection tconn = null;
         try {
             tconn = AQjmsFactory.getTopicConnectionFactory(orderpdbDataSource).createTopicConnection(
                     "orderuser", "Welcome12345");
-        TopicSession tsess = tconn.createTopicSession(true, Session.CLIENT_ACKNOWLEDGE);
-        Topic topic1 = ((AQjmsSession) tsess).getTopic("orderuser", "");
-        ((AQjmsDestination) topic1).unschedulePropagation(tsess, orderToInventoryLinkName);
+            TopicSession tsess = tconn.createTopicSession(true, Session.CLIENT_ACKNOWLEDGE);
+            Topic topic1 = ((AQjmsSession) tsess).getTopic("orderuser", "");
+            ((AQjmsDestination) topic1).unschedulePropagation(tsess, orderToInventoryLinkName);
         } catch (JMSException e) {
             e.printStackTrace();
             return e.toString();
@@ -332,16 +336,14 @@ public class PropagationSetup {
         System.out.println("Publish messages...");
         TextMessage objmsg = topicSession.createTextMessage();
         TopicPublisher publisher = topicSession.createPublisher(topic);
-        int i = 1;
-        String[] cities={"Philadelphia" };
-            objmsg.setIntProperty("Id",i) ;
-            objmsg.setStringProperty("City",cities[3]) ;
-            objmsg.setIntProperty("Priority",(1+ (i%3))) ;
-            objmsg.setText(i+":"+"message# "+i+":"+500) ;
-            objmsg.setJMSCorrelationID(""+i) ;
-            objmsg.setJMSPriority(1+(i%3)) ;
-            publisher.publish(topic, objmsg, DeliveryMode.PERSISTENT, 2, AQjmsConstants.EXPIRATION_NEVER);
-        publisher.publish(topic, objmsg, DeliveryMode.PERSISTENT,3, AQjmsConstants.EXPIRATION_NEVER);
+        objmsg.setIntProperty("Id", 1);
+        objmsg.setStringProperty("City", "Philadelphia");
+        objmsg.setText(1 + ":" + "message# " + 1 + ":" + 500);
+        objmsg.setIntProperty("Priority", 2);
+        objmsg.setJMSCorrelationID("" + 1);
+        objmsg.setJMSPriority(2);
+        publisher.publish(topic, objmsg, DeliveryMode.PERSISTENT, 2, AQjmsConstants.EXPIRATION_NEVER);
+        publisher.publish(topic, objmsg, DeliveryMode.PERSISTENT, 3, AQjmsConstants.EXPIRATION_NEVER);
         System.out.println("Commit now and sleep...");
         topicSession.commit();
     }
@@ -351,7 +353,7 @@ public class PropagationSetup {
         for (int i = 0; i < subs.length; i++) {
             System.out.println("\n\nMessages for subscriber : " + i);
             if (subs[i].getMessageSelector() != null) {
-                System.out.println("  with selector: " +   subs[i].getMessageSelector());
+                System.out.println("  with selector: " + subs[i].getMessageSelector());
             }
             boolean done = false;
             while (!done) {
@@ -377,81 +379,13 @@ public class PropagationSetup {
         }
     }
 
-
-    // UNUSED HERE TO END.... todo delete and...
-    // currently there is a manual step for...
-    //  1. the user to upload wallets to objectstore and provide the url of the wallet for GET_OBJECT
- //     2. provide info from tnsnames (hostname, port, service_name, and ssl_server_cert_dn) to create dblink
-//       * user also needs to provide username and pw for CREATE_CREDENTIAL but it may be safest/best to not automate that
-
-
-    private String dropUser() {
-        return "<h2>Drop User...</h2>" +
-                "<form action=\"execute\" method=\"get\">" +
-                "    user <input type=\"text\" name=\"user\" size=\"20\" value=\"\"><br>" +
-                "    password <input type=\"text\" name=\"password\" size=\"20\" value=\"\"><br>" +
-                "<textarea id=\"w3mission\" rows=\"50\" cols=\"20\">" +
+    private void cleanup(DataSource orderpdbDataSource, DataSource inventorypdbDataSource) throws SQLException {
+        orderpdbDataSource.getConnection().createStatement().execute(
                 "execute dbms_aqadm.unschedule_propagation(queue_name => 'paul.orders', " +
                 "destination => 'inventorydb_link', destination_queue => 'paul.orders_propqueue');" +
                 " execute dbms_lock.sleep(10);" +
                 " DROP USER paul CASCADE" +
-                " /" +
-                "" +
-                " GRANT DBA TO paul IDENTIFIED BY paul" +
-                " /" +
-                "</textarea>" +
-                "</form>";
-    }
-
-
-    String putWallet(DataSource dataSource) throws SQLException {
-        Connection connection = dataSource.getConnection();
-        connection.createStatement().execute("BEGIN " +
-                "DBMS_CLOUD.GET_OBJECT(" +
-                "object_uri => 'file:///Users/pparkins/Downloads/Wallet_DB202002011726/cwallet.sso', " +
-                "directory_name => 'DATA_PUMP_DIR'); " +
-                "END;");
-        return "success";
-    }
-
-    String putWallet0(DataSource dataSource) throws SQLException {
-
-
-        Connection connection = dataSource.getConnection();
-        connection.createStatement().execute("BEGIN " +
-                "DBMS_CLOUD.CREATE_CREDENTIAL ( " +
-                "'objectstore_cred', " +
-                "'paul.parkinson', " +
-                "'Q:4qWo:7PYDph9KZomZQ'); " +
-                "END;");
-        connection.createStatement().execute("BEGIN " +
-                "        DBMS_CLOUD.put_object(" +
-                "                credential_name => 'objectstore_cred', " +
-                "                object_uri      => '/Users/pparkins/Downloads/Wallet_DB202002011726/cwallet.sso', " +
-                "                directory_name  => 'DATA_PUMP_DIR', " +
-                "                file_name       => 'cwallet.sso');" +
-                "        END;");
-// BEGIN
-// DBMS_CLOUD.CREATE_CREDENTIAL (
-// 'objectstore_cred',
-// 'paul.parkinson',
-// 'Q:4qWo:7PYDph9KZomZQ');
-// END;
-// /
-//        pre-authenticated request to inventorypdb bucket wallet.sso
-//        https://objectstorage.us-phoenix-1.oraclecloud.com/p/xW-cwallet.sso
-//        pre-authenticated request to orderpdb bucket wallet.sso
-//        https://objectstorage.us-phoenix-1.oraclecloud.com/p/U3KJ_dZsNeF8Ycwallet.sso
-//        https://oracle-base.com/articles/vm/oracle-cloud-autonomous-data-warehouse-adw-import-data-from-object-store
-//        BEGIN
-//        DBMS_CLOUD.put_object(
-//                credential_name => 'obj_store_cred',
-//                object_uri      => 'https://s3-eu-west-1.amazonaws.com/my-sh-data-bucket/import.log',
-//                directory_name  => 'DATA_PUMP_DIR',
-//                file_name       => 'import.log');
-//        END;
-///
-        return "success";
+                " GRANT DBA TO paul IDENTIFIED BY paul");
     }
 }
 

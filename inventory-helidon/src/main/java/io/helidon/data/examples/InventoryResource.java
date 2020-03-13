@@ -42,6 +42,7 @@ public class InventoryResource {
     static String inventoryuser = "inventoryuser";
     static String inventorypw = "Welcome12345";
     static String inventoryQueueName = "inventoryqueue";
+    static String orderQueueName = "orderqueue";
 
     @Path("/listenForMessages")
     @GET

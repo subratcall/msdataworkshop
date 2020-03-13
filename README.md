@@ -95,10 +95,16 @@ Task 7 (Verify and understand ATP connectivity via Helidon microservice deployme
             - `kubectl port-forward [atpadmin pod] -n msdataworkshop 8080:8080`
             - http://localhost:8080/test
             
-
 Task 8 (setup AQ, order and inventory, saga, and CQRS)...
    - Pre-requisite: Task 1 through 7 are complete.
-   - Submit `setupAll` button on Frontend page
+   - Upload regional wallet (contains tnsnames.ora entries for both ATP PDBs to objectstore and obtain pre-authenticated url to it.
+        - using pre-authenticated link is a convenience. 
+        - alternatively a DBMS_CLOUD.CREATE_CREDENTIAL created credential can also be used to execute GET_OBJECT
+   - `cd msdataworkshop/osb-atp-dbadmin-helidon`
+   - Modify msdataworkshop/atpaqadmin/src/main/java/oracle/db/microservices/PropagationSetup.java
+        - set the `object_uri` value of the `GET_OBJECT` call to the pre-authenticated url created
+        - set the values of the `CREATE_DATABASE_LINK` calls from tnsnames.ora 
+   - Submit `setupAll` button on Frontend page 
                 
 Task 9 (Using OCI service broker, provision and create binding to stream, and verify with app)
    - demonstrate placeorder for choreography saga (success and fail/compensate)
