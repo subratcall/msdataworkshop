@@ -46,31 +46,31 @@ spec:
             secretKeyRef:
               name: atp-user-cred-orderuser
               key: walletPassword
-        - name: tenancyName
-          valueFrom:
-            secretKeyRef:
-              name: orderstream-cred
-              key: tenancyName
-        - name: username
-          valueFrom:
-            secretKeyRef:
-              name: orderstream-cred
-              key: username
-        - name: streamPoolId
-          valueFrom:
-            secretKeyRef:
-              name: orderstream-cred
-              key: streamPoolId
-        - name: authToken
-          valueFrom:
-            secretKeyRef:
-              name: orderstream-cred
-              key: authToken
-        - name: topicName
-          valueFrom:
-            secretKeyRef:
-              name: orderstream-cred
-              key: topicName
+#        - name: tenancyName
+#          valueFrom:
+#            secretKeyRef:
+#              name: orderstream-cred
+#              key: tenancyName
+#        - name: username
+#          valueFrom:
+#            secretKeyRef:
+#              name: orderstream-cred
+#              key: username
+#        - name: streamPoolId
+#          valueFrom:
+#            secretKeyRef:
+#              name: orderstream-cred
+#              key: streamPoolId
+#        - name: authToken
+#          valueFrom:
+#            secretKeyRef:
+#              name: orderstream-cred
+#              key: authToken
+#        - name: topicName
+#          valueFrom:
+#            secretKeyRef:
+#              name: orderstream-cred
+#              key: topicName
         volumeMounts:
         - name: creds
           mountPath: /msdataworkshop/creds
