@@ -51,17 +51,19 @@ eval "cat <<EOF
 $(<$SCRIPT_DIR/atp-secret-inventoryuser.yaml)
 EOF" > $SCRIPT_DIR/atp-secret-inventoryuser.yaml
 
-kubectl delete -f atp-existing-instance-order.yaml
-kubectl create -f atp-existing-instance-order.yaml
-kubectl delete -f atp-existing-instance-inventory.yaml
-kubectl create -f atp-existing-instance-inventory.yaml
+#kubectl delete -f atp-existing-instance-order.yaml
+#kubectl create -f atp-existing-instance-order.yaml
+#kubectl delete -f atp-existing-instance-inventory.yaml
+#kubectl create -f atp-existing-instance-inventory.yaml
 
 kubectl delete secret atp-demo-binding-order -n msdataworkshop
 kubectl delete -f atp-binding-plain-order.yaml
 kubectl create -f atp-binding-plain-order.yaml
 kubectl get secret atp-demo-binding-order --export -o yaml |  kubectl apply --namespace=msdataworkshop -f -
+kubectl create -f atp-secret-orderuser.yaml -n msdataworkshop
 
-kubectl delete secret atp-demo-binding-inventory -n msdataworkshop
-kubectl delete -f atp-binding-plain-inventory.yaml
-kubectl create -f atp-binding-plain-inventory.yaml
-kubectl get secret atp-demo-binding-inventory --export -o yaml |  kubectl apply --namespace=msdataworkshop -f -
+#kubectl delete secret atp-demo-binding-inventory -n msdataworkshop
+#kubectl delete -f atp-binding-plain-inventory.yaml
+#kubectl create -f atp-binding-plain-inventory.yaml
+#kubectl get secret atp-demo-binding-inventory --export -o yaml |  kubectl apply --namespace=msdataworkshop -f -
+kubectl create -f atp-secret-inventoryuser.yaml -n msdataworkshop

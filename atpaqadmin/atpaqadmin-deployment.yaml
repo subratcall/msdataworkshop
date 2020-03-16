@@ -68,11 +68,6 @@ spec:
               key: password
         - name: oracle.ucp.jdbc.PoolDataSource.orderpdb.URL
           value: "jdbc:oracle:thin:@db202002011726_high?TNS_ADMIN=/msdataworkshop/creds-order"
-        - name: WALLET_PWD
-          valueFrom:
-            secretKeyRef:
-              name: atp-user-cred-orderadmin
-              key: walletPassword
         # inventorypdb...
         - name: oracle.ucp.jdbc.PoolDataSource.inventorypdb.user
           value: "admin"
