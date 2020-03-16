@@ -39,6 +39,7 @@ public class OrderResource {
     PoolDataSource atpOrderPdb;
 
     private OrderServiceEventConsumer orderServiceEventConsumer = new OrderServiceEventConsumer();
+    private boolean isOrderEventConsumerStarted = false;
     private OrderServiceEventProducer orderServiceEventProducer = new OrderServiceEventProducer();
     static final String orderQueueOwner = "orderuser"; // System.getenv("oracle.ucp.jdbc.PoolDataSource.orderpdb.user");
     static final String orderQueueName = "orderqueue"; // System.getenv("orderqueuename");
@@ -117,6 +118,11 @@ public class OrderResource {
     public Response placeOrder(@QueryParam("orderid") String orderid, @QueryParam("itemid") String itemid,
                                @QueryParam("deliverylocation") String deliverylocation) throws Exception {
         System.out.println("--->placeOrder... orderid:" + orderid + " itemid:" + itemid);
+        if (!isOrderEventConsumerStarted) {
+            orderServiceEventConsumer.dataSource = atpOrderPdb;
+            new Thread(orderServiceEventConsumer).start();
+            isOrderEventConsumerStarted = true;
+        }
 //        itemid(Integer.valueOf(widget));
         OrderDetail orderDetail = new OrderDetail();
         orderDetail.setOrderStatus("pending");
