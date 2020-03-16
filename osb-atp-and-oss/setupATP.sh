@@ -51,17 +51,20 @@ eval "cat <<EOF
 $(<$SCRIPT_DIR/atp-secret-inventoryuser.yaml)
 EOF" > $SCRIPT_DIR/atp-secret-inventoryuser.yaml
 
+echo "creating order and inventory instances..."
 #kubectl delete -f atp-existing-instance-order.yaml
 #kubectl create -f atp-existing-instance-order.yaml
 #kubectl delete -f atp-existing-instance-inventory.yaml
 #kubectl create -f atp-existing-instance-inventory.yaml
 
+echo "creating order binding and secrets..."
 kubectl delete secret atp-demo-binding-order -n msdataworkshop
 kubectl delete -f atp-binding-plain-order.yaml
 kubectl create -f atp-binding-plain-order.yaml
 kubectl get secret atp-demo-binding-order --export -o yaml |  kubectl apply --namespace=msdataworkshop -f -
 kubectl create -f atp-secret-orderuser.yaml -n msdataworkshop
 
+echo "creating inventory binding and secrets..."
 #kubectl delete secret atp-demo-binding-inventory -n msdataworkshop
 #kubectl delete -f atp-binding-plain-inventory.yaml
 #kubectl create -f atp-binding-plain-inventory.yaml

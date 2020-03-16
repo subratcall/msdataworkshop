@@ -32,7 +32,6 @@ kubectl create secret generic ocicredentials \
 --from-literal=passphrase=<PASSPHRASE_STRING> \
 --from-file=privatekey=<PATH_OF_USER_PRIVATE_API_KEY>
 
-
 ########################################################################################
 # END MODIFY VALUES IN clusterrolebinding and ocicredentials DO NOT ALTER FROM HERE TO END....
 ########################################################################################
@@ -47,7 +46,6 @@ helm install https://github.com/oracle/oci-service-broker/releases/download/v1.4
   --set ociCredentials.secretName=ocicredentials \
   --set storage.etcd.useEmbedded=true \
   --set tls.enabled=false
-
 
 echo "create oci-service-broker ClusterServiceBroker:"
 kubectl create -f oci-service-broker.yaml
