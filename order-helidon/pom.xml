@@ -223,6 +223,11 @@
             <artifactId>aqapi</artifactId>
             <version>20.1</version>
         </dependency>
+        <dependency>
+            <groupId>javax.json.bind</groupId>
+            <artifactId>javax.json.bind-api</artifactId>
+            <version>1.0</version>
+        </dependency>
     </dependencies>
 
 </project>

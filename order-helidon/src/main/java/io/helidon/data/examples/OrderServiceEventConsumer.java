@@ -9,8 +9,11 @@ import javax.sql.DataSource;
 
 public class OrderServiceEventConsumer implements Runnable {
 
-    DataSource dataSource;
-    String orderidToListenFor;
+    OrderResource orderResource;
+
+    public OrderServiceEventConsumer(OrderResource orderResource) {
+        this.orderResource = orderResource;
+    }
 
     @Override
     public void run() {
@@ -20,6 +23,7 @@ public class OrderServiceEventConsumer implements Runnable {
     public Object dolistenForMessages() {
         QueueSession session;
         try {
+            DataSource dataSource = orderResource.atpOrderPdb;
             System.out.println("listenForMessages... " + "dataSource:" + dataSource + " queueOwner:" + OrderResource.orderQueueOwner +
                     " queueName:" + OrderResource.inventoryQueueName);
             QueueConnectionFactory q_cf = AQjmsFactory.getQueueConnectionFactory(dataSource);
@@ -27,6 +31,8 @@ public class OrderServiceEventConsumer implements Runnable {
             session = queueConnectionconnection.createQueueSession(true, Session.CLIENT_ACKNOWLEDGE);
             queueConnectionconnection.start();
             Queue queue = ((AQjmsSession) session).getQueue(OrderResource.orderQueueOwner, OrderResource.inventoryQueueName);
+            System.out.println("listenForMessages... " + "dataSource:" + dataSource + " queueOwner:" + OrderResource.orderQueueOwner +
+                    " queueName:" + OrderResource.inventoryQueueName + " queue:" + queue);
             receiveMessages(session,  queue);
         } catch (Exception e) {
             System.out.println("Error in performJmsOperations: " + e);
@@ -48,12 +54,18 @@ public class OrderServiceEventConsumer implements Runnable {
                     System.out.print(" Pri: " + textMessage.getJMSPriority());
                     System.out.print(" Message: " + textMessage.getIntProperty("Id"));
                     String orderid = textMessage.getStringProperty("orderid");
-                    System.out.print(" orderid:" + orderid);
+                    OrderDetail orderDetail = orderResource.orders.get(orderid);
+                    System.out.print("existing orderid:" + orderid + " orderDetail:" + orderDetail);
                     String itemid = textMessage.getStringProperty("itemid");
-                    System.out.print(" itemid:" + itemid);
+                    System.out.print(" itemid:" + itemid + " orderDetail:" + orderDetail);
                     String inventorylocation = textMessage.getStringProperty("inventorylocation");
                     System.out.print(" inventorylocation:" + inventorylocation);
                     System.out.println(" " + textMessage.getIntProperty("Priority"));
+                    if(orderDetail != null) {
+                        orderDetail.setOrderStatus((inventorylocation==null || inventorylocation.equals(""))?
+                                "failed inventory does not exist":"success inventory exists");
+                        orderDetail.setInventoryLocation(inventorylocation);
+                    }
                     System.out.println("((AQjmsSession) qsess).getDBConnection(): " + ((AQjmsSession) qsess).getDBConnection());
                 } else {
                     //  done = true;
@@ -67,66 +79,5 @@ public class OrderServiceEventConsumer implements Runnable {
         }
     }
 
-
-    public Object dolistenForMessages0(DataSource dataSource, String orderidToListenFor) {
-        QueueConnection connection = null;
-        javax.jms.Queue queue;
-        QueueSession session = null;
-        String queueOwner = OrderResource.orderQueueOwner;
-        String queueName = OrderResource.inventoryQueueName;
-        Message msg;
-        try {
-            System.out.println("listenForMessages... " + "dataSource:" + dataSource + " queueOwner:" + queueOwner +
-                    " queueName:" + queueName);
-            QueueConnectionFactory q_cf = AQjmsFactory.getQueueConnectionFactory(dataSource);
-            connection = q_cf.createQueueConnection();
-            session = connection.createQueueSession(true, Session.CLIENT_ACKNOWLEDGE);
-            queue = ((AQjmsSession) session).getQueue(queueOwner, queueName);
-            java.sql.Connection dbConnection = ((AQjmsSession) session).getDBConnection();
-            System.out.println("listenForMessages dbConnection:" + dbConnection);
-//            Reason: Since the message of type AQ$_JMS* is produced/enqueued by a
-//            Non-JMS client (PL/SQL client in this case), session.createReceiver(queue) is
-//            the appropriate call to create a consumer.
-//            session.createConsumer(queue) is used when message is produced by JMS client.
-//            MessageConsumer consumer = session.createConsumer(queue);
-            MessageConsumer consumer = session.createReceiver(queue);
-            //todo add selector for orderidToListenFor and action
-            connection.start();
-            System.out.println("listenForMessages before receive queue:" + queue);
-            msg = consumer.receive();
-            System.out.println("listenForMessages message:" + msg);
-            TextMessage message = (TextMessage) msg;
-            String messageTxt = message.getText();
-            System.out.println("listenForMessages message (null may be expected):" + messageTxt);
-            String action = message.getStringProperty("action");
-            System.out.println("listenForMessages message action:" + action);
-            int orderid = message.getIntProperty("orderid");
-            System.out.println("listenForMessages message orderid:" + orderid);
-
-            session.commit();
-            session.close();
-            connection.close();
-            return action;
-        } catch (Exception e) {
-            e.printStackTrace();
-            try {
-                if (session != null) session.rollback();
-            } catch (JMSException e1) {
-                e1.printStackTrace();
-            }
-        } finally {
-            try {
-                if (session != null) {
-                    session.close();
-                }
-                if (connection != null) {
-                    connection.close();
-                }
-            } catch (JMSException e) {
-                e.printStackTrace();
-            }
-        }
-        return null;
-    }
 
 }

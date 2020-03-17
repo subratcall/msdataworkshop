@@ -81,6 +81,20 @@ public class FrontEndResource {
 
     @GET
     @Produces(MediaType.TEXT_HTML)
+    @Path("/showallorders")
+    public String showallorders() {
+        System.out.println("-----> FrontEnd showallorders");
+        try {
+            URL url = new URL("http://order.msdataworkshop:8080/showallorders");
+            return getFullPage(makeRequest(url));
+        } catch (IOException e) {
+            e.printStackTrace();
+            return home();
+        }
+    }
+
+    @GET
+    @Produces(MediaType.TEXT_HTML)
     @Path("/orderservicecall")
     public String orderservicecall( @QueryParam("test") String test) {
         System.out.println("-----> FrontEnd orderservicecall test:" + test);
@@ -265,6 +279,7 @@ public class FrontEndResource {
                 "orderid : <input type=\"text\" name=\"orderid\"  size=\10\" value=\"66\"> " +
                 "    <input type=\"submit\" value=\"show order\">" +
                 "</form>" +
+                "<form action=\"showallorders\"><input type=\"submit\" name =\"test\" value=\"showallorders\"></form>" +
                 "<h4>Spatial data (map service)</h4>" +
 //                "<form action=\"deliveryservicetest\">" +
 //                "<input type=\"text\" name =\"orderid\" value=\"66\">" +

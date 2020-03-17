@@ -38,19 +38,6 @@ spec:
           readOnly: false
         - name: creds-inventory
           mountPath: /creds-inventory
-      - name: combine-tnsnamesora # as a  convenience for creating dblinks
-        command:
-        - bash
-        - -c
-        - "cat /tmp/creds-order/tnsnames.ora >> /tmp/creds-inventory/tnsnames.ora ; cp /tmp/creds-inventory/tnsnames.ora /tmp/creds-order/tnsnames.ora ;"
-        image: oraclelinux:7.5
-        volumeMounts:
-        - name: creds-order
-          mountPath: /tmp/creds-order
-          readOnly: false
-        - name: creds-inventory
-          mountPath: /tmp/creds-inventory
-          readOnly: false
       containers:
       - name: helidonatp
         image: us-phoenix-1.ocir.io/stevengreenberginc/paul.parkinson/msdataworkshop/helidonatp:0.1
@@ -67,7 +54,7 @@ spec:
               name: atp-user-cred-orderadmin
               key: password
         - name: oracle.ucp.jdbc.PoolDataSource.orderpdb.URL
-          value: "jdbc:oracle:thin:@db202002011726_high?TNS_ADMIN=/msdataworkshop/creds-order"
+          value: "jdbc:oracle:thin:@orderdb_high?TNS_ADMIN=/msdataworkshop/creds-order"
         # inventorypdb...
         - name: oracle.ucp.jdbc.PoolDataSource.inventorypdb.user
           value: "admin"
@@ -86,16 +73,9 @@ spec:
         volumeMounts:
         - name: creds-order
           mountPath: /msdataworkshop/creds-order
-        - name: creds-inventory
-          mountPath: /msdataworkshop/creds-inventory
       volumes:
       - name: creds-raw-order
         secret:
           secretName: atp-demo-binding-order
       - name: creds-order
-        emptyDir: {}
-      - name: creds-raw-inventory
-        secret:
-          secretName: atp-demo-binding-inventory
-      - name: creds-inventory
         emptyDir: {}

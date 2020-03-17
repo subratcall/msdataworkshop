@@ -72,40 +72,13 @@ public class PropagationSetup {
         return outputString + " successful";
     }
 
-    public String createDBLinks(DataSource orderpdbDataSource, DataSource inventorypdbDataSource) throws SQLException {
+    String createDBLinks(DataSource orderpdbDataSource, DataSource inventorypdbDataSource) throws SQLException {
         String outputString = "\ncreateDBLinks...";
         System.out.println(outputString);
         outputString += createDBLinks(orderpdbDataSource, inventorypdbDataSource,
                 orderuser, orderpw, inventoryuser, inventorypw,
                 orderToInventoryLinkName, inventoryToOrderLinkName);
-        outputString += "\nverifyDBLinks...";
-        System.out.println(outputString);
-        outputString += verifyDBLinks(orderpdbDataSource, inventorypdbDataSource,
-                orderuser, orderpw, inventoryuser, inventorypw,
-                orderToInventoryLinkName, inventoryToOrderLinkName);
-        System.out.println(outputString);
-        return outputString;
-    }
-
-    private String verifyDBLinks(DataSource orderdataSource, DataSource inventorydataSource,
-                                 String orderuser, String orderpassword, String inventoryuser, String inventorypassword,
-                                 String orderToInventoryLinkName, String inventoryToOrderLinkName) throws SQLException {
-        String outputString = "\nPropagationSetup.verifyDBLinks " +
-                "orderdataSource = [" + orderdataSource + "], " +
-                "inventorydataSource = [" + inventorydataSource + "], " +
-                "fromuser = [" + orderuser + "], orderpassword = [" + orderpassword + "], " +
-                "inventoryuser = [" + inventoryuser + "], inventorypassword = [" + inventorypassword + "], " +
-                " orderToInventoryLinkName = [" + orderToInventoryLinkName + "]" +
-                ", inventoryToOrderLinkName = [" + inventoryToOrderLinkName + "]";
-        // verify order to inventory...
-        Connection orderconnection = orderdataSource.getConnection(orderuser, orderpassword);
-        Connection iventoryconnection = inventorydataSource.getConnection(inventoryuser, inventorypassword);
-        orderconnection.createStatement().execute("create table templinktest (id varchar(32))");
-        iventoryconnection.createStatement().execute("create table templinktest (id varchar(32))");
-        orderconnection.createStatement().execute("select count(*) from inventoryuser.templinktest@" + orderToInventoryLinkName);
-        iventoryconnection.createStatement().execute("select count(*) from orderuser.templinktest@" + inventoryToOrderLinkName);
-        orderconnection.createStatement().execute("drop table templinktest");
-        iventoryconnection.createStatement().execute("drop table templinktest");
+        outputString = verifyDBLinks(orderpdbDataSource, inventorypdbDataSource, outputString);
         return outputString;
     }
 
@@ -176,27 +149,84 @@ public class PropagationSetup {
     }
 
 
-    public String setup(DataSource orderpdbDataSource, DataSource inventorypdbDataSource) {
-        String returnString = "in setup...";
+    String verifyDBLinks(DataSource orderpdbDataSource, DataSource inventorypdbDataSource, String outputString) throws SQLException {
+        outputString += "\nverifyDBLinks...";
+        System.out.println(outputString);
+        outputString += verifyDBLinks(orderpdbDataSource, inventorypdbDataSource,
+                orderuser, orderpw, inventoryuser, inventorypw,
+                orderToInventoryLinkName, inventoryToOrderLinkName);
+        System.out.println(outputString);
+        return outputString;
+    }
+
+    private String verifyDBLinks(DataSource orderdataSource, DataSource inventorydataSource,
+                                 String orderuser, String orderpassword, String inventoryuser, String inventorypassword,
+                                 String orderToInventoryLinkName, String inventoryToOrderLinkName) throws SQLException {
+        String outputString = "\nPropagationSetup.verifyDBLinks " +
+                "orderdataSource = [" + orderdataSource + "], " +
+                "inventorydataSource = [" + inventorydataSource + "], " +
+                "fromuser = [" + orderuser + "], orderpassword = [" + orderpassword + "], " +
+                "inventoryuser = [" + inventoryuser + "], inventorypassword = [" + inventorypassword + "], " +
+                " orderToInventoryLinkName = [" + orderToInventoryLinkName + "]" +
+                ", inventoryToOrderLinkName = [" + inventoryToOrderLinkName + "]";
+        Connection orderconnection = orderdataSource.getConnection(orderuser, orderpassword);
+        Connection inventoryconnection = inventorydataSource.getConnection(inventoryuser, inventorypassword);
+        System.out.println("PropagationSetup.verifyDBLinks orderconnection:" + orderconnection +
+                " inventoryconnection:" + inventoryconnection);
+        orderconnection.createStatement().execute("create table templinktest (id varchar(32))");
+        System.out.println("PropagationSetup.verifyDBLinks temp table created on order");
+        inventoryconnection.createStatement().execute("create table templinktest (id varchar(32))");
+        System.out.println("PropagationSetup.verifyDBLinks temp table created on inventory");
+        // verify orderuser select on inventorytable using link...
+        orderconnection.createStatement().execute("select count(*) from inventoryuser.templinktest@" + orderToInventoryLinkName);
+        System.out.println("PropagationSetup.verifyDBLinks select on inventoryuser.templinktest");
+        // verify inventoryuser select to inventory using link  ...
+        inventoryconnection.createStatement().execute("select count(*) from orderuser.templinktest@" + inventoryToOrderLinkName);
+        System.out.println("PropagationSetup.verifyDBLinks select on orderuser.templinktest");
+        orderconnection.createStatement().execute("drop table templinktest");
+        inventoryconnection.createStatement().execute("drop table templinktest");
+        return outputString;
+    }
+
+    public String setup(DataSource orderpdbDataSource, DataSource inventorypdbDataSource,
+                        boolean isSetupOrderToInventory, boolean isSetupInventoryToOrder) {
+        String returnString = "in setup... " +
+                "isSetupOrderToInventory:" + isSetupOrderToInventory + " isSetupInventoryToOrder:" + isSetupInventoryToOrder;
+        //propagation of order queue from orderpdb to inventorypdb
+        if (isSetupOrderToInventory) returnString += setup(orderpdbDataSource, inventorypdbDataSource, orderuser, orderpw, orderQueueName,
+                orderQueueTableName, inventoryuser, inventorypw, orderToInventoryLinkName, false);
+        //propagation of inventory queue from inventorypdb to orderpdb
+        if (isSetupInventoryToOrder) returnString += setup(inventorypdbDataSource, orderpdbDataSource, inventoryuser, inventorypw, inventoryQueueName,
+                inventoryQueueTableName, orderuser, orderpw, inventoryToOrderLinkName, false);
+        return returnString;
+    }
+
+    public String testOrderToInventory(DataSource orderpdbDataSource, DataSource inventorypdbDataSource) {
+        String returnString = "in testOrderToInventory...";
         //propagation of order queue from orderpdb to inventorypdb
         returnString += setup(orderpdbDataSource, inventorypdbDataSource, orderuser, orderpw, orderQueueName,
-                orderQueueTableName, inventoryuser, inventorypw, orderToInventoryLinkName);
+                orderQueueTableName, inventoryuser, inventorypw, orderToInventoryLinkName, true);
+        return returnString;
+    }
+
+    public String testInventoryToOrder(DataSource orderpdbDataSource, DataSource inventorypdbDataSource) {
+        String returnString = "in testInventoryToOrder...";
         //propagation of inventory queue from inventorypdb to orderpdb
         returnString += setup(inventorypdbDataSource, orderpdbDataSource, inventoryuser, inventorypw, inventoryQueueName,
-                inventoryQueueTableName, orderuser, orderpw, inventoryToOrderLinkName);
+                inventoryQueueTableName, orderuser, orderpw, inventoryToOrderLinkName, true);
         return returnString;
     }
 
     private String setup(
             DataSource sourcepdbDataSource, DataSource targetpdbDataSource, String sourcename, String sourcepw,
             String sourcequeuename, String sourcequeuetable, String targetuser, String targetpw,
-            String linkName) {
+            String linkName, boolean isTest) {
         String returnString = "sourcepdbDataSource = [" + sourcepdbDataSource + "], " +
                 "targetpdbDataSource = [" + targetpdbDataSource + "], " +
                 "sourcename = [" + sourcename + "], sourcepw = [" + sourcepw + "], " +
                 "sourcequeuename = [" + sourcequeuename + "], " +
                 "sourcequeuetable = [" + sourcequeuetable + "], targetuser = [" + targetuser + "], " +
-                "targetpw = [" + targetpw + "], linkName = [" + linkName + "]";
+                "targetpw = [" + targetpw + "], linkName = [" + linkName + "] isTest = " + isTest;
         System.out.println(returnString);
         try {
             TopicConnectionFactory tcfact = AQjmsFactory.getTopicConnectionFactory(sourcepdbDataSource);
@@ -209,8 +239,8 @@ public class PropagationSetup {
             System.out.println("PropagationSetup.setup destination queuesession:" + qsess);
             tconn.start();
             qconn.start();
-            setupTopicAndQueue(tsess, qsess, sourcename, targetuser, sourcequeuename, sourcequeuetable);
-            performJmsOperations(tsess, qsess, sourcename, targetuser, sourcequeuename, linkName);
+            if (!isTest) setupTopicAndQueue(tsess, qsess, sourcename, targetuser, sourcequeuename, sourcequeuetable);
+            performJmsOperations(tsess, qsess, sourcename, targetuser, sourcequeuename, linkName, isTest);
             tsess.close();
             tconn.close();
             qsess.close();
@@ -284,16 +314,16 @@ public class PropagationSetup {
             TopicSession topicSession, QueueSession queueSession,
             String sourcetopicuser, String destinationqueueuser,
             String name,
-            String linkName)
+            String linkName, boolean isTest)
             throws Exception {
         try {
-            System.out.println("Setup topic/source and queue/destination for propagation...");
+            System.out.println("Setup topic/source and queue/destination for propagation... isTest:" + isTest);
             Topic topic1 = ((AQjmsSession) topicSession).getTopic(sourcetopicuser, name);
             Queue queue = ((AQjmsSession) queueSession).getQueue(destinationqueueuser, name);
             System.out.println("Creating Topic Subscribers... queue:" + queue.getQueueName());
             AQjmsConsumer[] subs = new AQjmsConsumer[1];
             subs[0] = (AQjmsConsumer) queueSession.createConsumer(queue);
-            createRemoteSubAndSchedulePropagation(topicSession, destinationqueueuser, name, linkName, topic1, queue);
+            if(!isTest)createRemoteSubAndSchedulePropagation(topicSession, destinationqueueuser, name, linkName, topic1, queue);
             sendMessages(topicSession, topic1);
             Thread.sleep(50000);
             receiveMessages(queueSession, subs);
@@ -340,7 +370,7 @@ public class PropagationSetup {
         objmsg.setStringProperty("City", "Philadelphia");
         objmsg.setText(1 + ":" + "message# " + 1 + ":" + 500);
         objmsg.setIntProperty("Priority", 2);
-        objmsg.setJMSCorrelationID("" + 1);
+        objmsg.setJMSCorrelationID("" + 12);
         objmsg.setJMSPriority(2);
         publisher.publish(topic, objmsg, DeliveryMode.PERSISTENT, 2, AQjmsConstants.EXPIRATION_NEVER);
         publisher.publish(topic, objmsg, DeliveryMode.PERSISTENT, 3, AQjmsConstants.EXPIRATION_NEVER);
@@ -380,6 +410,7 @@ public class PropagationSetup {
     }
 
     private void cleanup(DataSource orderpdbDataSource, DataSource inventorypdbDataSource) throws SQLException {
+//            ((AQjmsDestination) topic1).unschedulePropagation(topicSession, linkName);
         orderpdbDataSource.getConnection().createStatement().execute(
                 "execute dbms_aqadm.unschedule_propagation(queue_name => 'paul.orders', " +
                 "destination => 'inventorydb_link', destination_queue => 'paul.orders_propqueue');" +

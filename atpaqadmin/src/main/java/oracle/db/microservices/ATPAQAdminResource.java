@@ -34,31 +34,31 @@ public class ATPAQAdminResource {
 
   @Inject
   @Named("orderpdb")
-  private DataSource orderpdbDataSource; // .setFastConnectionFailoverEnabled(false) to get rid of benign SEVERE message
+  private DataSource orderpdbDataSource; // .setFastConnectionFailoverEnabled(false) to get rid of SEVERE yet benign message
 
   @Inject
   @Named("inventorypdb")
   private DataSource inventorypdbDataSource;
 
-  @Path("/test")
+  @Path("/testdatasources")
   @GET
   @Produces(MediaType.TEXT_HTML)
-  public String test() {
+  public String testdatasources() {
       System.out.println("test datasources...");
       try {
-          System.out.println("ATPAQAdminResource.test inventorypdbDataSource connection:" + inventorypdbDataSource.getConnection());
+          System.out.println("ATPAQAdminResource.testdatasources inventorypdbDataSource connection:" + inventorypdbDataSource.getConnection());
       } catch (Exception e) {
           e.printStackTrace();
       }
       try {
-          System.out.println("ATPAQAdminResource.test orderpdbDataSource connection:" + orderpdbDataSource.getConnection());
+          System.out.println("ATPAQAdminResource.testdatasources orderpdbDataSource connection:" + orderpdbDataSource.getConnection());
       } catch (Exception e) {
           e.printStackTrace();
       }
       return "success";
   }
 
-    @Path("/setupAll")
+  @Path("/setupAll")
   @GET
   @Produces(MediaType.TEXT_HTML)
   public String setupAll() {
@@ -68,7 +68,8 @@ public class ATPAQAdminResource {
       returnValue += propagationSetup.createUsers(orderpdbDataSource, inventorypdbDataSource);
       returnValue += propagationSetup.createInventoryTable(inventorypdbDataSource);
       returnValue += propagationSetup.createDBLinks(orderpdbDataSource, inventorypdbDataSource);
-      returnValue += propagationSetup.setup(orderpdbDataSource, inventorypdbDataSource);
+      returnValue += propagationSetup.setup(orderpdbDataSource, inventorypdbDataSource,
+              true, true);
       return " result of setupAll : success... " + returnValue;
     } catch (Exception e) {
       e.printStackTrace();
@@ -95,7 +96,7 @@ public class ATPAQAdminResource {
 
   @Path("/createDBLinks")
   @GET
-  @Produces(MediaType.TEXT_HTML)
+  @Produces(MediaType.TEXT_HTML) // does verifyDBLinks as well
   public String createDBLinks() {
     String returnValue = "";
     try {
@@ -109,6 +110,22 @@ public class ATPAQAdminResource {
     }
   }
 
+  @Path("/verifyDBLinks")
+  @GET
+  @Produces(MediaType.TEXT_HTML)
+  public String verifyDBLinks() {
+    String returnValue = "";
+    try {
+      System.out.println("verifyDBLinks ...");
+      returnValue += propagationSetup.verifyDBLinks(orderpdbDataSource, inventorypdbDataSource, "verifyDBLinks");
+      return " result of verifyDBLinks : success... " + returnValue;
+    } catch (Exception e) {
+      e.printStackTrace();
+      returnValue += e;
+      return " result of verifyDBLinks : " + returnValue;
+    }
+  }
+
   @Path("/setupTablesQueuesAndPropagation")
   @GET
   @Produces(MediaType.TEXT_HTML)
@@ -116,12 +133,77 @@ public class ATPAQAdminResource {
     String returnValue = "";
     try {
       System.out.println("setupTablesQueuesAndPropagation ...");
-      returnValue += propagationSetup.setup(orderpdbDataSource, inventorypdbDataSource);
+      returnValue += propagationSetup.setup(orderpdbDataSource, inventorypdbDataSource,
+              true, true);
       return " result of setupTablesQueuesAndPropagation : success... " + returnValue;
     } catch (Exception e) {
       e.printStackTrace();
       returnValue += e;
       return " result of setupTablesQueuesAndPropagation : " + returnValue;
+    }
+  }
+
+
+  @Path("/setupOrderToInventory")
+  @GET
+  @Produces(MediaType.TEXT_HTML)
+  public String setupOrderToInventory() {
+    String returnValue = "";
+    return getString(returnValue, "setupOrderToInventory ...", true, false,
+            " result of setupOrderToInventory : success... ", " result of setupOrderToInventory : ");
+  }
+
+  @Path("/setupInventoryToOrder")
+  @GET
+  @Produces(MediaType.TEXT_HTML)
+  public String setupInventoryToOrder() {
+    String returnValue = "";
+    return getString(returnValue, "setupInventoryToOrder ...", false, true,
+            " result of setupInventoryToOrder : success... ", " result of setupInventoryToOrder : ");
+  }
+
+  private String getString(String returnValue, String s, boolean b, boolean b2, String s2, String s3) {
+    try {
+      System.out.println(s);
+      returnValue += propagationSetup.setup(orderpdbDataSource, inventorypdbDataSource,
+              b, b2);
+      return s2 + returnValue;
+    } catch (Exception e) {
+      e.printStackTrace();
+      returnValue += e;
+      return s3 + returnValue;
+    }
+  }
+
+  @Path("/testInventoryToOrder")
+  @GET
+  @Produces(MediaType.TEXT_HTML)
+  public String testInventoryToOrder() {
+    String returnValue = "";
+    try {
+      System.out.println("testInventoryToOrder ...");
+      returnValue += propagationSetup.testInventoryToOrder(orderpdbDataSource, inventorypdbDataSource);
+      return " result of testInventoryToOrder : success... " + returnValue;
+    } catch (Exception e) {
+      e.printStackTrace();
+      returnValue += e;
+      return " result of testInventoryToOrder : " + returnValue;
+    }
+  }
+
+  @Path("/testOrderToInventory")
+  @GET
+  @Produces(MediaType.TEXT_HTML)
+  public String testOrderToInventory() {
+    String returnValue = "";
+    try {
+      System.out.println("testOrderToInventory ...");
+      returnValue += propagationSetup.testOrderToInventory(orderpdbDataSource, inventorypdbDataSource);
+      return " result of testOrderToInventory : success... " + returnValue;
+    } catch (Exception e) {
+      e.printStackTrace();
+      returnValue += e;
+      return " result of testOrderToInventory : " + returnValue;
     }
   }
 
