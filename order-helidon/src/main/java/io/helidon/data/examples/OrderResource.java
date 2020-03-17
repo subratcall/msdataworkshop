@@ -81,7 +81,7 @@ public class OrderResource {
     @Path("/showorder")
     @GET
     @Produces(MediaType.TEXT_PLAIN)
-    public Response showorder(@QueryParam("order") String orderId) throws Exception {
+    public Response showorder(@QueryParam("orderid") String orderId) throws Exception {
         System.out.println("--->showorder for orderId:" + orderId);
         OrderDetail orderDetail = orders.get(orderId); //we can also lookup orderId if is null and we do order population lazily
         String returnString = orderDetail == null ? "orderId not found:" + orderId :
