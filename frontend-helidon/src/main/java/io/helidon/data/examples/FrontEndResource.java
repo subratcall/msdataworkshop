@@ -52,11 +52,11 @@ public class FrontEndResource {
         System.out.println("-----> FrontEnd placeorder orderid:" + orderid + " itemid:" + itemid+ " deliverylocation:" + deliverylocation);
         try {
             URL url = new URL("http://order.msdataworkshop:8080/placeOrder?orderid=" + orderid +
-                    "&itemid=" + itemid); // + "&deliverylocation=" + URLEncoder.encode(deliverylocation, "UTF-8"));
+                    "&itemid=" + itemid + "&deliverylocation=" + URLEncoder.encode(deliverylocation, "UTF-8"));
             String json = makeRequest(url);
             System.out.println("FrontEndResource.placeorder json:" + json);
-            url = new URL("http://order.msdataworkshop:8080/showorder?orderid=" + orderid +
-                    "&itemid=" + itemid); // + "&deliverylocation=" + URLEncoder.encode(deliverylocation, "UTF-8"));
+            System.out.println("FrontEndResource.placeorder complete, now show order...");
+            url = new URL("http://order.msdataworkshop:8080/showorder?orderid=" + orderid );
             json = makeRequest(url);
             return getFullPage(json);
         } catch (IOException e) {

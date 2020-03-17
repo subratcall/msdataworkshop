@@ -5,7 +5,7 @@ import javax.json.bind.annotation.JsonbProperty;
 public class OrderDetail {
 
     @JsonbProperty("orderId")
-    private int orderId = -1;
+    private String orderId;
     @JsonbProperty(nillable = true)
     private String suggestiveSaleItem = "";
     @JsonbProperty(nillable = true)
@@ -26,23 +26,23 @@ public class OrderDetail {
 
     public String toString() {
         String returnString = "";
-        returnString+=" orderId =" + orderId;
-        returnString+=" suggestiveSaleItem = " + suggestiveSaleItem;
-        returnString+=" suggestiveSale = " + suggestiveSale;
-        returnString+=" inventoryLocationItem = " + inventoryLocationItem;
-        returnString+=" inventoryLocation = " + inventoryLocation;
-        returnString+=" shippingEstimate = " + shippingEstimate;
-        returnString+=" shippingEstimateItem = " + shippingEstimateItem;
-        returnString+=" orderStatus = " + orderStatus;
-        returnString+=" deliveryLocation = " + deliveryLocation;
+        returnString+="\n orderId =" + orderId;
+//        returnString+=" suggestiveSaleItem = " + suggestiveSaleItem;
+//        returnString+=" suggestiveSale = " + suggestiveSale;
+//        returnString+=" inventoryLocationItem = " + inventoryLocationItem;
+        returnString+="\n inventoryLocation = " + inventoryLocation;
+//        returnString+=" shippingEstimate = " + shippingEstimate;
+//        returnString+=" shippingEstimateItem = " + shippingEstimateItem;
+        returnString+="\n orderStatus = " + orderStatus;
+        returnString+="\n deliveryLocation = " + deliveryLocation;
         return returnString;
     }
 
-    public int getOrderId() {
+    public String getOrderId() {
         return orderId;
     }
 
-    public void setOrderId(int orderId) {
+    public void setOrderId(String orderId) {
         this.orderId = orderId;
     }
 

@@ -124,6 +124,7 @@ public class OrderResource {
         startEventConsumerIfNotStarted();
 //        itemid(Integer.valueOf(widget));
         OrderDetail orderDetail = new OrderDetail();
+        orderDetail.setOrderId(orderid);
         orderDetail.setOrderStatus("pending");
         orderDetail.setDeliveryLocation(deliverylocation);
         orders.put(orderid, orderDetail);
