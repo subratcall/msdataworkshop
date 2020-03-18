@@ -71,7 +71,7 @@ public class FrontEndResource {
     public String showorder(@QueryParam("orderid") String orderid) {
         System.out.println("-----> FrontEnd showorder orderid:" + orderid);
         try {
-            URL url = new URL("http://order.msdataworkshop:8080/showorder");
+            URL url = new URL("http://order.msdataworkshop:8080/showorder?orderid=" + orderid );
             return getFullPage(makeRequest(url));
         } catch (IOException e) {
             e.printStackTrace();
