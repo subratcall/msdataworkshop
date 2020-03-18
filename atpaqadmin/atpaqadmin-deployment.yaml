@@ -1,43 +1,31 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: orderandinventoryadmin
+  name: atpaqadmin
 spec:
   replicas: 1
   template:
     metadata:
       labels:
-        app: orderandinventoryadmin
+        app: atpaqadmin
         version: helidon
     spec:
       # The credential files in the secret are base64 encoded twice and hence they need to be decoded for the programs to use them.
       # This decode-creds initContainer takes care of decoding the files and writing them to a shared volume from which jdbc-app contianer
       # can read them and use it for connecting to ATP.
       initContainers:
-      - name: decode-creds-order
+      - name: decode-creds
         command:
         - bash
         - -c
-        - "for i in `ls -1 /tmp/creds-order | grep -v user_name`; do cat /tmp/creds-order/$i  | base64 --decode > /creds-order/$i; done; ls -l /creds-order/*;"
+        - "for i in `ls -1 /tmp/creds | grep -v user_name`; do cat /tmp/creds/$i  | base64 --decode > /creds/$i; done; ls -l /creds/*;"
         image: oraclelinux:7.5
         volumeMounts:
-        - name: creds-raw-order
-          mountPath: /tmp/creds-order
+        - name: creds-raw
+          mountPath: /tmp/creds
           readOnly: false
-        - name: creds-order
-          mountPath: /creds-order
-      - name: decode-creds-inventory
-        command:
-        - bash
-        - -c
-        - "for i in `ls -1 /tmp/creds-inventory | grep -v user_name`; do cat /tmp/creds-inventory/$i  | base64 --decode > /creds-inventory/$i; done; ls -l /creds-inventory/*;"
-        image: oraclelinux:7.5
-        volumeMounts:
-        - name: creds-raw-inventory
-          mountPath: /tmp/creds-inventory
-          readOnly: false
-        - name: creds-inventory
-          mountPath: /creds-inventory
+        - name: creds
+          mountPath: /creds
       containers:
       - name: helidonatp
         image: us-phoenix-1.ocir.io/stevengreenberginc/paul.parkinson/msdataworkshop/helidonatp:0.1
@@ -54,7 +42,7 @@ spec:
               name: atp-user-cred-orderadmin
               key: password
         - name: oracle.ucp.jdbc.PoolDataSource.orderpdb.URL
-          value: "jdbc:oracle:thin:@orderdb_high?TNS_ADMIN=/msdataworkshop/creds-order"
+          value: "jdbc:oracle:thin:@orderdb_high?TNS_ADMIN=/msdataworkshop/creds"
         # inventorypdb...
         - name: oracle.ucp.jdbc.PoolDataSource.inventorypdb.user
           value: "admin"
@@ -64,18 +52,19 @@ spec:
               name: atp-user-cred-inventoryadmin
               key: password
         - name: oracle.ucp.jdbc.PoolDataSource.inventorypdb.URL
-          value: "jdbc:oracle:thin:@inventorydb_high?TNS_ADMIN=/msdataworkshop/creds-inventory"
+          value: "jdbc:oracle:thin:@inventorydb_high?TNS_ADMIN=/msdataworkshop/creds"
         - name: WALLET_PWD
           valueFrom:
             secretKeyRef:
-              name: atp-user-cred-orderadmin
+              name: atp-user-cred-orderuser
               key: walletPassword
         volumeMounts:
-        - name: creds-order
-          mountPath: /msdataworkshop/creds-order
+        - name: creds
+          mountPath: /msdataworkshop/creds
       volumes:
-      - name: creds-raw-order
+      - name: creds-raw
         secret:
           secretName: atp-demo-binding-order
-      - name: creds-order
+      - name: creds
         emptyDir: {}
+# pdbs are part of the same cdb and use shared/regional wallet so order or inventory binding and WALLET_PWD could be used here
