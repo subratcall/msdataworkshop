@@ -94,6 +94,22 @@ public class ATPAQAdminResource {
     }
   }
 
+  @Path("/createInventoryTable")
+  @GET
+  @Produces(MediaType.TEXT_HTML)
+  public String createInventoryTable() {
+    String returnValue = "";
+    try {
+      System.out.println("createInventoryTable ...");
+      returnValue += propagationSetup.createInventoryTable(inventorypdbDataSource);
+      return " result of createInventoryTable : success... " + returnValue;
+    } catch (Exception e) {
+      e.printStackTrace();
+      returnValue += e;
+      return " result of createInventoryTable : " + returnValue;
+    }
+  }
+
   @Path("/createDBLinks")
   @GET
   @Produces(MediaType.TEXT_HTML) // does verifyDBLinks as well
