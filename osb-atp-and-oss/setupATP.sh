@@ -62,6 +62,7 @@ kubectl delete secret atp-demo-binding-order -n msdataworkshop
 kubectl delete -f atp-binding-plain-order.yaml
 kubectl create -f atp-binding-plain-order.yaml
 kubectl get secret atp-demo-binding-order --export -o yaml |  kubectl apply --namespace=msdataworkshop -f -
+kubectl create -f atp-secret-order-admin.yaml -n msdataworkshop
 kubectl create -f atp-secret-orderuser.yaml -n msdataworkshop
 
 echo "creating inventory binding and secrets..."
@@ -69,4 +70,5 @@ kubectl delete secret atp-demo-binding-inventory -n msdataworkshop
 kubectl delete -f atp-binding-plain-inventory.yaml
 kubectl create -f atp-binding-plain-inventory.yaml
 kubectl get secret atp-demo-binding-inventory --export -o yaml |  kubectl apply --namespace=msdataworkshop -f -
+kubectl create -f atp-secret-inventory-admin.yaml -n msdataworkshop
 kubectl create -f atp-secret-inventoryuser.yaml -n msdataworkshop
