@@ -1,31 +1,56 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: atpaqadmin
+  name: orderandinventoryadmin
 spec:
   replicas: 1
   template:
     metadata:
       labels:
-        app: atpaqadmin
+        app: orderandinventoryadmin
         version: helidon
     spec:
       # The credential files in the secret are base64 encoded twice and hence they need to be decoded for the programs to use them.
       # This decode-creds initContainer takes care of decoding the files and writing them to a shared volume from which jdbc-app contianer
       # can read them and use it for connecting to ATP.
       initContainers:
-      - name: decode-creds
+      - name: decode-creds-order
         command:
         - bash
         - -c
-        - "for i in `ls -1 /tmp/creds | grep -v user_name`; do cat /tmp/creds/$i  | base64 --decode > /creds/$i; done; ls -l /creds/*;"
+        - "for i in `ls -1 /tmp/creds-order | grep -v user_name`; do cat /tmp/creds-order/$i  | base64 --decode > /creds-order/$i; done; ls -l /creds-order/*;"
         image: oraclelinux:7.5
         volumeMounts:
-        - name: creds-raw
-          mountPath: /tmp/creds
+        - name: creds-raw-order
+          mountPath: /tmp/creds-order
           readOnly: false
-        - name: creds
-          mountPath: /creds
+        - name: creds-order
+          mountPath: /creds-order
+      - name: decode-creds-inventory
+        command:
+        - bash
+        - -c
+        - "for i in `ls -1 /tmp/creds-inventory | grep -v user_name`; do cat /tmp/creds-inventory/$i  | base64 --decode > /creds-inventory/$i; done; ls -l /creds-inventory/*;"
+        image: oraclelinux:7.5
+        volumeMounts:
+        - name: creds-raw-inventory
+          mountPath: /tmp/creds-inventory
+          readOnly: false
+        - name: creds-inventory
+          mountPath: /creds-inventory
+      - name: combine-tnsnamesora # as a  convenience for creating dblinks
+        command:
+        - bash
+        - -c
+        - "cat /tmp/creds-order/tnsnames.ora >> /tmp/creds-inventory/tnsnames.ora ; cp /tmp/creds-inventory/tnsnames.ora /tmp/creds-order/tnsnames.ora ;"
+        image: oraclelinux:7.5
+        volumeMounts:
+        - name: creds-order
+          mountPath: /tmp/creds-order
+          readOnly: false
+        - name: creds-inventory
+          mountPath: /tmp/creds-inventory
+          readOnly: false
       containers:
       - name: helidonatp
         image: us-phoenix-1.ocir.io/stevengreenberginc/paul.parkinson/msdataworkshop/helidonatp:0.1
@@ -42,7 +67,7 @@ spec:
               name: atp-user-cred-orderadmin
               key: password
         - name: oracle.ucp.jdbc.PoolDataSource.orderpdb.URL
-          value: "jdbc:oracle:thin:@orderdb_high?TNS_ADMIN=/msdataworkshop/creds"
+          value: "jdbc:oracle:thin:@orderdb_high?TNS_ADMIN=/msdataworkshop/creds-order"
         # inventorypdb...
         - name: oracle.ucp.jdbc.PoolDataSource.inventorypdb.user
           value: "admin"
@@ -52,19 +77,25 @@ spec:
               name: atp-user-cred-inventoryadmin
               key: password
         - name: oracle.ucp.jdbc.PoolDataSource.inventorypdb.URL
-          value: "jdbc:oracle:thin:@inventorydb_high?TNS_ADMIN=/msdataworkshop/creds"
+          value: "jdbc:oracle:thin:@inventorydb_high?TNS_ADMIN=/msdataworkshop/creds-inventory"
         - name: WALLET_PWD
           valueFrom:
             secretKeyRef:
-              name: atp-user-cred-orderuser
+              name: atp-user-cred-orderadmin
               key: walletPassword
         volumeMounts:
-        - name: creds
-          mountPath: /msdataworkshop/creds
+        - name: creds-order
+          mountPath: /msdataworkshop/creds-order
+        - name: creds-inventory
+          mountPath: /msdataworkshop/creds-inventory
       volumes:
-      - name: creds-raw
+      - name: creds-raw-order
         secret:
           secretName: atp-demo-binding-order
-      - name: creds
+      - name: creds-order
         emptyDir: {}
-# pdbs are part of the same cdb and use shared/regional wallet so order or inventory binding and WALLET_PWD could be used here
+      - name: creds-raw-inventory
+        secret:
+          secretName: atp-demo-binding-inventory
+      - name: creds-inventory
+        emptyDir: {}
