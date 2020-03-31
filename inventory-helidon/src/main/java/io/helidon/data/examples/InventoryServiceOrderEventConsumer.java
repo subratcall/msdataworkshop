@@ -55,7 +55,6 @@ public class InventoryServiceOrderEventConsumer implements Runnable {
                 } else {
                   //  done = true;
                 }
-                qsess.commit();
                 Thread.sleep(500);
             } catch (Exception e) {
                 System.out.println("Error in performJmsOperations: " + e);
@@ -70,8 +69,8 @@ public class InventoryServiceOrderEventConsumer implements Runnable {
         String inventorylocation = "Philadelphia"; //todo temp
         String jsonString = "{ \"orderid\" : \"" + orderid + "\", \"item\" : " + itemid +
                 "\", \"inventoryLocation\" : " + inventorylocation + " }";
-        System.out.println("send inventory status message... jsonString:" + jsonString) ;
         Topic topic =  session.getTopic(InventoryResource.inventoryuser, InventoryResource.inventoryQueueName);
+        System.out.println("send inventory status message... jsonString:" + jsonString + " topic:" + topic) ;
         TextMessage objmsg = session.createTextMessage();
         TopicPublisher publisher = session.createPublisher(topic);
         objmsg.setIntProperty("Id", 1);

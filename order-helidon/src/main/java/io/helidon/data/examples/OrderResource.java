@@ -137,6 +137,7 @@ public class OrderResource {
     }
 
     private void startEventConsumerIfNotStarted() {
+        System.out.println("OrderResource.startEventConsumerIfNotStarted isOrderEventConsumerStarted:" + isOrderEventConsumerStarted);
         if (!isOrderEventConsumerStarted) {
             orderServiceEventConsumer =  new OrderServiceEventConsumer(this);
             new Thread(orderServiceEventConsumer).start();

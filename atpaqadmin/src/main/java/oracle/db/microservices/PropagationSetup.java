@@ -9,13 +9,6 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 public class PropagationSetup {
-    // todo get these from env
-    String orderuser = "orderuser";
-    String orderpw = "Welcome12345";
-    String inventoryuser = "inventoryuser";
-    String inventorypw = "Welcome12345";
-    String orderToInventoryLinkName = "ORDERTOINVENTORYLINK";
-    String inventoryToOrderLinkName = "INVENTORYTOORDERLINK";
     String orderQueueName = "orderqueue";
     String orderQueueTableName = "orderqueuetable";
     String inventoryQueueName = "inventoryqueue";
@@ -39,13 +32,13 @@ public class PropagationSetup {
     public String createUsers(DataSource orderpdbDataSource, DataSource inventorypdbDataSource) throws SQLException {
         String returnValue = "";
         try {
-            returnValue += createAQUser(orderpdbDataSource, orderuser, orderpw);
+            returnValue += createAQUser(orderpdbDataSource, ATPAQAdminResource.orderuser, ATPAQAdminResource.orderpw);
         } catch (SQLException ex) {
             ex.printStackTrace();
             returnValue += ex.toString();
         }
         try {
-            returnValue += createAQUser(inventorypdbDataSource, inventoryuser, inventorypw);
+            returnValue += createAQUser(inventorypdbDataSource, ATPAQAdminResource.inventoryuser, ATPAQAdminResource.inventorypw);
         } catch (SQLException ex) {
             ex.printStackTrace();
             returnValue += ex.toString();
@@ -76,8 +69,9 @@ public class PropagationSetup {
         String outputString = "\ncreateDBLinks...";
         System.out.println(outputString);
         outputString += createDBLinks(orderpdbDataSource, inventorypdbDataSource,
-                orderuser, orderpw, inventoryuser, inventorypw,
-                orderToInventoryLinkName, inventoryToOrderLinkName);
+                ATPAQAdminResource.orderuser, ATPAQAdminResource.orderpw,
+                ATPAQAdminResource.inventoryuser, ATPAQAdminResource.inventorypw,
+                ATPAQAdminResource.orderToInventoryLinkName, ATPAQAdminResource.inventoryToOrderLinkName);
         outputString = verifyDBLinks(orderpdbDataSource, inventorypdbDataSource, outputString);
         return outputString;
     }
@@ -153,8 +147,9 @@ public class PropagationSetup {
         outputString += "\nverifyDBLinks...";
         System.out.println(outputString);
         outputString += verifyDBLinks(orderpdbDataSource, inventorypdbDataSource,
-                orderuser, orderpw, inventoryuser, inventorypw,
-                orderToInventoryLinkName, inventoryToOrderLinkName);
+                ATPAQAdminResource.orderuser, ATPAQAdminResource.orderpw,
+                ATPAQAdminResource.inventoryuser, ATPAQAdminResource.inventorypw,
+                ATPAQAdminResource.orderToInventoryLinkName, ATPAQAdminResource.inventoryToOrderLinkName);
         System.out.println(outputString);
         return outputString;
     }
@@ -193,27 +188,35 @@ public class PropagationSetup {
         String returnString = "in setup... " +
                 "isSetupOrderToInventory:" + isSetupOrderToInventory + " isSetupInventoryToOrder:" + isSetupInventoryToOrder;
         //propagation of order queue from orderpdb to inventorypdb
-        if (isSetupOrderToInventory) returnString += setup(orderpdbDataSource, inventorypdbDataSource, orderuser, orderpw, orderQueueName,
-                orderQueueTableName, inventoryuser, inventorypw, orderToInventoryLinkName, false);
+        if (isSetupOrderToInventory) returnString += setup(orderpdbDataSource, inventorypdbDataSource,
+                ATPAQAdminResource.orderuser, ATPAQAdminResource.orderpw, orderQueueName,
+                orderQueueTableName, ATPAQAdminResource.inventoryuser, ATPAQAdminResource.inventorypw,
+                ATPAQAdminResource.orderToInventoryLinkName, false);
         //propagation of inventory queue from inventorypdb to orderpdb
-        if (isSetupInventoryToOrder) returnString += setup(inventorypdbDataSource, orderpdbDataSource, inventoryuser, inventorypw, inventoryQueueName,
-                inventoryQueueTableName, orderuser, orderpw, inventoryToOrderLinkName, false);
+        if (isSetupInventoryToOrder) returnString += setup(inventorypdbDataSource, orderpdbDataSource,
+                ATPAQAdminResource.inventoryuser, ATPAQAdminResource.inventorypw, inventoryQueueName,
+                inventoryQueueTableName, ATPAQAdminResource.orderuser, ATPAQAdminResource.orderpw,
+                ATPAQAdminResource.inventoryToOrderLinkName, false);
         return returnString;
     }
 
     public String testOrderToInventory(DataSource orderpdbDataSource, DataSource inventorypdbDataSource) {
         String returnString = "in testOrderToInventory...";
         //propagation of order queue from orderpdb to inventorypdb
-        returnString += setup(orderpdbDataSource, inventorypdbDataSource, orderuser, orderpw, orderQueueName,
-                orderQueueTableName, inventoryuser, inventorypw, orderToInventoryLinkName, true);
+        returnString += setup(orderpdbDataSource, inventorypdbDataSource,
+                ATPAQAdminResource.orderuser, ATPAQAdminResource.orderpw, orderQueueName,
+                orderQueueTableName, ATPAQAdminResource.inventoryuser, ATPAQAdminResource.inventorypw,
+                ATPAQAdminResource.orderToInventoryLinkName, true);
         return returnString;
     }
 
     public String testInventoryToOrder(DataSource orderpdbDataSource, DataSource inventorypdbDataSource) {
         String returnString = "in testInventoryToOrder...";
         //propagation of inventory queue from inventorypdb to orderpdb
-        returnString += setup(inventorypdbDataSource, orderpdbDataSource, inventoryuser, inventorypw, inventoryQueueName,
-                inventoryQueueTableName, orderuser, orderpw, inventoryToOrderLinkName, true);
+        returnString += setup(inventorypdbDataSource, orderpdbDataSource,
+                ATPAQAdminResource.inventoryuser, ATPAQAdminResource.inventorypw, inventoryQueueName,
+                inventoryQueueTableName, ATPAQAdminResource.orderuser, ATPAQAdminResource.orderpw,
+                ATPAQAdminResource.inventoryToOrderLinkName, true);
         return returnString;
     }
 
@@ -346,15 +349,31 @@ public class PropagationSetup {
     }
 
 
-    String unscheduleOrderToInventoryPropagation(DataSource orderpdbDataSource) {
+    String unscheduleOrderToInventoryPropagation(DataSource orderpdbDataSource, String topicUser, String topicPassword, String linkName) {
         System.out.println("PropagationSetup.unscheduleOrderToInventoryPropagation");
         TopicConnection tconn = null;
         try {
             tconn = AQjmsFactory.getTopicConnectionFactory(orderpdbDataSource).createTopicConnection(
-                    "orderuser", "Welcome12345");
+                    topicUser, topicPassword);
             TopicSession tsess = tconn.createTopicSession(true, Session.CLIENT_ACKNOWLEDGE);
-            Topic topic1 = ((AQjmsSession) tsess).getTopic("orderuser", "");
-            ((AQjmsDestination) topic1).unschedulePropagation(tsess, orderToInventoryLinkName);
+            Topic topic1 = ((AQjmsSession) tsess).getTopic(topicUser, "");
+            ((AQjmsDestination) topic1).unschedulePropagation(tsess, linkName);
+        } catch (JMSException e) {
+            e.printStackTrace();
+            return e.toString();
+        }
+        return "success";
+    }
+
+    String enablePropagation(DataSource orderpdbDataSource, String topicUser, String topicPassword, String linkName) {
+        System.out.println("PropagationSetup.schedulePropagation");
+        TopicConnection tconn = null;
+        try {
+            tconn = AQjmsFactory.getTopicConnectionFactory(orderpdbDataSource).createTopicConnection(
+                    topicUser, topicPassword);
+            TopicSession tsess = tconn.createTopicSession(true, Session.CLIENT_ACKNOWLEDGE);
+            Topic topic1 = ((AQjmsSession) tsess).getTopic(topicUser, "");
+            ((AQjmsDestination) topic1).enablePropagationSchedule(tsess, linkName);
         } catch (JMSException e) {
             e.printStackTrace();
             return e.toString();

@@ -31,6 +31,13 @@ import javax.ws.rs.core.Response;
 @ApplicationScoped
 public class ATPAQAdminResource {
   PropagationSetup propagationSetup = new PropagationSetup();
+  // todo get these from env
+  static String orderuser = "orderuser";
+  static String orderpw = "Welcome12345";
+  static String inventoryuser = "inventoryuser";
+  static String inventorypw = "Welcome12345";
+  static String orderToInventoryLinkName = "ORDERTOINVENTORYLINK";
+  static String inventoryToOrderLinkName = "INVENTORYTOORDERLINK";
 
   @Inject
   @Named("orderpdb")
@@ -247,8 +254,41 @@ public class ATPAQAdminResource {
   @GET
   @Produces(MediaType.TEXT_PLAIN)
   public Response unschedulePropagation() throws SQLException {
+    System.out.println("ATPAQAdminResource.unschedulePropagation");
+    String returnString =  propagationSetup.unscheduleOrderToInventoryPropagation(
+            orderpdbDataSource, orderuser, orderpw, orderToInventoryLinkName);
+    returnString +=  propagationSetup.unscheduleOrderToInventoryPropagation(
+            inventorypdbDataSource, inventoryuser, inventorypw, inventoryToOrderLinkName);
     final Response returnValue = Response.ok()
-            .entity("Connection obtained successfully metadata:" + propagationSetup.unscheduleOrderToInventoryPropagation(orderpdbDataSource))
+            .entity("unschedulePropagation:" + returnString)
+            .build();
+    return returnValue;
+  }
+
+  @Path("/enablePropagation")
+  @GET
+  @Produces(MediaType.TEXT_PLAIN)
+  public Response enablePropagation() throws SQLException {
+    System.out.println("ATPAQAdminResource.enablePropagation");
+    String returnString =  propagationSetup.enablePropagation(
+            orderpdbDataSource, orderuser, orderpw, orderToInventoryLinkName);
+    returnString +=  propagationSetup.unscheduleOrderToInventoryPropagation(
+            inventorypdbDataSource, inventoryuser, inventorypw, inventoryToOrderLinkName);
+    final Response returnValue = Response.ok()
+            .entity("enablePropagation:" + returnString)
+            .build();
+    return returnValue;
+  }
+
+  @Path("/enablePropagationInventoryToOrder")
+  @GET
+  @Produces(MediaType.TEXT_PLAIN)
+  public Response enablePropagationInventoryToOrder() throws SQLException {
+    System.out.println("ATPAQAdminResource.enablePropagationInventoryToOrder");
+    String returnString =  propagationSetup.unscheduleOrderToInventoryPropagation(
+            inventorypdbDataSource, inventoryuser, inventorypw, inventoryToOrderLinkName);
+    final Response returnValue = Response.ok()
+            .entity("enablePropagationInventoryToOrder:" + returnString)
             .build();
     return returnValue;
   }

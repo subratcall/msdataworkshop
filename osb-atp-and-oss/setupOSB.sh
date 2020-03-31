@@ -38,7 +38,7 @@ kubectl create secret generic ocicredentials \
 
 echo "install oci-service-broker:"
 # detect helm and if Helm 3.x ...
-# helm install oci-service-broker https://github.com/oracle/oci-service-broker/releases/download/v1.3.3/oci-service-broker-1.3.3.tgz \
+# helm install oci-service-broker https://github.com/oracle/oci-service-broker/releases/download/v1.4.0/oci-service-broker-1.4.0.tgz \
 #   --set ociCredentials.secretName=ocicredentials \
 #   --set storage.etcd.useEmbedded=true \
 #   --set tls.enabled=false

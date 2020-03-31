@@ -333,6 +333,8 @@ public class FrontEndResource {
                 "   <input type=\"submit\" name =\"test\" value=\"createInventoryTable\">" +
                 "   <input type=\"submit\" name =\"test\" value=\"createDBLinks\">" +
                 "   <input type=\"submit\" name =\"test\" value=\"setupTablesQueuesAndPropagation\">" +
+                "   <input type=\"submit\" name =\"test\" value=\"enablePropagationInventoryToOrder\">" +
+                "   <input type=\"submit\" name =\"test\" value=\"enablePropagationInventoryToOrder\">" +
                 "</form>" +
                 "<form action=\"inventoryservicetest\"><input type=\"submit\" name =\"test\" value=\"listenForMessages\"></form>" +
                 "<form action=\"inventoryservicetest\"><input type=\"submit\" name =\"test\" value=\"cleanUpResources\"></form>" +

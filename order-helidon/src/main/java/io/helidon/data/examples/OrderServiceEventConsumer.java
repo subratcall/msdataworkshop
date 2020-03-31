@@ -21,6 +21,7 @@ public class OrderServiceEventConsumer implements Runnable {
     }
 
     public Object dolistenForMessages() {
+        System.out.println("OrderServiceEventConsumer.dolistenForMessages");
         QueueSession session;
         try {
             DataSource dataSource = orderResource.atpOrderPdb;
