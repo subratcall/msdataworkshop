@@ -9,10 +9,6 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 public class PropagationSetup {
-    String orderQueueName = "orderqueue";
-    String orderQueueTableName = "orderqueuetable";
-    String inventoryQueueName = "inventoryqueue";
-    String inventoryQueueTableName = "inventoryqueuetable";
 
 
     public String createInventoryTable(DataSource inventorypdbDataSource) throws SQLException {
@@ -189,13 +185,13 @@ public class PropagationSetup {
                 "isSetupOrderToInventory:" + isSetupOrderToInventory + " isSetupInventoryToOrder:" + isSetupInventoryToOrder;
         //propagation of order queue from orderpdb to inventorypdb
         if (isSetupOrderToInventory) returnString += setup(orderpdbDataSource, inventorypdbDataSource,
-                ATPAQAdminResource.orderuser, ATPAQAdminResource.orderpw, orderQueueName,
-                orderQueueTableName, ATPAQAdminResource.inventoryuser, ATPAQAdminResource.inventorypw,
+                ATPAQAdminResource.orderuser, ATPAQAdminResource.orderpw, ATPAQAdminResource.orderQueueName,
+                ATPAQAdminResource.orderQueueTableName, ATPAQAdminResource.inventoryuser, ATPAQAdminResource.inventorypw,
                 ATPAQAdminResource.orderToInventoryLinkName, false);
         //propagation of inventory queue from inventorypdb to orderpdb
         if (isSetupInventoryToOrder) returnString += setup(inventorypdbDataSource, orderpdbDataSource,
-                ATPAQAdminResource.inventoryuser, ATPAQAdminResource.inventorypw, inventoryQueueName,
-                inventoryQueueTableName, ATPAQAdminResource.orderuser, ATPAQAdminResource.orderpw,
+                ATPAQAdminResource.inventoryuser, ATPAQAdminResource.inventorypw, ATPAQAdminResource.inventoryQueueName,
+                ATPAQAdminResource.inventoryQueueTableName, ATPAQAdminResource.orderuser, ATPAQAdminResource.orderpw,
                 ATPAQAdminResource.inventoryToOrderLinkName, false);
         return returnString;
     }
@@ -204,8 +200,8 @@ public class PropagationSetup {
         String returnString = "in testOrderToInventory...";
         //propagation of order queue from orderpdb to inventorypdb
         returnString += setup(orderpdbDataSource, inventorypdbDataSource,
-                ATPAQAdminResource.orderuser, ATPAQAdminResource.orderpw, orderQueueName,
-                orderQueueTableName, ATPAQAdminResource.inventoryuser, ATPAQAdminResource.inventorypw,
+                ATPAQAdminResource.orderuser, ATPAQAdminResource.orderpw, ATPAQAdminResource.orderQueueName,
+                ATPAQAdminResource.orderQueueTableName, ATPAQAdminResource.inventoryuser, ATPAQAdminResource.inventorypw,
                 ATPAQAdminResource.orderToInventoryLinkName, true);
         return returnString;
     }
@@ -214,8 +210,8 @@ public class PropagationSetup {
         String returnString = "in testInventoryToOrder...";
         //propagation of inventory queue from inventorypdb to orderpdb
         returnString += setup(inventorypdbDataSource, orderpdbDataSource,
-                ATPAQAdminResource.inventoryuser, ATPAQAdminResource.inventorypw, inventoryQueueName,
-                inventoryQueueTableName, ATPAQAdminResource.orderuser, ATPAQAdminResource.orderpw,
+                ATPAQAdminResource.inventoryuser, ATPAQAdminResource.inventorypw, ATPAQAdminResource.inventoryQueueName,
+                ATPAQAdminResource.inventoryQueueTableName, ATPAQAdminResource.orderuser, ATPAQAdminResource.orderpw,
                 ATPAQAdminResource.inventoryToOrderLinkName, true);
         return returnString;
     }
@@ -349,14 +345,14 @@ public class PropagationSetup {
     }
 
 
-    String unscheduleOrderToInventoryPropagation(DataSource orderpdbDataSource, String topicUser, String topicPassword, String linkName) {
+    String unscheduleOrderToInventoryPropagation(DataSource dataSource, String topicUser, String topicPassword, String topicName, String linkName) {
         System.out.println("PropagationSetup.unscheduleOrderToInventoryPropagation");
         TopicConnection tconn = null;
         try {
-            tconn = AQjmsFactory.getTopicConnectionFactory(orderpdbDataSource).createTopicConnection(
+            tconn = AQjmsFactory.getTopicConnectionFactory(dataSource).createTopicConnection(
                     topicUser, topicPassword);
             TopicSession tsess = tconn.createTopicSession(true, Session.CLIENT_ACKNOWLEDGE);
-            Topic topic1 = ((AQjmsSession) tsess).getTopic(topicUser, "");
+            Topic topic1 = ((AQjmsSession) tsess).getTopic(topicUser, topicName);
             ((AQjmsDestination) topic1).unschedulePropagation(tsess, linkName);
         } catch (JMSException e) {
             e.printStackTrace();
@@ -365,14 +361,14 @@ public class PropagationSetup {
         return "success";
     }
 
-    String enablePropagation(DataSource orderpdbDataSource, String topicUser, String topicPassword, String linkName) {
+    String enablePropagation(DataSource dataSource, String topicUser, String topicPassword, String topicName, String linkName) {
         System.out.println("PropagationSetup.schedulePropagation");
         TopicConnection tconn = null;
         try {
-            tconn = AQjmsFactory.getTopicConnectionFactory(orderpdbDataSource).createTopicConnection(
+            tconn = AQjmsFactory.getTopicConnectionFactory(dataSource).createTopicConnection(
                     topicUser, topicPassword);
             TopicSession tsess = tconn.createTopicSession(true, Session.CLIENT_ACKNOWLEDGE);
-            Topic topic1 = ((AQjmsSession) tsess).getTopic(topicUser, "");
+            Topic topic1 = ((AQjmsSession) tsess).getTopic(topicUser, topicName);
             ((AQjmsDestination) topic1).enablePropagationSchedule(tsess, linkName);
         } catch (JMSException e) {
             e.printStackTrace();

@@ -36,6 +36,10 @@ public class ATPAQAdminResource {
   static String orderpw = "Welcome12345";
   static String inventoryuser = "inventoryuser";
   static String inventorypw = "Welcome12345";
+  static String orderQueueName = "orderqueue";
+  static String orderQueueTableName = "orderqueuetable";
+  static String inventoryQueueName = "inventoryqueue";
+  static String inventoryQueueTableName = "inventoryqueuetable";
   static String orderToInventoryLinkName = "ORDERTOINVENTORYLINK";
   static String inventoryToOrderLinkName = "INVENTORYTOORDERLINK";
 
@@ -256,9 +260,9 @@ public class ATPAQAdminResource {
   public Response unschedulePropagation() throws SQLException {
     System.out.println("ATPAQAdminResource.unschedulePropagation");
     String returnString =  propagationSetup.unscheduleOrderToInventoryPropagation(
-            orderpdbDataSource, orderuser, orderpw, orderToInventoryLinkName);
+            orderpdbDataSource, orderuser, orderpw, orderQueueName, orderToInventoryLinkName);
     returnString +=  propagationSetup.unscheduleOrderToInventoryPropagation(
-            inventorypdbDataSource, inventoryuser, inventorypw, inventoryToOrderLinkName);
+            inventorypdbDataSource, inventoryuser, inventorypw, inventoryQueueName, inventoryToOrderLinkName);
     final Response returnValue = Response.ok()
             .entity("unschedulePropagation:" + returnString)
             .build();
@@ -271,9 +275,9 @@ public class ATPAQAdminResource {
   public Response enablePropagation() throws SQLException {
     System.out.println("ATPAQAdminResource.enablePropagation");
     String returnString =  propagationSetup.enablePropagation(
-            orderpdbDataSource, orderuser, orderpw, orderToInventoryLinkName);
-    returnString +=  propagationSetup.unscheduleOrderToInventoryPropagation(
-            inventorypdbDataSource, inventoryuser, inventorypw, inventoryToOrderLinkName);
+            orderpdbDataSource, orderuser, orderpw, orderQueueName, orderToInventoryLinkName);
+    returnString +=  propagationSetup.enablePropagation(
+            inventorypdbDataSource, inventoryuser, inventorypw, inventoryQueueName, inventoryToOrderLinkName);
     final Response returnValue = Response.ok()
             .entity("enablePropagation:" + returnString)
             .build();
@@ -285,8 +289,8 @@ public class ATPAQAdminResource {
   @Produces(MediaType.TEXT_PLAIN)
   public Response enablePropagationInventoryToOrder() throws SQLException {
     System.out.println("ATPAQAdminResource.enablePropagationInventoryToOrder");
-    String returnString =  propagationSetup.unscheduleOrderToInventoryPropagation(
-            inventorypdbDataSource, inventoryuser, inventorypw, inventoryToOrderLinkName);
+    String returnString =  propagationSetup.enablePropagation(
+            inventorypdbDataSource, inventoryuser, inventorypw, inventoryQueueName, inventoryToOrderLinkName);
     final Response returnValue = Response.ok()
             .entity("enablePropagationInventoryToOrder:" + returnString)
             .build();
