@@ -1,13 +1,13 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: orderandinventoryadmin
+  name: atpaqadmin
 spec:
   replicas: 1
   template:
     metadata:
       labels:
-        app: orderandinventoryadmin
+        app: atpaqadmin
         version: helidon
     spec:
       # The credential files in the secret are base64 encoded twice and hence they need to be decoded for the programs to use them.
