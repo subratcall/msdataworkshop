@@ -15,7 +15,7 @@ public class PropagationSetup {
         System.out.println("PropagationSetup.createInventoryTable");
         String returnValue = "PropagationSetup.createInventoryTable\n";
         try {
-            inventorypdbDataSource.getConnection().createStatement().executeUpdate(
+            inventorypdbDataSource.getConnection(ATPAQAdminResource.inventoryuser, ATPAQAdminResource.inventorypw).createStatement().executeUpdate(
                     "create table inventory (inventoryid varchar(16), inventorylocation varchar(32), inventorycount integer)");
             returnValue += "success";
         } catch (SQLException ex) {

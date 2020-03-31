@@ -297,7 +297,6 @@ public class ATPAQAdminResource {
     return returnValue;
   }
 
-
   @Path("/getConnectionMetaData")
   @GET
   @Produces(MediaType.TEXT_PLAIN)
