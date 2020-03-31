@@ -12,11 +12,17 @@ public class PropagationSetup {
 
 
     public String createInventoryTable(DataSource inventorypdbDataSource) throws SQLException {
-        System.out.println("PropagationSetup.createInventoryTable");
-        String returnValue = "PropagationSetup.createInventoryTable\n";
+        System.out.println("PropagationSetup.createInventoryTable and add items");
+        String returnValue = "PropagationSetup.createInventoryTable and add items\n";
         try {
-            inventorypdbDataSource.getConnection(ATPAQAdminResource.inventoryuser, ATPAQAdminResource.inventorypw).createStatement().executeUpdate(
+            Connection connection = inventorypdbDataSource.getConnection(ATPAQAdminResource.inventoryuser, ATPAQAdminResource.inventorypw);
+            connection.createStatement().executeUpdate( "drop table inventory ");
+            connection.createStatement().executeUpdate(
                     "create table inventory (inventoryid varchar(16), inventorylocation varchar(32), inventorycount integer)");
+            connection.createStatement().executeUpdate("insert into inventory values ('carrots', '1st Street', 0)");
+            connection.createStatement().executeUpdate("insert into inventory values ('cucumbers', '2nd Street', 0)");
+            connection.createStatement().executeUpdate("insert into inventory values ('tomatoes', '3rd Street', 0)");
+            connection.createStatement().executeUpdate("insert into inventory values ('onions', '4th Street', 0)");
             returnValue += "success";
         } catch (SQLException ex) {
             ex.printStackTrace();
