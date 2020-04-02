@@ -136,7 +136,7 @@
         <!--</dependency>-->
         <dependency>
             <groupId>com.oracle.ojdbc</groupId>
-            <artifactId>ojdbc8</artifactId>
+            <artifactId>ojdbc8dms_g</artifactId>
             <version>19.3.0.0</version>
         </dependency>
         <dependency>

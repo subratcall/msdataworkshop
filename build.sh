@@ -8,9 +8,9 @@ cd frontend-helidon
 cd ../
 
 echo ________________________________________
-echo building and pushing osb-atp-dbadmin-helidon...
+echo building and pushing atpaqadmin...
 echo ________________________________________
-cd osb-atp-dbadmin-helidon
+cd atpaqadmin
 ./build.sh
 cd ../
 

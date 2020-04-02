@@ -262,14 +262,14 @@ public class FrontEndResource {
                 "    <th width=\"50%\" align=\"left\" valign=\"top\">" +
                "<h4>JSON data, AQ transactional event-driven communication, and choreography saga (order and inventory service)</h4>" +
                 "<form action=\"placeorder\">" +
-                "itemid : <input type=\"text\" name=\"itemid\" size=\"5\" value=\"cucumbers\">  " +
+                "itemid : <input type=\"text\" name=\"itemid\" size=\"5\" value=\"11\">  " +
                 "deliver to : <input type=\"text\" name=\"deliverylocation\" size=\"35\" value=\"780 PANORAMA DR,San Francisco,CA\"><br>  " +
                 "orderid : <input type=\"text\" name=\"orderid\"  size=\"6\" value=\"66\"> " +
                 "<input type=\"submit\" value=\"place order\"></p>" +
                 "</form>" +
                 "<h4>Relational data (supplier service)</h4>" +
                 "<form action=\"supplierservicecall\">" +
-                "itemid : <input type=\"text\" name=\"itemid\" size=\"5\" value=\"11\">  " +
+                "itemid (cucumbers, carrots, tomatoes, onions): <input type=\"text\" name=\"itemid\" size=\"5\" value=\"cucumbers\">  " +
                 "<input type=\"submit\" name =\"test\" value=\"addInventory\">" +
                 "<input type=\"submit\" name =\"test\" value=\"removeInventory\">" +
                 "<input type=\"submit\" name =\"test\" value=\"getinventory\">" +
