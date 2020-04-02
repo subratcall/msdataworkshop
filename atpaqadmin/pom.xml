@@ -56,7 +56,7 @@
                 <configuration>
                     <imageName>${docker.image.prefix}/${project.artifactId}</imageName>
                     <baseImage>java</baseImage>
-                    <entryPoint>["java", "-jar", "/${project.build.finalName}.jar"]</entryPoint>
+                    <entryPoint>["java", "-Doracle.jdbc.Trace=true, "-jar", "/${project.build.finalName}.jar"]</entryPoint>
                     <resources>
                         <resource>
                             <targetPath>/</targetPath>
@@ -129,6 +129,11 @@
             <artifactId>helidon-integrations-cdi-datasource-ucp</artifactId>
             <scope>runtime</scope>
         </dependency>
+        <!--<dependency>-->
+            <!--<groupId>io.helidon.integrations.cdi</groupId>-->
+            <!--<artifactId>helidon-integrations-cdi-datasource-hikaricp</artifactId>-->
+            <!--<scope>runtime</scope>-->
+        <!--</dependency>-->
         <dependency>
             <groupId>com.oracle.ojdbc</groupId>
             <artifactId>ojdbc8</artifactId>
