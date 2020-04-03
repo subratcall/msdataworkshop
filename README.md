@@ -29,6 +29,7 @@ Task 1 (create OCI account, OKE cluster, ATP databases, and access OKE from clou
         - Download the regional wallet (connection info) and note the wallet password (this is optional depending on setup - todo elaborate)
 
 Task 2 (Use cloud Shell to access OKE cluster and create `msdataworkshop` namespace)
+        - Note that cloud shell will timeout if inactive for more than 20 minutes and environment variables, etc. will need to be reset/re-exported
         - Enter cloud shell and issue command to export kubeconfig for the OKE cluster created
         - Related blog with quick instructions here: https://blogs.oracle.com/cloud-infrastructure/announcing-oracle-cloud-shell
         - Verify OKE access using command such as `kubectl get pods --all-namespaces`
@@ -40,20 +41,23 @@ Task 3 (create github account and build microservice image)
    - From cloud shell...
    - Run `git clone https://github.com/paulparkinson/msdataworkshop.git`
         - optionally (if planning to make modifications, for example) fork this repos and Run `git clone` on the forked repos
-   - `cd msdataworkshop`
-   - Run `./build.sh`
-   - For convenience, `source shortcutaliases` and add the `utils` directory to the path.
+   - `cd msdataworkshop/frontend-helidon`
+   - Run `mvn clean install`
 
 Task 4 (push image, deploy, and access microservice)
-   - Setup OCIR, create authkey
+   - Setup OCIR, create authtoken and save it (will have a format such as ) 
+        - https://docs.cloud.oracle.com/en-us/iaas/Content/Registry/Tasks/registrypushingimagesusingthedockercli.htm
    - From cloud shell...
    - `docker login` 
-        - https://docs.cloud.oracle.com/en-us/iaas/Content/Registry/Tasks/registrypushingimagesusingthedockercli.htm
         - example `docker login us-phoenix-1.ocir.io` user: msdataworkshoptenancy/msdataworkshopuser password: [authtoken]
    - Modify the following files... (todo get this from single location such as DOCKER_REGISTRY env var)
         - export DOCKER_REGISTRY setting it to OCIR repos location such as us-phoenix-1.ocir.io/stevengreenberginc/paul.parkinson/msdataworkshop
         - edit pom.xml and replace <docker.image.prefix>us-phoenix-1.ocir.io/stevengreenberginc/paul.parkinson/msdataworkshop</docker.image.prefix>
         - edit `./deploy.sh` and replace us-phoenix-1.ocir.io/stevengreenberginc/paul.parkinson/msdataworkshop/frontend-helidon:0.1
+   - For convenience, vi ~/.bashrc , append the following lines, and `source ~/.bashrc`
+        - `source shortcutaliases` 
+        - `export PATH=$PATH:~/msdataworkshop/utils/`
+        - `export DOCKER_REGISTRY="us-phoenix-1.ocir.io/stevengreenberginc/paul.parkinson/msdataworkshop"`
    - Run `./build.sh` to push images to OCIR
    - Mark the images as public in OCIR via Cloud Console - todo if this is an issue mod deployment/git to do `docker login`
    - Run `kubectl create ns msdataworkshop` 

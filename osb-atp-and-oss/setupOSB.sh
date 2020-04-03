@@ -50,7 +50,7 @@ helm install https://github.com/oracle/oci-service-broker/releases/download/v1.4
 echo "create oci-service-broker ClusterServiceBroker:"
 kubectl create -f oci-service-broker.yaml
 
-echo " svcat get brokers..."
+echo "sleep for 1 minute and svcat get brokers..."
 svcat get brokers
 
 echo "sleep for 1 minute and check again..."

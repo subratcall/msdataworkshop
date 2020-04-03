@@ -1,4 +1,3 @@
-export DOCKER_REGISTRY=us-phoenix-1.ocir.io/stevengreenberginc/paul.parkinson/msdataworkshop
 alias k='kubectl'
 alias kt='kubectl --insecure-skip-tls-verify'
 alias p='kubectl get po --all-namespaces'
