@@ -104,7 +104,6 @@ public class OrderResource {
             returnString += orders.get(order);
         }
         // todo - make this an option if we dont automatically reload returnString += "orders in db...\n";
-
         final Response returnValue = Response.ok()
                 .entity(returnString)
                 .build();

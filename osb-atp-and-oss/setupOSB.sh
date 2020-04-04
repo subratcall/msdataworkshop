@@ -12,8 +12,7 @@ echo "Add the Kubernetes Service Catalog helm repository:"
 helm repo add svc-cat https://svc-catalog-charts.storage.googleapis.com
 
 echo "Install the Kubernetes Service Catalog helm chart:"
-# detect helm and if Helm 3.x ... helm install catalog svc-cat/catalog
-helm install svc-cat/catalog --timeout 300 --name catalog
+helm install catalog svc-cat/catalog --version 0.3.0-beta.2
 
 ########################################################################################
 # MODIFY "< >" VALUES IN clusterrolebinding and ocicredentials ARGUMENTS BELOW....
@@ -37,20 +36,15 @@ kubectl create secret generic ocicredentials \
 ########################################################################################
 
 echo "install oci-service-broker:"
-# detect helm and if Helm 3.x ...
-# helm install oci-service-broker https://github.com/oracle/oci-service-broker/releases/download/v1.4.0/oci-service-broker-1.4.0.tgz \
-#   --set ociCredentials.secretName=ocicredentials \
-#   --set storage.etcd.useEmbedded=true \
-#   --set tls.enabled=false
-helm install https://github.com/oracle/oci-service-broker/releases/download/v1.4.0/oci-service-broker-1.4.0.tgz  --name oci-service-broker \
-  --set ociCredentials.secretName=ocicredentials \
-  --set storage.etcd.useEmbedded=true \
-  --set tls.enabled=false
+helm install oci-service-broker https://github.com/oracle/oci-service-broker/releases/download/v1.4.0/oci-service-broker-1.4.0.tgz \
+   --set ociCredentials.secretName=ocicredentials \
+   --set storage.etcd.useEmbedded=true \
+   --set tls.enabled=false
 
 echo "create oci-service-broker ClusterServiceBroker:"
 kubectl create -f oci-service-broker.yaml
 
-echo "sleep for 1 minute and svcat get brokers..."
+echo "sleep for 1 minute and svcat get brokers... (initial check may temporarily show ErrorFetchingCatalog etc.)"
 svcat get brokers
 
 echo "sleep for 1 minute and check again..."

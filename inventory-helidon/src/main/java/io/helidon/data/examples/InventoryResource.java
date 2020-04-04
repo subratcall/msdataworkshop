@@ -30,7 +30,6 @@ import oracle.ucp.jdbc.PoolDataSource;
 @ApplicationScoped
 public class InventoryResource {
 
-
     @Inject
     @Named("inventorypdb")
     PoolDataSource atpInventoryPDB;
@@ -43,6 +42,10 @@ public class InventoryResource {
     static String inventorypw = "Welcome12345";
     static String inventoryQueueName = "inventoryqueue";
     static String orderQueueName = "orderqueue";
+
+    static {
+        System.setProperty(“oracle.jdbc.fanEnabled”, “false”);
+    }
 
     @Path("/listenForMessages")
     @GET

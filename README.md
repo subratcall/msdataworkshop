@@ -9,12 +9,13 @@ Task 1 (create OCI account, OKE cluster, ATP databases, and access OKE from clou
    - Get (free) OCI account and tenancy 
         - https://myservices.us.oraclecloud.com/mycloud/signup
         - note tenancy ocid, region name, user ocid
-   - Create user api key and note the private key/pem location, fingerprint, and passphrase foobar 
+   - Create user api key and note the private key/pem location, fingerprint, and passphrase 
         - https://docs.cloud.oracle.com/en-us/iaas/Content/Functions/Tasks/functionssetupapikey.htm
    - Create compartment
         - https://docs.cloud.oracle.com/en-us/iaas/Content/Identity/Tasks/managingcompartments.htm?Highlight=creating%20a%20comparment
         - https://oracle-base.com/articles/vm/oracle-cloud-infrastructure-oci-create-a-compartment#create-compartment
    - Create OCIR repos and auth key
+        - Create a meaningful repos name such as `paul.parkinson/msdataworkshop`and note the repo-name you've created as it will be used in Task 4
         - https://docs.cloud.oracle.com/en-us/iaas/Content/Registry/Tasks/registrycreatingarepository.htm
         - https://docs.cloud.oracle.com/en-us/iaas/Content/Registry/Tasks/registrypushingimagesusingthedockercli.htm (login etc. steps can be done in later tasks)
    - Create OKE cluster
@@ -45,11 +46,11 @@ Task 3 (create github account and build microservice image)
    - Run `mvn clean install`
 
 Task 4 (push image, deploy, and access microservice)
-   - Setup OCIR, create authtoken and save it (will have a format such as ) 
+   - Setup OCIR, create authtoken and save it (will have a format such as Q:4qXo:7ADFaf9KZddZQ ) 
         - https://docs.cloud.oracle.com/en-us/iaas/Content/Registry/Tasks/registrypushingimagesusingthedockercli.htm
-   - From cloud shell...
-   - `docker login` 
-        - example `docker login us-phoenix-1.ocir.io` user: msdataworkshoptenancy/msdataworkshopuser password: [authtoken]
+   - Enter cloud shell...
+   - Run `docker login <ocir-host> -u <tenancyname>/<username> -p <authtoken>` 
+        - example `docker login us-phoenix-1.ocir.io -u msdataworkshoptenancy/msdataworkshopuser -p Q:4qXo:7ADFaf9KZddZQ`
    - Modify the following files... (todo get this from single location such as DOCKER_REGISTRY env var)
         - export DOCKER_REGISTRY setting it to OCIR repos location such as us-phoenix-1.ocir.io/stevengreenberginc/paul.parkinson/msdataworkshop
         - edit pom.xml and replace <docker.image.prefix>us-phoenix-1.ocir.io/stevengreenberginc/paul.parkinson/msdataworkshop</docker.image.prefix>
@@ -59,7 +60,7 @@ Task 4 (push image, deploy, and access microservice)
         - `export PATH=$PATH:~/msdataworkshop/utils/`
         - `export DOCKER_REGISTRY="us-phoenix-1.ocir.io/stevengreenberginc/paul.parkinson/msdataworkshop"`
    - Run `./build.sh` to push images to OCIR
-   - Mark the images as public in OCIR via Cloud Console - todo if this is an issue mod deployment/git to do `docker login`
+   - Mark the images as public in OCIR via Cloud Console (this avoids the need to do `docker login` in the deployment yaml or git CI/CD)
    - Run `kubectl create ns msdataworkshop` 
    - Run `./deploy.sh` to create deployment and service to namespace msdataworkshop created in previous step
    - Check frontend pod is Running by using `kubectl get pods --all-namespaces`

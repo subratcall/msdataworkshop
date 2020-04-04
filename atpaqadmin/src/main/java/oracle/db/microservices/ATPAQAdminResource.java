@@ -43,6 +43,10 @@ public class ATPAQAdminResource {
   static String orderToInventoryLinkName = "ORDERTOINVENTORYLINK";
   static String inventoryToOrderLinkName = "INVENTORYTOORDERLINK";
 
+  static {
+    System.setProperty("oracle.jdbc.fanEnabled", "false");
+  }
+
   @Inject
   @Named("orderpdb")
   private DataSource orderpdbDataSource; // .setFastConnectionFailoverEnabled(false) to get rid of SEVERE yet benign message

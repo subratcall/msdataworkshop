@@ -42,7 +42,7 @@ spec:
         command:
         - bash
         - -c
-        - "cat /tmp/creds-order/tnsnames.ora >> /tmp/creds-inventory/tnsnames.ora ; cp /tmp/creds-inventory/tnsnames.ora /tmp/creds-order/tnsnames.ora ;"
+        - "cat /tmp/creds-order/tnsnames.ora >> /tmp/creds-inventory/tnsnames.ora ; cp /tmp/creds-inventory/tnsnames.ora /tmp/creds-order/tnsnames.ora;"
         image: oraclelinux:7.5
         volumeMounts:
         - name: creds-order
