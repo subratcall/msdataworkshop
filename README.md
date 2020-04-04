@@ -5,7 +5,7 @@ WORKSHOP - NOTE THAT THIS IS A WORK IN PROGRESS AND WILL BE COMPLETE BY MID MARC
 ![demo architecture](demo-arch.png) 
 ![demo ERD](demo-erd.png) 
 
-Task 1 (create OCI account, OKE cluster, ATP databases, and access OKE from cloud shell)
+Task 1 (create OCI account, OKE cluster, ATP databases)
    - Get (free) OCI account and tenancy 
         - https://myservices.us.oraclecloud.com/mycloud/signup
         - note tenancy ocid, region name, user ocid
@@ -29,17 +29,16 @@ Task 1 (create OCI account, OKE cluster, ATP databases, and access OKE from clou
         - Note the ocid, compartmentId, name, and admin pw of the databases
         - Download the regional wallet (connection info) and note the wallet password (this is optional depending on setup - todo elaborate)
 
-Task 2 (Use cloud Shell to access OKE cluster and create `msdataworkshop` namespace)
-        - Note that cloud shell will timeout if inactive for more than 20 minutes and environment variables, etc. will need to be reset/re-exported
-        - Enter cloud shell and issue command to export kubeconfig for the OKE cluster created
-        - Related blog with quick instructions here: https://blogs.oracle.com/cloud-infrastructure/announcing-oracle-cloud-shell
-        - Verify OKE access using command such as `kubectl get pods --all-namespaces`
-        - Create `msdataworkshop` namespace using command `kubectl create ns msdataworkshop`
+Task 2 (Use Cloud Shell to access OKE cluster and create `msdataworkshop` namespace)
+    - Enter Cloud Shell and issue command to export kubeconfig for the OKE cluster created
+    - Related blog with quick instructions here: https://blogs.oracle.com/cloud-infrastructure/announcing-oracle-cloud-shell
+    - Verify OKE access using command such as `kubectl get pods --all-namespaces`
+    - Create `msdataworkshop` namespace using command `kubectl create ns msdataworkshop`
     
 Task 3 (create github account and build microservice image)
    - Create github account
         - http://github.com
-   - From cloud shell...
+   - From Cloud Shell...
    - Run `git clone https://github.com/paulparkinson/msdataworkshop.git`
         - optionally (if planning to make modifications, for example) fork this repos and Run `git clone` on the forked repos
    - `cd msdataworkshop/frontend-helidon`
@@ -48,7 +47,7 @@ Task 3 (create github account and build microservice image)
 Task 4 (push image, deploy, and access microservice)
    - Setup OCIR, create authtoken and save it (will have a format such as Q:4qXo:7ADFaf9KZddZQ ) 
         - https://docs.cloud.oracle.com/en-us/iaas/Content/Registry/Tasks/registrypushingimagesusingthedockercli.htm
-   - Enter cloud shell...
+   - Enter Cloud Shell...
    - Run `docker login <ocir-host> -u <tenancyname>/<username> -p <authtoken>` 
         - example `docker login us-phoenix-1.ocir.io -u msdataworkshoptenancy/msdataworkshopuser -p Q:4qXo:7ADFaf9KZddZQ`
    - Modify the following files... (todo get this from single location such as DOCKER_REGISTRY env var)
@@ -60,7 +59,7 @@ Task 4 (push image, deploy, and access microservice)
         - `export PATH=$PATH:~/msdataworkshop/utils/`
         - `export DOCKER_REGISTRY="us-phoenix-1.ocir.io/stevengreenberginc/paul.parkinson/msdataworkshop"`
    - Run `./build.sh` to push images to OCIR
-   - Mark the images as public in OCIR via Cloud Console (this avoids the need to do `docker login` in the deployment yaml or git CI/CD)
+   - Mark the images as public in OCIR via Cloud Shell (this avoids the need to do `docker login` in the deployment yaml or git CI/CD)
    - Run `kubectl create ns msdataworkshop` 
    - Run `./deploy.sh` to create deployment and service to namespace msdataworkshop created in previous step
    - Check frontend pod is Running by using `kubectl get pods --all-namespaces`
@@ -118,7 +117,7 @@ Task 9 (Using OCI service broker, provision and create binding to stream, and ve
 Task 10 (Using OCI service broker, provision and create binding to stream, and verify with app)
    - Insure Task 4 is complete and refer to https://github.com/oracle/oci-service-broker and specifically...
         - https://github.com/oracle/oci-service-broker/blob/master/charts/oci-service-broker/docs/oss.md
-   - In Cloud Console and streaming policy
+   - In Cloud Shell and streaming policy
         - add a group for user if one does not exist
         - add policy for that group to allow streaming (eg name `StreamingPolicy`, description `Allow to manage streams`)
             - Policy statement `Allow group <SERVICE_BROKER_GROUP> to manage streams in compartment <COMPARTMENT_NAME>`
