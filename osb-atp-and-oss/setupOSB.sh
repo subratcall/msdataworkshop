@@ -4,8 +4,8 @@ echo "Install svcat"
 # linux is currently assumed, check
 curl -sLO https://download.svcat.sh/cli/latest/linux/amd64/svcat
 chmod +x ./svcat
-echo "moving svcat to `utils` dir to add it to path..."
-mv svcat ../utils
+echo "moving svcat to utils dir to add it to path..."
+mv svcat $MSDATAWORKSHOP_LOCATION/utils
 svcat version --client
 
 echo "Add the Kubernetes Service Catalog helm repository:"
