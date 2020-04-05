@@ -50,7 +50,7 @@ Task 3 (Create github account and build microservice image)
 
 Task 4 (Push image, deploy, and access microservice)
    - Estimated task time 8 minutes
-   - Video walk through: https://www.youtube.com/watch?v=vYD1s6c3a8w
+   - Video walk through: https://www.youtube.com/watch?v=I10NLrAYjIM
    - From Cloud Shell...
    - Login to OCIR and verify docker
         - https://docs.cloud.oracle.com/en-us/iaas/Content/Registry/Tasks/registrypushingimagesusingthedockercli.htm
