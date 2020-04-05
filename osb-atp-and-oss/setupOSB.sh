@@ -53,4 +53,4 @@ svcat get brokers
 svcat get classes
 svcat get plans
 
-echo "if still not ready continue to  check again with 'svcat get brokers ; svcat get classes ; svcat get plans''
+echo "If broker is still not ready, continue to check again with svcat get brokers etc commands"
