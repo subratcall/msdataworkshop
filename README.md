@@ -5,7 +5,9 @@ WORKSHOP - NOTE THAT THIS IS A WORK IN PROGRESS AND WILL BE COMPLETE BY MID MARC
 ![demo architecture](demo-arch.png) 
 ![demo ERD](demo-erd.png) 
 
-Task 1 (create OCI account, OKE cluster, ATP databases)
+Task 1 (create OCI account, OKE cluster, ATP databases) 
+   - Estimated task time 20 minutes
+   - Video walk through: https://www.youtube.com/watch?v=
    - Get (free) OCI account and tenancy 
         - https://myservices.us.oraclecloud.com/mycloud/signup
         - note tenancy ocid, region name, user ocid
@@ -30,10 +32,10 @@ Task 1 (create OCI account, OKE cluster, ATP databases)
         - Download the regional wallet (connection info) and note the wallet password (this is optional depending on setup - todo elaborate)
 
 Task 2 (Use Cloud Shell to access OKE cluster and create `msdataworkshop` namespace)
-    - Enter Cloud Shell and issue command to export kubeconfig for the OKE cluster created
-    - Related blog with quick instructions here: https://blogs.oracle.com/cloud-infrastructure/announcing-oracle-cloud-shell
-    - Verify OKE access using command such as `kubectl get pods --all-namespaces`
-    - Create `msdataworkshop` namespace using command `kubectl create ns msdataworkshop`
+   - Enter Cloud Shell and issue command to export kubeconfig for the OKE cluster created
+   - Related blog with quick instructions here: https://blogs.oracle.com/cloud-infrastructure/announcing-oracle-cloud-shell
+   - Verify OKE access using command such as `kubectl get pods --all-namespaces`
+   - Create `msdataworkshop` namespace using command `kubectl create ns msdataworkshop`
     
 Task 3 (create github account and build microservice image)
    - Create github account
