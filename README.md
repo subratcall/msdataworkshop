@@ -17,7 +17,6 @@ Task 1 (Create OCI account, OKE cluster, ATP databases)
    - Create OCIR repos and auth key
         - Create a meaningful repos name such as `paul.parkinson/msdataworkshop`and note the repo-name you've created as it will be used in Task 4
         - https://docs.cloud.oracle.com/en-us/iaas/Content/Registry/Tasks/registrycreatingarepository.htm
-        - https://docs.cloud.oracle.com/en-us/iaas/Content/Registry/Tasks/registrypushingimagesusingthedockercli.htm (login etc. steps can be done in later tasks)
    - Create OKE cluster
         - https://docs.cloud.oracle.com/en-us/iaas/Content/ContEng/Tasks/contengcreatingclusterusingoke.htm
         - https://docs.cloud.oracle.com/en-us/iaas/Content/ContEng/Tasks/contengaccessingclusterkubectl.htm
@@ -51,14 +50,18 @@ Task 3 (Create github account and build microservice image)
 
 Task 4 (Push image, deploy, and access microservice)
    - From Cloud Shell...
-   - Run `docker login <ocir-host> -u <tenancyname>/<username> -p <authtoken>` 
-        - example `docker login us-phoenix-1.ocir.io -u msdataworkshoptenancy/msdataworkshopuser -p Q:4qXo:7ADFaf9KZddZQ`
+   - Login to OCIR and verify docker
+        - https://docs.cloud.oracle.com/en-us/iaas/Content/Registry/Tasks/registrypushingimagesusingthedockercli.htm
+        - Run `docker login <region-key>.ocir.io -u <tenancy-namespace>/<username> -p <authtoken>` 
+            - <tenancy-namespace> is the Object Storage Namespace found under tenancy information
+            - example `docker login us-phoenix-1.ocir.io -u ax2mkasdfkkx/msdataworkshopuser -p Q:4qXo:7ADFaf9KZddZQ`
+        - Verify with `docker image` command
    - For convenience, vi ~/.bashrc, append the following lines (substituting DOCKER_REGISTRY and MSDATAWORKSHOP_LOCATION values), and `source ~/.bashrc`
 
-          export MSDATAWORKSHOP_LOCATION=~/msdataworkshop
-          source $MSDATAWORKSHOP_LOCATION/msdataworkshop/shortcutaliases
-          export PATH=$PATH:$MSDATAWORKSHOP_LOCATION/utils/
-          export DOCKER_REGISTRY="us-phoenix-1.ocir.io/msdataworkshoptenancy/msdataworkshopuser/msdataworkshop"
+         export MSDATAWORKSHOP_LOCATION=~/msdataworkshop
+         source $MSDATAWORKSHOP_LOCATION/msdataworkshop/shortcutaliases
+         export PATH=$PATH:$MSDATAWORKSHOP_LOCATION/utils/
+         export DOCKER_REGISTRY="us-phoenix-1.ocir.io/msdataworkshoptenancy/msdataworkshopuser/msdataworkshop"
    - `cd $MSDATAWORKSHOP_LOCATION\frontend-helidon`
    - Run `./build.sh` to build the frontend-helidon image and push it to OCIR
    - Mark the image as public in OCIR via Cloud Shell (this avoids the need to do `docker login` in the deployment yaml or git CI/CD)
