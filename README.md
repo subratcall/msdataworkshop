@@ -53,24 +53,21 @@ Task 4 (Push image, deploy, and access microservice)
    - From Cloud Shell...
    - Run `docker login <ocir-host> -u <tenancyname>/<username> -p <authtoken>` 
         - example `docker login us-phoenix-1.ocir.io -u msdataworkshoptenancy/msdataworkshopuser -p Q:4qXo:7ADFaf9KZddZQ`
-   - Modify the following files... (todo get this from single location such as DOCKER_REGISTRY env var)
-        - export DOCKER_REGISTRY setting it to OCIR repos location such as us-phoenix-1.ocir.io/paulparkinson/paul.parkinson/msdataworkshop
-        - edit pom.xml and replace <docker.image.prefix>us-phoenix-1.ocir.io/paulparkinson/paul.parkinson/msdataworkshop</docker.image.prefix>
-        - edit `./deploy.sh` and replace us-phoenix-1.ocir.io/paulparkinson/paul.parkinson/msdataworkshop/frontend-helidon:0.1
-   - For convenience, vi ~/.bashrc, append the following lines, and `source ~/.bashrc`
-        - `export MSDATAWORKSHOP_LOCATION=~/msdataworkshop`
-        - `source $MSDATAWORKSHOP_LOCATION/msdataworkshop/shortcutaliases` 
-        - `export PATH=$PATH:$MSDATAWORKSHOP_LOCATION/utils/`
-        - `export DOCKER_REGISTRY="us-phoenix-1.ocir.io/paulparkinson/paul.parkinson/msdataworkshop"`
-   - Run `./build.sh` to push images to OCIR
-   - Mark the images as public in OCIR via Cloud Shell (this avoids the need to do `docker login` in the deployment yaml or git CI/CD)
-   - Run `kubectl create ns msdataworkshop` 
-   - Run `./deploy.sh` to create deployment and service to namespace msdataworkshop created in previous step
-   - Check frontend pod is Running by using `kubectl get pods --all-namespaces`
-   - Check frontend loadbalancer address using `kubectl get services --all-namespaces`
+   - For convenience, vi ~/.bashrc, append the following lines (substituting DOCKER_REGISTRY and MSDATAWORKSHOP_LOCATION values), and `source ~/.bashrc`
+   
+          export MSDATAWORKSHOP_LOCATION=~/msdataworkshop
+          source $MSDATAWORKSHOP_LOCATION/msdataworkshop/shortcutaliases
+          export PATH=$PATH:$MSDATAWORKSHOP_LOCATION/utils/
+          export DOCKER_REGISTRY="us-phoenix-1.ocir.io/msdataworkshoptenancy/msdataworkshopuser/msdataworkshop"
+   - `cd $MSDATAWORKSHOP_LOCATION\frontend-helidon`
+   - Run `./build.sh` to build the frontend-helidon image and push it to OCIR
+   - Mark the image as public in OCIR via Cloud Shell (this avoids the need to do `docker login` in the deployment yaml or git CI/CD)
+   - Run `./deploy.sh` to create deployment and service in the msdataworkshop namespace 
+   - Check frontend pod is Running by using `kubectl get pods --all-namespaces` or the `p` shortcut command
+   - Check frontend loadbalancer address using `kubectl get services --all-namespaces`  or use `s` shortcut command
    - Access frontend page 
-        - via frontend LoadBalancer service, eg http://129.146.94.70:8080
-        - or, if using NodePort instead of LoadBalancer as service do..
+        - via frontend LoadBalancer service, eg http://129.146.99.99:8080
+        - or, if the service has been modified to use NodePort instead of LoadBalancer...
             - `kubectl port-forward [frontend pod] -n msdataworkshop 8080:8080`
             - and access http://localhost:8080
 

@@ -10,9 +10,7 @@ if [ -z "DOCKER_REGISTRY" ]; then
     exit 1
 fi
 
-echo IMAGE is ${DOCKER_REGISTRY}/${IMAGE_NAME}:${IMAGE_VERSION}
 export IMAGE=${DOCKER_REGISTRY}/${IMAGE_NAME}:${IMAGE_VERSION}
-# export IMAGE=us-phoenix-1.ocir.io/stevengreenberginc/paul.parkinson/msdataworkshop/${IMAGE_NAME}:${IMAGE_VERSION}
 
 mvn install
 mvn package docker:build
