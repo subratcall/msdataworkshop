@@ -369,7 +369,7 @@ public class FrontEndResource {
                 "h4   {color: blue;}" +
                 "</style></head>" +
                 "  <body>" +
-                "  <script>" +
+      /**          "  <script>" +
                 "" +
                 "            // const visulizationURL = 'https://nsh2110129.us.oracle.com:8011/chrest/Visualize.jsp'" +
                 "            // const elocationURL = 'https://elocation.oracle.com/routeserver/servlet/RouteServerServlet'" +
@@ -492,8 +492,10 @@ public class FrontEndResource {
                 "            }" +
                 "" +
                 "        </script> " +
-                "<h1 color=\"#BDB76B;\" align=\"left\">" +
-                "<a href=\"\" />\"VeggieDash\" ...Event-driven Stateful Microservices with Helidon and Autonomous Database on OCI</a></h1>" +
+    */            "<h1 color=\"#BDB76B;\" align=\"left\">" +
+//                "<a href=\"\" />Event-driven Stateful Microservices with Helidon and Autonomous Database on OCI</a></h1>" +
+                "Event-driven Stateful Microservices with Helidon and Autonomous Database on OCI</h1>" +
+                "<h2><br>\"VeggieDash\"</h2>" +
                 "</table>";
     }
 

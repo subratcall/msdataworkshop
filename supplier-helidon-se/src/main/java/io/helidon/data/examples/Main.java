@@ -12,11 +12,10 @@ import io.helidon.webserver.Routing;
 import io.helidon.webserver.ServerConfiguration;
 import io.helidon.webserver.WebServer;
 
-/**
- * Main class.
- * Picked up from java -jar and defined in project's pom.
- *
- */
+static {
+        System.setProperty("oracle.jdbc.fanEnabled", "false");
+        }
+
 public final class Main {
 
   public static void main(final String[] args)

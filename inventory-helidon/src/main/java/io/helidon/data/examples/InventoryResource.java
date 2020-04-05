@@ -44,7 +44,7 @@ public class InventoryResource {
     static String orderQueueName = "orderqueue";
 
     static {
-        System.setProperty(“oracle.jdbc.fanEnabled”, “false”);
+        System.setProperty("oracle.jdbc.fanEnabled", "false");
     }
 
     @Path("/listenForMessages")

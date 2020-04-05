@@ -41,9 +41,10 @@ public class OrderResource {
     private OrderServiceEventConsumer orderServiceEventConsumer;
     private boolean isOrderEventConsumerStarted = false;
     private OrderServiceEventProducer orderServiceEventProducer = new OrderServiceEventProducer();
-    static final String orderQueueOwner = "orderuser"; // System.getenv("oracle.ucp.jdbc.PoolDataSource.orderpdb.user");
-    static final String orderQueueName = "orderqueue"; // System.getenv("orderqueuename");
-    static final String inventoryQueueName = "inventoryqueue"; // System.getenv("inventoryqueuename");
+    // todo get from env
+    static final String orderQueueOwner = "orderuser";
+    static final String orderQueueName = "orderqueue";
+    static final String inventoryQueueName = "inventoryqueue";
     static boolean liveliness = true;
     private static String lastContainerStartTime;
     OrderServiceCPUStress orderServiceCPUStress = new OrderServiceCPUStress();
@@ -54,6 +55,7 @@ public class OrderResource {
         System.out.println("____________________________________________________");
         System.out.println("----------->OrderResource (container) starting at: " + lastContainerStartTime);
         System.out.println("____________________________________________________");
+        System.setProperty("oracle.jdbc.fanEnabled", "false");
     }
 
     @Path("/lastContainerStartTime")
