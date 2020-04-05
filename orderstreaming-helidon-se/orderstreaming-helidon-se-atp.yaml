@@ -1,13 +1,13 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: supplier-helidon
+  name: orderstreaming-helidon
 spec:
   replicas: 1
   template:
     metadata:
       labels:
-        app: supplier
+        app: orderstreaming
         version: helidon-se
     spec:
       # The credential files in the secret are base64 encoded twice and hence they need to be decoded for the programs to use them.
@@ -39,8 +39,8 @@ spec:
         - name: creds-inventory
           mountPath: /creds-inventory
       containers:
-      - name: supplier
-        image: us-phoenix-1.ocir.io/stevengreenberginc/paul.parkinson/msdataworkshop/supplier-helidon-se:0.1
+      - name: orderstreaming
+        image: us-phoenix-1.ocir.io/stevengreenberginc/paul.parkinson/msdataworkshop/orderstreaming-helidon-se:0.1
         imagePullPolicy: Always
         env:
         - name: database.user

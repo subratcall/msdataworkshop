@@ -33,7 +33,7 @@ public class OrderStreamingService implements Service {
     @Override
     public void update(Rules rules) {
         rules
-                .get("/streamorders", this::streamOrders)
+                .get("/streamorders", this::streamOrders);
     }
 
 

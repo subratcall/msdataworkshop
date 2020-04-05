@@ -31,7 +31,7 @@ public final class Main {
     WebServer server = WebServer.create(serverConfig, createRouting(config));
     server.start().thenAccept(ws -> {
         System.out
-          .printf("WEB server is up! http://localhost:%s/supplier%n", ws.port());
+          .printf("WEB server is up! http://localhost:%s/orderstreaming%n", ws.port());
           ws.whenShutdown()
           .thenRun(() -> System.out.println("WEB server is DOWN. Good bye!"));
       }).exceptionally(t -> {
@@ -53,7 +53,7 @@ public final class Main {
     return Routing
         .builder()
         .register(JsonSupport.create())
-        .register("/supplier", rsiService)
+        .register("/orderstreaming", rsiService)
         .build();
   }
 }
