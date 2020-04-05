@@ -12,14 +12,11 @@ import io.helidon.webserver.Routing;
 import io.helidon.webserver.ServerConfiguration;
 import io.helidon.webserver.WebServer;
 
-static {
-        System.setProperty("oracle.jdbc.fanEnabled", "false");
-        }
-
 public final class Main {
 
   public static void main(final String[] args)
       throws IOException, SQLException {
+    System.setProperty("oracle.jdbc.fanEnabled", "false");
     LogManager
         .getLogManager()
         .readConfiguration(
