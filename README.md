@@ -54,7 +54,7 @@ Task 4 (Push image, deploy, and access microservice)
    - Run `docker login <ocir-host> -u <tenancyname>/<username> -p <authtoken>` 
         - example `docker login us-phoenix-1.ocir.io -u msdataworkshoptenancy/msdataworkshopuser -p Q:4qXo:7ADFaf9KZddZQ`
    - For convenience, vi ~/.bashrc, append the following lines (substituting DOCKER_REGISTRY and MSDATAWORKSHOP_LOCATION values), and `source ~/.bashrc`
-   
+
           export MSDATAWORKSHOP_LOCATION=~/msdataworkshop
           source $MSDATAWORKSHOP_LOCATION/msdataworkshop/shortcutaliases
           export PATH=$PATH:$MSDATAWORKSHOP_LOCATION/utils/
@@ -70,6 +70,8 @@ Task 4 (Push image, deploy, and access microservice)
         - or, if the service has been modified to use NodePort instead of LoadBalancer...
             - `kubectl port-forward [frontend pod] -n msdataworkshop 8080:8080`
             - and access http://localhost:8080
+   - Run `cd $MSDATAWORKSHOP_LOCATION ; ./build.sh ` to build and push all of the rest of the microservices
+   - Mark all of the images as public in OCIR via Cloud Shell as done with the frontend image
 
 Task 5 (Setup OCI Open Service Broker)
    - `cd atpaqadmin`
