@@ -6,6 +6,7 @@ import oracle.jdbc.aq.*;
 import java.sql.SQLException;
 
 public class QueueUtils {
+    /**
     public static String sendMessage(OracleConnection conn, Object message, String queueName, String aggentName,
                                      String aggentAddress) throws SQLException {
         AQMessageProperties msgprop = AQFactory.createAQMessageProperties();
@@ -65,4 +66,5 @@ public class QueueUtils {
         }
         return sb.toString();
     }
+     */
 }

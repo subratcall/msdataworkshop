@@ -49,6 +49,8 @@ Task 3 (Create github account and build microservice image)
    - Run `mvn clean install`
 
 Task 4 (Push image, deploy, and access microservice)
+   - Estimated task time 8 minutes
+   - Video walk through: https://www.youtube.com/watch?v=vYD1s6c3a8w
    - From Cloud Shell...
    - Login to OCIR and verify docker
         - https://docs.cloud.oracle.com/en-us/iaas/Content/Registry/Tasks/registrypushingimagesusingthedockercli.htm
@@ -77,21 +79,20 @@ Task 4 (Push image, deploy, and access microservice)
    - Mark all of the images as public in OCIR via Cloud Shell as done with the frontend image
 
 Task 5 (Setup OCI Open Service Broker)
-   - `cd atpaqadmin`
+   - `cd $MSDATAWORKSHOP_LOCATION/osb-atp-and-oss`
    - Set ocid, etc. values in `setupOSB.sh` and run `./setupOSB.sh`
    - Refererences... 
         - https://github.com/oracle/oci-service-broker/blob/master/charts/oci-service-broker/docs/installation.md
         - https://www.youtube.com/watch?v=qW_pw6Nd5hM
    
 Task 6 (Using OCI service broker, create binding to 2 existing atp instances)
-   - Pre-requisite: Task 1 and 4 are is complete 
+   - `cd $MSDATAWORKSHOP_LOCATION/osb-atp-and-oss`
    - Set ocid and password values in `setupATP.sh` and run `./setupATP.sh`
    - References...
         - https://github.com/oracle/oci-service-broker/blob/master/charts/oci-service-broker/docs/atp.md
         - https://www.youtube.com/watch?v=qW_pw6Nd5hM
   
 Task 7 (Verify and understand ATP connectivity via Helidon microservice deployment in OKE)
-   - Pre-requisite: Task 1 through 6 are complete.
    - `cd msdataworkshop/osb-atp-dbadmin-helidon`
    - Notice atpadmin-deployment.yaml wallet, secret, decode initcontainer, etc. 
    - Notice `atp*` references in microprofile-config.properties and @Inject dataSource in ATPAQAdminResource.java 
