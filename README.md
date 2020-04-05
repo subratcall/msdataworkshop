@@ -59,10 +59,10 @@ Task 4 (Push image, deploy, and access microservice)
    - For convenience, vi ~/.bashrc, append the following lines (substituting DOCKER_REGISTRY and MSDATAWORKSHOP_LOCATION values), and `source ~/.bashrc`
 
          export MSDATAWORKSHOP_LOCATION=~/msdataworkshop
-         source $MSDATAWORKSHOP_LOCATION/msdataworkshop/shortcutaliases
+         source $MSDATAWORKSHOP_LOCATION/shortcutaliases
          export PATH=$PATH:$MSDATAWORKSHOP_LOCATION/utils/
-         export DOCKER_REGISTRY="us-phoenix-1.ocir.io/msdataworkshoptenancy/msdataworkshopuser/msdataworkshop"
-   - `cd $MSDATAWORKSHOP_LOCATION\frontend-helidon`
+         export DOCKER_REGISTRY="<region-key>.ocir.io/<tenancy-namespace>/<repo-name>"
+   - `cd $MSDATAWORKSHOP_LOCATION/frontend-helidon`
    - Run `./build.sh` to build the frontend-helidon image and push it to OCIR
    - Mark the image as public in OCIR via Cloud Shell (this avoids the need to do `docker login` in the deployment yaml or git CI/CD)
    - Run `./deploy.sh` to create deployment and service in the msdataworkshop namespace 
