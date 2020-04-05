@@ -1,11 +1,9 @@
 "Intelligent Event-driven Stateful Microservices with Helidon and Autonomous Database on OCI" 
 
-WORKSHOP - NOTE THAT THIS IS A WORK IN PROGRESS AND WILL BE COMPLETE BY MID MARCH 2020
-
 ![demo architecture](demo-arch.png) 
 ![demo ERD](demo-erd.png) 
 
-Task 1 (create OCI account, OKE cluster, ATP databases) 
+Task 1 (Create OCI account, OKE cluster, ATP databases) 
    - Estimated task time 20 minutes
    - Video walk through: https://www.youtube.com/watch?v=0LeyGPw2vAA
    - Get (free) OCI account and tenancy 
@@ -39,7 +37,7 @@ Task 2 (Use Cloud Shell to access OKE cluster and create `msdataworkshop` namesp
    - Verify OKE access using command such as `kubectl get pods --all-namespaces`
    - Create `msdataworkshop` namespace using command `kubectl create ns msdataworkshop`
     
-Task 3 (create github account and build microservice image)
+Task 3 (Create github account and build microservice image)
    - Estimated task time 2 minutes
    - Video walk through: https://www.youtube.com/watch?v=vYD1s6c3a8w
    - Optionally (if planning to make modifications, for example) 
@@ -51,7 +49,7 @@ Task 3 (create github account and build microservice image)
    - `cd msdataworkshop/frontend-helidon`
    - Run `mvn clean install`
 
-Task 4 (push image, deploy, and access microservice)
+Task 4 (Push image, deploy, and access microservice)
    - From Cloud Shell...
    - Run `docker login <ocir-host> -u <tenancyname>/<username> -p <authtoken>` 
         - example `docker login us-phoenix-1.ocir.io -u msdataworkshoptenancy/msdataworkshopuser -p Q:4qXo:7ADFaf9KZddZQ`
@@ -105,7 +103,7 @@ Task 7 (Verify and understand ATP connectivity via Helidon microservice deployme
             - `kubectl port-forward [atpadmin pod] -n msdataworkshop 8080:8080`
             - http://localhost:8080/test
             
-Task 8 (setup AQ, order and inventory, saga, and CQRS)...
+Task 8 (Setup AQ, order and inventory, saga, and CQRS)...
    - Pre-requisite: Task 1 through 7 are complete.
    - Upload regional wallet (contains tnsnames.ora entries for both ATP PDBs to objectstore and obtain pre-authenticated url to it.
         - using pre-authenticated link is a convenience. 
@@ -141,7 +139,7 @@ Task 10 (Using OCI service broker, provision and create binding to stream, and v
    - Run `kubectl get secrets test-stream-binding-order -o yaml -n msdataworkshop`
    - Demonstrate streaming orders in frontend app by hitting `producerstream` button
 
-Task 10 (demonstrate health/readiness) 
+Task 10 (Demonstrate health/readiness) 
    - eg order service is not ready until some data load (from view or eventsourcing or lazily) is done
    - show src and probes in deployment
    - https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
@@ -150,7 +148,7 @@ Task 10 (demonstrate health/readiness)
    - https://github.com/oracle/helidon/blob/master/docs/src/main/docs/guides/07_health_se_guide.adoc
    - https://dmitrykornilov.net/2019/08/08/helidon-brings-microprofile-2-2-support/
     
-Task 11 (demonstrate metrics prometheus and grafana (maybe monitoring and alert)
+Task 11 (Demonstrate metrics prometheus and grafana (maybe monitoring and alert)
    - show compute auto-scaling in console before explaining horizontal scaling of pods.
         - for reference re compute instance scaling... https://docs.cloud.oracle.com/en-us/iaas/Content/Compute/Tasks/autoscalinginstancepools.htm
    - https://medium.com/oracledevs/how-to-keep-your-microservices-available-by-monitoring-its-metrics-d88900298025
@@ -170,7 +168,7 @@ Task 11 (demonstrate metrics prometheus and grafana (maybe monitoring and alert)
    - https://github.com/helm/charts/tree/master/stable/prometheus-adapter
    - helm install --name my-release stable/prometheus-adapter
 
-Task 12 (demonstrate OKE horizontal pod scaling)
+Task 12 (Demonstrate OKE horizontal pod scaling)
    - install metrics-server
         - DOWNLOAD_URL=$(curl -Ls "https://api.github.com/repos/kubernetes-sigs/metrics-server/releases/latest" | jq -r .tarball_url)
         - DOWNLOAD_VERSION=$(grep -o '[^/v]*$' <<< $DOWNLOAD_URL)
