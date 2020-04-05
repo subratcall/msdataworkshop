@@ -1,5 +1,9 @@
 #!/bin/bash
 
+echo "Setting Helm to version 2.14.3"
+helm reset --force
+helm init --service-account tiller --tiller-image gcr.io/kubernetes-helm/tiller:v2.14.3
+
 echo "Install svcat"
 # linux is currently assumed, check
 curl -sLO https://download.svcat.sh/cli/latest/linux/amd64/svcat
@@ -12,7 +16,9 @@ echo "Add the Kubernetes Service Catalog helm repository:"
 helm repo add svc-cat https://svc-catalog-charts.storage.googleapis.com
 
 echo "Install the Kubernetes Service Catalog helm chart:"
-helm install catalog svc-cat/catalog --version 0.3.0-beta.2
+helm install catalog svc-cat/catalog --timeout 300 --name catalog
+#helm v3 command...
+#helm install catalog svc-cat/catalog --version 0.3.0-beta.2
 
 ########################################################################################
 # MODIFY "< >" VALUES IN clusterrolebinding and ocicredentials ARGUMENTS BELOW....
@@ -36,10 +42,15 @@ kubectl create secret generic ocicredentials \
 ########################################################################################
 
 echo "install oci-service-broker:"
-helm install oci-service-broker https://github.com/oracle/oci-service-broker/releases/download/v1.4.0/oci-service-broker-1.4.0.tgz \
+helm install https://github.com/oracle/oci-service-broker/releases/download/v1.4.0/oci-service-broker-1.4.0.tgz --name oci-service-broker \
    --set ociCredentials.secretName=ocicredentials \
    --set storage.etcd.useEmbedded=true \
    --set tls.enabled=false
+#helm v3 command...
+#helm install oci-service-broker https://github.com/oracle/oci-service-broker/releases/download/v1.4.0/oci-service-broker-1.4.0.tgz \
+#   --set ociCredentials.secretName=ocicredentials \
+#   --set storage.etcd.useEmbedded=true \
+#   --set tls.enabled=false
 
 echo "create oci-service-broker ClusterServiceBroker:"
 kubectl create -f oci-service-broker.yaml
