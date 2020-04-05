@@ -53,7 +53,7 @@ Task 4 (Push image, deploy, and access microservice)
    - Login to OCIR and verify docker
         - https://docs.cloud.oracle.com/en-us/iaas/Content/Registry/Tasks/registrypushingimagesusingthedockercli.htm
         - Run `docker login <region-key>.ocir.io -u <tenancy-namespace>/<username> -p <authtoken>` 
-            - <tenancy-namespace> is the Object Storage Namespace found under tenancy information
+            - `<tenancy-namespace>` is the Object Storage Namespace found under tenancy information
             - example `docker login us-phoenix-1.ocir.io -u ax2mkasdfkkx/msdataworkshopuser -p Q:4qXo:7ADFaf9KZddZQ`
         - Verify with `docker image` command
    - For convenience, vi ~/.bashrc, append the following lines (substituting DOCKER_REGISTRY and MSDATAWORKSHOP_LOCATION values), and `source ~/.bashrc`
