@@ -1,8 +1,8 @@
 #!/bin/bash
 
 echo "Setting Helm to version 2.14.3"
-helm reset --force
-helm init --service-account tiller --tiller-image gcr.io/kubernetes-helm/tiller:v2.14.3
+helm reset
+helm init --tiller-image gcr.io/kubernetes-helm/tiller:v2.14.3
 
 echo "Install svcat"
 # linux is currently assumed, check
