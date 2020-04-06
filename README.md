@@ -102,8 +102,7 @@ Task 7 (Verify and understand ATP connectivity via Helidon microservice deployme
    - Notice `atp*` references in microprofile-config.properties and @Inject dataSources in `ATPAQAdminResource.java` 
    - Run `./deploy.sh` to create deployment and service
    - Run `msdataworkshop` command to verify existence of deployment and service and verify pod is in Running state
-   - Demonstrate service discovery/call to order and inventory db 
-        and db access from these services using `executeonorderpdb` and `executeoninventorypdb` on Frontend page
+   - Open the frontend microservice home page and hit the submit `setupAll` hit the submit `testdatasources` button 
    - Troubleshooting... 
         - Look at logs... `kubectl logs [podname] -n msdataworkshop`
         - If no request is shown in logs, try accessing the pod directly using port-forward
@@ -112,13 +111,14 @@ Task 7 (Verify and understand ATP connectivity via Helidon microservice deployme
             
 Task 8 (Setup DB links between ATP PDBs, AQ, and Queue propagation, order and inventory, saga, and CQRS)...
    - Download connection information zip for ATP instances from console.
-   - Upload cwallet.sso in objectstore, obtain and note pre-authorized URL for cwallet.sso
-        - (alternatively a DBMS_CLOUD.CREATE_CREDENTIAL created credential can also be used to execute GET_OBJECT)
+   - Upload cwallet.sso to objectstore, obtain and note pre-authorized URL for cwallet.sso
+        - (this is for convenience, alternatively a DBMS_CLOUD.CREATE_CREDENTIAL can be used to create a credential that is then used to execute GET_OBJECT in PropagationSetup.java)
    - `cd $MSDATAWORKSHOP_LOCATION/atpaqadmin`
    - Edit `atpaqadmin-deployment.yaml` and provide values in the section marked with `PROVIDE VALUES FOR THE FOLLOWING...`
-   - 
-   - Run `deletepod admin` . This will force the atpaqadmin pod to be redeployed with the new 
-   - Submit `setupAll` button on Frontend page 
+   - Run `kubectl delete -f atpaqadmin-deployment.yaml -n msdataworkshop`
+   - Run `kubectl create -f atpaqadmin-deployment.yaml -n msdataworkshop`
+   - Run `kubectl get pods -n msdataworkshop` and verify the atpaqadmin pod is in running state
+   - Open the frontend microservice home page and hit the submit `setupAll` button 
                 
 Task 9 (Using OCI service broker, provision and create binding to stream, and verify with app)
    - demonstrate placeorder for choreography saga (success and fail/compensate)

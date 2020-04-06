@@ -270,6 +270,7 @@ public class FrontEndResource {
                 "    <th width=\"50%\" align=\"left\" valign=\"top\">" +
                 "<h4>Setup...</h4>" +
                 "<form action=\"adminservicetest\">" +
+                "   <input type=\"submit\" name =\"test\" value=\"testdatasources\">" +
                 "   <input type=\"submit\" name =\"test\" value=\"setupAll\">" +
                 " <br> setupAll does createUsers + createInventoryTable + createDBLinks + setupTablesQueuesAndPropagation in one trip/call" +
                 "   <input type=\"submit\" name =\"test\" value=\"createUsers\">" +

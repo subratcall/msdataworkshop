@@ -83,17 +83,22 @@ public class ATPAQAdminResource {
   @Produces(MediaType.TEXT_HTML)
   public String testdatasources() {
       System.out.println("test datasources...");
+      String resultString = "test datasources...";
     try {
-      System.out.println("ATPAQAdminResource.testdatasources orderpdbDataSource connection:" + orderpdbDataSource.getConnection());
+      resultString += "ATPAQAdminResource.testdatasources orderpdbDataSource connection:" + orderpdbDataSource.getConnection();
+      System.out.println(resultString);
     } catch (Exception e) {
+      resultString += e;
       e.printStackTrace();
     }
       try {
-          System.out.println("ATPAQAdminResource.testdatasources inventorypdbDataSource connection:" + inventorypdbDataSource.getConnection());
+        resultString += "ATPAQAdminResource.testdatasources inventorypdbDataSource connection:" + inventorypdbDataSource.getConnection();
+        System.out.println(resultString);
       } catch (Exception e) {
+        resultString += e;
           e.printStackTrace();
       }
-      return "success";
+      return resultString;
   }
 
   @Path("/setupAll")
