@@ -80,7 +80,7 @@ Task 4 (Push image, deploy, and access microservice)
 
 Task 5 (Setup OCI Open Service Broker)
    - Estimated task time 5 minutes
-   - Video walk through: https://github.com/paulparkinson/msdataworkshop
+   - Video walk through: https://www.youtube.com/watch?v=cb8N1TzNgsk
    - `cd $MSDATAWORKSHOP_LOCATION/osb-atp-and-oss`
    - Set ocid, etc. values in `setupOSB.sh` and run `./setupOSB.sh`
    - Refererences... 
@@ -88,6 +88,8 @@ Task 5 (Setup OCI Open Service Broker)
         - https://www.youtube.com/watch?v=qW_pw6Nd5hM
    
 Task 6 (Using OCI service broker, create binding to 2 existing atp instances)
+   - Estimated task time 5 minutes
+   - Video walk through: https://www.youtube.com/watch?v=EGO-bLHrhv0
    - `cd $MSDATAWORKSHOP_LOCATION/osb-atp-and-oss`
    - Set ocid and password values in `setupATP.sh` and run `./setupATP.sh`
    - References...

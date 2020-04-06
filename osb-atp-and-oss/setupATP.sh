@@ -51,24 +51,34 @@ eval "cat <<EOF
 $(<$SCRIPT_DIR/atp-secret-inventoryuser.yaml)
 EOF" > $SCRIPT_DIR/atp-secret-inventoryuser.yaml
 
-echo "creating order and inventory instances..."
+echo "note that NotFound errors from the following delete/cleanup commands are expected if this is first install..."
+sleep 5
+kubectl delete secret atp-user-cred-orderadmin  atp-user-cred-orderuser atp-demo-binding-inventory  -n msdataworkshop
+kubectl delete secret atp-user-cred-inventoryadmin atp-user-cred-inventoryuser atp-demo-binding-order -n msdataworkshop
+kubectl delete -f atp-binding-plain-order.yaml
+kubectl delete -f atp-binding-plain-inventory.yaml
 kubectl delete -f atp-existing-instance-order.yaml
-kubectl create -f atp-existing-instance-order.yaml
 kubectl delete -f atp-existing-instance-inventory.yaml
+
+echo "..."
+echo "creating order and inventory instances..."
+kubectl create -f atp-existing-instance-order.yaml
 kubectl create -f atp-existing-instance-inventory.yaml
 
+echo "..."
 echo "creating order binding and secrets..."
-kubectl delete secret atp-demo-binding-order -n msdataworkshop
-kubectl delete -f atp-binding-plain-order.yaml
 kubectl create -f atp-binding-plain-order.yaml
 kubectl get secret atp-demo-binding-order --export -o yaml |  kubectl apply --namespace=msdataworkshop -f -
 kubectl create -f atp-secret-order-admin.yaml -n msdataworkshop
 kubectl create -f atp-secret-orderuser.yaml -n msdataworkshop
 
+echo "..."
 echo "creating inventory binding and secrets..."
-kubectl delete secret atp-demo-binding-inventory -n msdataworkshop
-kubectl delete -f atp-binding-plain-inventory.yaml
 kubectl create -f atp-binding-plain-inventory.yaml
 kubectl get secret atp-demo-binding-inventory --export -o yaml |  kubectl apply --namespace=msdataworkshop -f -
 kubectl create -f atp-secret-inventory-admin.yaml -n msdataworkshop
 kubectl create -f atp-secret-inventoryuser.yaml -n msdataworkshop
+
+echo "..."
+svcat get bindings
+kubectl get secrets -n msdataworkshop |grep atp
