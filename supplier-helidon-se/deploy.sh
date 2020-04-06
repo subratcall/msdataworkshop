@@ -10,6 +10,10 @@ if [ -z "DOCKER_REGISTRY" ]; then
     exit 1
 fi
 
+eval "cat <<EOF
+$(<$SCRIPT_DIR/supplier-helidon-se-atp-deployment.yaml)
+EOF" > $SCRIPT_DIR/supplier-helidon-se-atp-deployment.yaml
+
 export IMAGE=${DOCKER_REGISTRY}/${IMAGE_NAME}:${IMAGE_VERSION}
 
 if [ -z "$1" ]; then

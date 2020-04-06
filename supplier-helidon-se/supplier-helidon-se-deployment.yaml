@@ -1,14 +1,14 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: inventory-helidon
+  name: supplier-helidon-se
 spec:
   replicas: 1
   template:
     metadata:
       labels:
-        app: inventory
-        version: helidon-mp
+        app: supplier
+        version: helidon-se
     spec:
       initContainers:
       - name: decode-creds
@@ -24,18 +24,18 @@ spec:
         - name: creds
           mountPath: /creds
       containers:
-      - name: inventory
-        image: us-phoenix-1.ocir.io/stevengreenberginc/paul.parkinson/msdataworkshop/inventory-helidon:0.1
+      - name: supplier
+        image: ${DOCKER_REGISTRY}/supplier-helidon-se:0.1
         imagePullPolicy: Always
         env:
-        - name: oracle.ucp.jdbc.PoolDataSource.inventorypdb.user
+        - name: database.user
           value: "inventoryuser"
-        - name: oracle.ucp.jdbc.PoolDataSource.inventorypdb.password
+        - name: database.password
           valueFrom:
             secretKeyRef:
               name: atp-user-cred-inventoryuser
               key: password
-        - name: oracle.ucp.jdbc.PoolDataSource.inventorypdb.URL
+        - name: database.url
           value: "jdbc:oracle:thin:@inventorydb_high?TNS_ADMIN=/msdataworkshop/creds"
         - name: inventoryqueuename
           value: "inventoryqueue"
