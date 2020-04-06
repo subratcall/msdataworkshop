@@ -79,6 +79,8 @@ Task 4 (Push image, deploy, and access microservice)
    - Mark all of the images as public in OCIR via Cloud Shell as done with the frontend image
 
 Task 5 (Setup OCI Open Service Broker)
+   - Estimated task time 5 minutes
+   - Video walk through: https://github.com/paulparkinson/msdataworkshop
    - `cd $MSDATAWORKSHOP_LOCATION/osb-atp-and-oss`
    - Set ocid, etc. values in `setupOSB.sh` and run `./setupOSB.sh`
    - Refererences... 

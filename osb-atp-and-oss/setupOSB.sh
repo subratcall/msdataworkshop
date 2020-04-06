@@ -12,10 +12,10 @@ echo "moving svcat to utils dir to add it to path..."
 mv svcat $MSDATAWORKSHOP_LOCATION/utils
 svcat version --client
 
-echo "Add the Kubernetes Service Catalog helm repository:"
+echo "Add the Kubernetes Service Catalog helm repository..."
 helm repo add svc-cat https://svc-catalog-charts.storage.googleapis.com
 
-echo "Install the Kubernetes Service Catalog helm chart:"
+echo "Install the Kubernetes Service Catalog helm chart..."
 helm install catalog svc-cat/catalog --timeout 300 --name catalog
 #helm v3 command...
 #helm install catalog svc-cat/catalog --version 0.3.0-beta.2
@@ -41,7 +41,7 @@ kubectl create secret generic ocicredentials \
 # END MODIFY VALUES IN clusterrolebinding and ocicredentials DO NOT ALTER FROM HERE TO END....
 ########################################################################################
 
-echo "Waiting for Service Catalog to be Running"
+echo "Waiting for Service Catalog to be Running..."
 sleep 120
 # todo look into using kubectl wait --for=condition= Service Catalog
 
@@ -59,10 +59,10 @@ helm install https://github.com/oracle/oci-service-broker/releases/download/v1.4
 echo "create oci-service-broker ClusterServiceBroker:"
 kubectl create -f oci-service-broker.yaml
 
-echo "sleep for 1 minute and svcat get brokers... (initial check may temporarily show ErrorFetchingCatalog etc.)"
+echo "Sleep and svcat get brokers... (initial check may temporarily show ErrorFetchingCatalog etc.)"
 svcat get brokers
 
-echo "sleep for 1 minute and check again..."
+echo "Sleep and check again..."
 sleep 60
 svcat get brokers
 svcat get classes
