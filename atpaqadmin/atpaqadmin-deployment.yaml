@@ -55,8 +55,6 @@ spec:
       - name: helidonatp
         image: ${DOCKER_REGISTRY}/helidonatp:0.1
         imagePullPolicy: Always
-        ports:
-        - containerPort: 8080
         env:
         # orderpdb...
         - name: oracle.ucp.jdbc.PoolDataSource.orderpdb.user
@@ -107,6 +105,9 @@ spec:
           mountPath: /msdataworkshop/creds-order
         - name: creds-inventory
           mountPath: /msdataworkshop/creds-inventory
+        ports:
+        - containerPort: 8080
+      restartPolicy: Always
       volumes:
       - name: creds-raw-order
         secret:
