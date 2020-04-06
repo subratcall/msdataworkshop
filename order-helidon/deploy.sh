@@ -11,15 +11,15 @@ if [ -z "DOCKER_REGISTRY" ]; then
 fi
 
 eval "cat <<EOF
-$(<$SCRIPT_DIR/order-helidon-atp-deployment.yaml)
-EOF" > $SCRIPT_DIR/order-helidon-atp-deployment.yaml
+$(<$SCRIPT_DIR/order-helidon-deployment.yaml)
+EOF" > $SCRIPT_DIR/order-helidon-deployment.yaml
 
 export IMAGE=${DOCKER_REGISTRY}/${IMAGE_NAME}:${IMAGE_VERSION}
 
 if [ -z "$1" ]; then
-    kubectl apply -f $SCRIPT_DIR/order-helidon-atp-deployment.yaml -n msdataworkshop
+    kubectl apply -f $SCRIPT_DIR/order-helidon-deployment.yaml -n msdataworkshop
 else
-    kubectl apply -f <(istioctl kube-inject -f $SCRIPT_DIR/order-helidon-atp-deployment.yaml) -n msdataworkshop
+    kubectl apply -f <(istioctl kube-inject -f $SCRIPT_DIR/order-helidon-deployment.yaml) -n msdataworkshop
 fi
 
 kubectl create -f $SCRIPT_DIR/order-service.yaml -n msdataworkshop
