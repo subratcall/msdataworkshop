@@ -102,7 +102,7 @@ Task 7 (Verify and understand ATP connectivity via Helidon microservice deployme
    - Notice `atp*` references in microprofile-config.properties and @Inject dataSources in `ATPAQAdminResource.java` 
    - Run `./deploy.sh` to create deployment and service
    - Run `msdataworkshop` command to verify existence of deployment and service and verify pod is in Running state
-   - Open the frontend microservice home page and hit the submit `setupAll` hit the submit `testdatasources` button 
+   - Open the frontend microservice home page and hit the submit `testdatasources` button 
    - Troubleshooting... 
         - Look at logs... `kubectl logs [podname] -n msdataworkshop`
         - If no request is shown in logs, try accessing the pod directly using port-forward
@@ -145,7 +145,7 @@ Task 10 (Using OCI service broker, provision and create binding to stream, and v
    - Run `kubectl get secrets test-stream-binding-order -o yaml -n msdataworkshop`
    - Demonstrate streaming orders in frontend app by hitting `producerstream` button
 
-Task 10 (Demonstrate health/readiness) 
+Task 11 (Demonstrate health/readiness) 
    - eg order service is not ready until some data load (from view or eventsourcing or lazily) is done
    - show src and probes in deployment
    - https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
