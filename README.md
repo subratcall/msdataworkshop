@@ -38,7 +38,7 @@ Task 2 (Use Cloud Shell to access OKE cluster and create `msdataworkshop` namesp
     
 Task 3 (Create github account and build microservice image)
    - Estimated task time 2 minutes
-   - Video walk through: https://www.youtube.com/watch?v=vYD1s6c3a8w
+   - Video walk through: https://www.youtube.com/watch?v=6g4c2yjbTPg
    - Optionally (if planning to make modifications, for example) 
         - Create github account if needed
         - Fork `https://github.com/paulparkinson/msdataworkshop.git` 

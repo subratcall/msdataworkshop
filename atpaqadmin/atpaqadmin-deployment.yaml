@@ -18,6 +18,7 @@ spec:
         command:
         - bash
         - -c
+        - "for i in `ls -1 /tmp/creds | grep -v user_name`; do cat /tmp/creds/$i  | base64 --decode > /creds/$i; done; ls -l /creds/*;"
         - "for i in `ls -1 /tmp/creds-order | grep -v user_name`; do cat /tmp/creds-order/$i  | base64 --decode > /creds-order/$i; done; ls -l /creds-order/*;"
         image: oraclelinux:7.5
         volumeMounts:
@@ -109,6 +110,12 @@ spec:
         - containerPort: 8080
       restartPolicy: Always
       volumes:
+      - name: creds-raw
+        secret:
+          secretName: atp-demo-binding-inventory
+      - name: creds
+        emptyDir: {}
+
       - name: creds-raw-order
         secret:
           secretName: atp-demo-binding-order

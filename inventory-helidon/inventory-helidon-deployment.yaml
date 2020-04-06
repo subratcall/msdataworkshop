@@ -8,7 +8,7 @@ spec:
     metadata:
       labels:
         app: inventory
-        version: helidon-mp
+        version: helidon
     spec:
       initContainers:
       - name: decode-creds
