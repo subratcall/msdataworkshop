@@ -68,8 +68,8 @@ Task 4 (Push image, deploy, and access microservice)
    - Run `./build.sh` to build the frontend-helidon image and push it to OCIR
    - Mark the image as public in OCIR via Cloud Shell (this avoids the need to do `docker login` in the deployment yaml or git CI/CD)
    - Run `./deploy.sh` to create deployment and service in the msdataworkshop namespace 
-   - Check frontend pod is Running by using `kubectl get pods --all-namespaces` or the `p` shortcut command
-   - Check frontend loadbalancer address using `kubectl get services --all-namespaces`  or use `s` shortcut command
+   - Check frontend pod is Running by using `kubectl get pods --all-namespaces` or the `pods` shortcut command
+   - Check frontend loadbalancer address using `kubectl get services --all-namespaces`  or use `services` shortcut command
    - Access frontend page 
         - via frontend LoadBalancer service, eg http://129.146.99.99:8080
         - or, if the service has been modified to use NodePort instead of LoadBalancer...
