@@ -9,18 +9,18 @@ echo "for the atp ServiceInstance (existing instance)..."
 export orderpdb_ocid=<ORDERPDB_OCID>
 export orderpdb_compartmentId=<ORDERPDB_COMPARTENT_OCID>
 echo "for order admin and orderuser secrets..."
-export orderpdb_walletPassword=<ORDERPDB_WALLET_PW>
-export orderpdb_admin_password=<ORDERPDB_ADMIN_PW>
-export orderpdb_orderuser_password=<ORDERPDB_ORDERUSER_PW>
+export orderpdb_walletPassword=$(echo <ORDERPDB_WALLET_PW> | base64)
+export orderpdb_admin_password=$(echo <ORDERPDB_ADMIN_PW> | base64)
+export orderpdb_orderuser_password=$(echo <ORDERPDB_ORDERUSER_PW> | base64)
 
 echo "inventory exports..."
 echo "for the atp ServiceInstance (existing instance)..."
 export inventorypdb_ocid=<INVENTORYPDB_OCID>
 export inventorypdb_compartmentId=<INVENTORYPDB_COMPARTENT_OCID>
 echo "for inventory admin and inventoryuser secrets..."
-export inventorypdb_walletPassword=<INVENTORYPDB_WALLET_PW>
-export inventorypdb_admin_password=<INVENTORYPDB_ADMIN_PW>
-export inventorypdb_inventoryuser_password=<INVENTORYPDB_INVENTORYUSER_PW>
+export inventorypdb_walletPassword=$(echo <INVENTORYPDB_WALLET_PW> | base64)
+export inventorypdb_admin_password=$(echo <INVENTORYPDB_ADMIN_PW> | base64)
+export inventorypdb_inventoryuser_password=$(echo <INVENTORYPDB_INVENTORYUSER_PW> | base64)
 
 
 ########################################################################################
