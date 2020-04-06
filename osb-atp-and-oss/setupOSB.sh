@@ -41,6 +41,10 @@ kubectl create secret generic ocicredentials \
 # END MODIFY VALUES IN clusterrolebinding and ocicredentials DO NOT ALTER FROM HERE TO END....
 ########################################################################################
 
+echo "Waiting for Service Catalog to be Running"
+sleep 120
+# todo look into using kubectl wait --for=condition= Service Catalog
+
 echo "install oci-service-broker:"
 helm install https://github.com/oracle/oci-service-broker/releases/download/v1.4.0/oci-service-broker-1.4.0.tgz --name oci-service-broker \
    --set ociCredentials.secretName=ocicredentials \

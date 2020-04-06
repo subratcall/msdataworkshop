@@ -8,10 +8,10 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-public class PropagationSetup {
+class PropagationSetup {
 
 
-    public String createInventoryTable(DataSource inventorypdbDataSource) throws SQLException {
+     String createInventoryTable(DataSource inventorypdbDataSource) throws SQLException {
         System.out.println("PropagationSetup.createInventoryTable and add items");
         String returnValue = "PropagationSetup.createInventoryTable and add items\n";
         try {
@@ -31,7 +31,7 @@ public class PropagationSetup {
         return returnValue;
     }
 
-    public String createUsers(DataSource orderpdbDataSource, DataSource inventorypdbDataSource) throws SQLException {
+     String createUsers(DataSource orderpdbDataSource, DataSource inventorypdbDataSource) throws SQLException {
         String returnValue = "";
         try {
             returnValue += createAQUser(orderpdbDataSource, ATPAQAdminResource.orderuser, ATPAQAdminResource.orderpw);
@@ -93,23 +93,23 @@ public class PropagationSetup {
         Connection connection = orderdataSource.getConnection(orderuser, orderpassword);
         connection.createStatement().execute("BEGIN " +
                 "DBMS_CLOUD.GET_OBJECT(" +
-                "object_uri => 'https://objectstorage.us-phoenix-1.oraclecloud.com/p/W09lHtI_JWR8qR7w45P7hRn46y390V4hTGqWlso01Ds/n/stevengreenberginc/b/msdataworkshop/o/cwallet.sso', " +
+                "object_uri => '" + ATPAQAdminResource.cwalletobjecturi + "', " +
                 "directory_name => 'DATA_PUMP_DIR'); " +
                 "END;");
         connection.createStatement().execute("BEGIN " +
                 "DBMS_CLOUD.CREATE_CREDENTIAL(" +
                 "credential_name => 'INVENTORYPDB_CRED'," +
-                "username => 'INVENTORYUSER'," +
-                "password => 'Welcome12345'" +
+                "username => '" + ATPAQAdminResource.inventoryuser + "'" +
+                "password => '" + ATPAQAdminResource.inventorypw + "'" +
                 ");" +
                 "END;");
         connection.createStatement().execute("BEGIN " +
                 "DBMS_CLOUD_ADMIN.CREATE_DATABASE_LINK(" +
                 "db_link_name => '" + orderToInventoryLinkName + "'," +
-                "hostname => 'adb.us-phoenix-1.oraclecloud.com'," +
-                "port => '1522'," +
-                "service_name => 'mnisopbygm56hii_inventorydb_high.atp.oraclecloud.com'," +
-                "ssl_server_cert_dn => 'CN=adwc.uscom-east-1.oraclecloud.com,OU=Oracle BMCS US,O=Oracle Corporation,L=Redwood City,ST=California,C=US'," +
+                "hostname => '" + ATPAQAdminResource.inventoryhostname + "'," +
+                "port => '"+ ATPAQAdminResource.inventoryport +"'," +
+                "service_name => '"+ ATPAQAdminResource.inventoryservice_name +"'," +
+                "ssl_server_cert_dn => '"+ ATPAQAdminResource.inventoryssl_server_cert_dn +"'," +
                 "credential_name => 'INVENTORYPDB_CRED'," +
                 "directory_name => 'DATA_PUMP_DIR');" +
                 "END;");
@@ -119,23 +119,23 @@ public class PropagationSetup {
         connection = inventorydataSource.getConnection(inventoryuser, inventorypassword);
         connection.createStatement().execute("BEGIN " +
                 "DBMS_CLOUD.GET_OBJECT(" +
-                "object_uri => 'https://objectstorage.us-phoenix-1.oraclecloud.com/p/W09lHtI_JWR8qR7w45P7hRn46y390V4hTGqWlso01Ds/n/stevengreenberginc/b/msdataworkshop/o/cwallet.sso', " +
+                "object_uri => '" + ATPAQAdminResource.cwalletobjecturi + "', " +
                 "directory_name => 'DATA_PUMP_DIR'); " +
                 "END;");
         connection.createStatement().execute("BEGIN " +
                 "DBMS_CLOUD.CREATE_CREDENTIAL(" +
                 "credential_name => 'ORDERPDB_CRED'," +
                 "username => 'ORDERUSER'," +
-                "password => 'Welcome12345'" +
+                "password => '" + ATPAQAdminResource.orderpw + "'" +
                 ");" +
                 "END;");
         connection.createStatement().execute("BEGIN " +
                 "DBMS_CLOUD_ADMIN.CREATE_DATABASE_LINK(" +
                 "db_link_name => '" + inventoryToOrderLinkName + "'," +
-                "hostname => 'adb.us-phoenix-1.oraclecloud.com'," +
-                "port => '1522'," +
-                "service_name => 'mnisopbygm56hii_orderdb_high.atp.oraclecloud.com'," +
-                "ssl_server_cert_dn => 'CN=adwc.uscom-east-1.oraclecloud.com,OU=Oracle BMCS US,O=Oracle Corporation,L=Redwood City,ST=California,C=US'," +
+                "hostname => '" + ATPAQAdminResource.orderhostname + "'," +
+                "port => '"+ ATPAQAdminResource.orderport +"'," +
+                "service_name => '"+ ATPAQAdminResource.orderservice_name +"'," +
+                "ssl_server_cert_dn => '"+ ATPAQAdminResource.orderssl_server_cert_dn +"'," +
                 "credential_name => 'ORDERPDB_CRED'," +
                 "directory_name => 'DATA_PUMP_DIR');" +
                 "END;");
@@ -384,7 +384,7 @@ public class PropagationSetup {
     }
 
     private static void sendMessages(TopicSession topicSession, Topic topic) throws JMSException {
-        System.out.println("Publish messages...");
+        System.out.println("Publish test messages...");
         TextMessage objmsg = topicSession.createTextMessage();
         TopicPublisher publisher = topicSession.createPublisher(topic);
         objmsg.setIntProperty("Id", 1);
@@ -400,7 +400,7 @@ public class PropagationSetup {
     }
 
     private static void receiveMessages(QueueSession qsess, AQjmsConsumer[] subs) throws JMSException {
-        System.out.println("Receive Messages...");
+        System.out.println("Receive test messages...");
         for (int i = 0; i < subs.length; i++) {
             System.out.println("\n\nMessages for subscriber : " + i);
             if (subs[i].getMessageSelector() != null) {

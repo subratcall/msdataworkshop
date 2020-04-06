@@ -31,7 +31,6 @@ import javax.ws.rs.core.Response;
 @ApplicationScoped
 public class ATPAQAdminResource {
   PropagationSetup propagationSetup = new PropagationSetup();
-  // todo get these from env
   static String orderuser = "orderuser";
   static String orderpw = "Welcome12345";
   static String inventoryuser = "inventoryuser";
@@ -42,9 +41,19 @@ public class ATPAQAdminResource {
   static String inventoryQueueTableName = "inventoryqueuetable";
   static String orderToInventoryLinkName = "ORDERTOINVENTORYLINK";
   static String inventoryToOrderLinkName = "INVENTORYTOORDERLINK";
+  static String cwalletobjecturi =   System.getenv("cwalletobjecturi");
+  static String inventoryhostname =   System.getenv("inventoryhostname");
+  static String inventoryport =   System.getenv("inventoryport");
+  static String inventoryservice_name =   System.getenv("inventoryservice_name");
+  static String inventoryssl_server_cert_dn =   System.getenv("inventoryssl_server_cert_dn");
+  static String orderhostname =   System.getenv("orderhostname");
+  static String orderport =   System.getenv("orderport");
+  static String orderservice_name =   System.getenv("orderservice_name");
+  static String orderssl_server_cert_dn =   System.getenv("orderssl_server_cert_dn");
 
   static {
     System.setProperty("oracle.jdbc.fanEnabled", "false");
+    System.out.println("ATPAQAdminResource.static initializer");
   }
 
   @Inject

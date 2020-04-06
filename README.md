@@ -93,9 +93,9 @@ Task 6 (Using OCI service broker, create binding to 2 existing atp instances)
         - https://www.youtube.com/watch?v=qW_pw6Nd5hM
   
 Task 7 (Verify and understand ATP connectivity via Helidon microservice deployment in OKE)
-   - `cd msdataworkshop/osb-atp-dbadmin-helidon`
+   - `cd $MSDATAWORKSHOP_LOCATION/atpaqadmin`
    - Notice atpadmin-deployment.yaml wallet, secret, decode initcontainer, etc. 
-   - Notice `atp*` references in microprofile-config.properties and @Inject dataSource in ATPAQAdminResource.java 
+   - Notice `atp*` references in microprofile-config.properties and @Inject dataSources in `ATPAQAdminResource.java` 
    - Run `./deploy.sh` to create deployment and service
    - Run `msdataworkshop` command to verify existence of deployment and service and verify pod is in Running state
    - Demonstrate service discovery/call to order and inventory db 
@@ -106,15 +106,14 @@ Task 7 (Verify and understand ATP connectivity via Helidon microservice deployme
             - `kubectl port-forward [atpadmin pod] -n msdataworkshop 8080:8080`
             - http://localhost:8080/test
             
-Task 8 (Setup AQ, order and inventory, saga, and CQRS)...
-   - Pre-requisite: Task 1 through 7 are complete.
-   - Upload regional wallet (contains tnsnames.ora entries for both ATP PDBs to objectstore and obtain pre-authenticated url to it.
-        - using pre-authenticated link is a convenience. 
-        - alternatively a DBMS_CLOUD.CREATE_CREDENTIAL created credential can also be used to execute GET_OBJECT
-   - `cd msdataworkshop/osb-atp-dbadmin-helidon`
-   - Modify msdataworkshop/atpaqadmin/src/main/java/oracle/db/microservices/PropagationSetup.java
-        - set the `object_uri` value of the `GET_OBJECT` call to the pre-authenticated url created
-        - set the values of the `CREATE_DATABASE_LINK` calls from tnsnames.ora 
+Task 8 (Setup DB links between ATP PDBs, AQ, and Queue propagation, order and inventory, saga, and CQRS)...
+   - Download connection information zip for ATP instances from console.
+   - Upload cwallet.sso in objectstore, obtain and note pre-authorized URL for cwallet.sso
+        - (alternatively a DBMS_CLOUD.CREATE_CREDENTIAL created credential can also be used to execute GET_OBJECT)
+   - `cd $MSDATAWORKSHOP_LOCATION/atpaqadmin`
+   - Edit `atpaqadmin-deployment.yaml` and provide values in the section marked with `PROVIDE VALUES FOR THE FOLLOWING...`
+   - 
+   - Run `deletepod admin` . This will force the atpaqadmin pod to be redeployed with the new 
    - Submit `setupAll` button on Frontend page 
                 
 Task 9 (Using OCI service broker, provision and create binding to stream, and verify with app)
@@ -151,26 +150,6 @@ Task 10 (Demonstrate health/readiness)
    - https://github.com/oracle/helidon/blob/master/docs/src/main/docs/guides/07_health_se_guide.adoc
    - https://dmitrykornilov.net/2019/08/08/helidon-brings-microprofile-2-2-support/
     
-Task 11 (Demonstrate metrics prometheus and grafana (maybe monitoring and alert)
-   - show compute auto-scaling in console before explaining horizontal scaling of pods.
-        - for reference re compute instance scaling... https://docs.cloud.oracle.com/en-us/iaas/Content/Compute/Tasks/autoscalinginstancepools.htm
-   - https://medium.com/oracledevs/how-to-keep-your-microservices-available-by-monitoring-its-metrics-d88900298025
-   - https://learnk8s.io/autoscaling-apps-kubernetes
-   - high level: https://itnext.io/kubernetes-monitoring-with-prometheus-in-15-minutes-8e54d1de2e13
-   - https://github.com/coreos/prometheus-operator/blob/master/Documentation/user-guides/getting-started.md
-   - helm repo update ;  helm install stable/prometheus-operator --name prometheus-operator --namespace monitoring
-   - https://medium.com/oracledevs/deploying-and-monitoring-a-redis-cluster-to-oracle-container-engine-oke-5f210b91b800
-   - helm install --namespace monitoring stable/prometheus-operator --name prom-operator --set kubeDns.enabled=true --set prometheus.prometheusSpec.serviceMonitorSelectorNilUsesHelmValues=false --set coreDns.enabled=false --set kubeControllerManager.enabled=false --set kubeEtcd.enabled=false --set kubeScheduler.enabled=false
-   - kubectl get pods  -n monitoring
-   - k create -f OrderServiceServiceMonitor.yaml -n msdataworkshop
-   - kubectl port-forward -n monitoring prometheus-prometheus-operator-prometheus-0 9090
-   - kubectl -n monitoring get pods | grep grafana
-   - kubectl -n monitoring port-forward [podname] 3000:3000
-   - Login with admin/prom-operator
-   - https://kubernetes.io/docs/tasks/Run-application/horizontal-pod-autoscale-walkthrough/#autoscaling-on-multiple-metrics-and-custom-metrics
-   - https://github.com/helm/charts/tree/master/stable/prometheus-adapter
-   - helm install --name my-release stable/prometheus-adapter
-
 Task 12 (Demonstrate OKE horizontal pod scaling)
    - install metrics-server
         - DOWNLOAD_URL=$(curl -Ls "https://api.github.com/repos/kubernetes-sigs/metrics-server/releases/latest" | jq -r .tarball_url)
@@ -187,44 +166,30 @@ Task 12 (Demonstrate OKE horizontal pod scaling)
             order-helidon   Deployment/order-helidon   <unknown>/50%   1         2         0          16s
    - increase cpu, notice cpu increase and scale to 2 pods
 
-Task 13 (tracing)
-   - install istio, demonstrate tracing (jaeger and kiali)
-   - @Traced annotation
 
 Future here to end...
 
-Task 14 
-   - autoscaling
-   - sharding
-   - various security both of wire, mtls, vault, etc. 
-   - analytics - OSE server visualization
-   - potential converged database additions slide goes here
-   - eg show drivers/robots in all locations and do analytics 
-   - multi-region and other HA
-   - message to logic/endpoint mapping
-   - kafka streams not just in chunks theres no end
-   - rehydation / retention and compacted queues (most recent not all events) time windows
-   - comes from functional aspect, no sharding orders based on phone number, more memory ?)_
-   - https://medium.com/oracledevs/how-to-keep-your-microservices-available-by-monitoring-its-metrics-d88900298025
-   - nice to have: 
-        - messaging when available, JPA, JTA
-        - fn
-        - cloud developer service
-        - apex report/callout to helidon
-        - ORDS/DaaM (data as a microservice)
-        - Grafana of OCI https://blogs.oracle.com/cloudnative/data-source-grafana
-        - graph route planning
-        kms key monitoring
+(Demonstrate metrics prometheus and grafana (monitoring and alert)
 
-Task 15 (data flow) 
+(tracing)
+   - install istio, demonstrate tracing (jaeger and kiali)
+   - @Traced annotation
+   
+(LRA)
+
+(security, vault, etc) 
+
+(sharding)
+
+(data flow) 
     - fully managed Spark service that lets you Run Spark applications with almost no administrative overhead.
     - for demo: fog computing of IoT
     
-Task 16 (data science)
+(data science)
     - enables data scientists to easily build, train, and manage machine learning models on Oracle Cloud, using Python and open source machine learning libraries
     - for demo: predictive analytics of orders to inventory/delivery locations
 
-Task 17 (data catalog)
+(data catalog)
     - enables data consumers to easily find, understand, govern, and track Oracle Cloud data assets across the enterprise using an organized inventory of data assets
     - what data is available where in the organization and how trustworthy and fit-for-use they are
     - for demo: analytics report of order info from streaming + atp 
