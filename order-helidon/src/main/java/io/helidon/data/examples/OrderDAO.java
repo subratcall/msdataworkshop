@@ -1,9 +1,7 @@
 package io.helidon.data.examples;
 
-import java.sql.SQLException;
+import java.sql.Connection;
 import java.util.Objects;
-import io.helidon.config.Config;
-import oracle.jdbc.OracleConnection;
 import oracle.soda.OracleCollection;
 import oracle.soda.OracleDatabase;
 import oracle.soda.OracleDocument;
@@ -16,7 +14,7 @@ public class OrderDAO {
     private final String collectionName = "orderscollection";
 
 
-    public Order get(OracleConnection conn, String id) throws OracleException {
+    public Order get(Connection conn, String id) throws OracleException {
         OracleDatabase soda = new OracleRDBMSClient().getDatabase(conn);
         OracleCollection col = soda.openCollection(collectionName);
         OracleDocument doc = col.find().key(id).getOne();
@@ -27,7 +25,7 @@ public class OrderDAO {
         }
     }
 
-    public Order create(OracleConnection conn, Order order) throws OracleException {
+    public Order create(Connection conn, Order order) throws OracleException {
         OracleDatabase soda = new OracleRDBMSClient().getDatabase(conn);
         OracleCollection col = soda.openCollection(collectionName);
         OracleDocument doc = soda.createDocumentFromString(order.getOrderid(), JsonUtils.writeValueAsString(order));
@@ -36,7 +34,7 @@ public class OrderDAO {
         return order;
     }
 
-    public void update(OracleConnection conn, Order order) throws OracleException {
+    public void update(Connection conn, Order order) throws OracleException {
         OracleDatabase soda = new OracleRDBMSClient().getDatabase(conn);
         OracleCollection col = soda.openCollection(collectionName);
         OracleDocument doc = soda.createDocumentFromString(order.getOrderid(), JsonUtils.writeValueAsString(order));
@@ -44,7 +42,7 @@ public class OrderDAO {
         System.out.println("Updated order:" + order);
     }
 
-    public int delete(OracleConnection conn, String id) throws OracleException {
+    public int delete(Connection conn, String id) throws OracleException {
 //        OracleDatabase soda = database.getSoda().getDatabase(conn);
         OracleDatabase soda = new OracleRDBMSClient().getDatabase(conn);
         OracleCollection col = soda.openCollection(collectionName);
