@@ -98,7 +98,7 @@ class PropagationSetup {
                      "object_uri => '" + ATPAQAdminResource.cwalletobjecturi + "', " +
                      "directory_name => 'DATA_PUMP_DIR'); " +
                      "END;");
-             outputString+=" orderdataSource GET_OBJECT cwalletobjecturi successful,";
+             appendAndPrintOutputString(outputString," orderdataSource GET_OBJECT cwalletobjecturi successful,");
              connection.createStatement().execute("BEGIN " +
                      "DBMS_CLOUD.CREATE_CREDENTIAL(" +
                      "credential_name => 'INVENTORYPDB_CRED'," +
@@ -106,7 +106,7 @@ class PropagationSetup {
                      "password => '" + ATPAQAdminResource.inventorypw + "'" +
                      ");" +
                      "END;");
-             outputString+=" orderdataSource CREATE_CREDENTIAL INVENTORYPDB_CRED successful";
+             appendAndPrintOutputString(outputString," orderdataSource CREATE_CREDENTIAL INVENTORYPDB_CRED successful");
              connection.createStatement().execute("BEGIN " +
                      "DBMS_CLOUD_ADMIN.CREATE_DATABASE_LINK(" +
                      "db_link_name => '" + orderToInventoryLinkName + "'," +
@@ -117,8 +117,8 @@ class PropagationSetup {
                      "credential_name => 'INVENTORYPDB_CRED'," +
                      "directory_name => 'DATA_PUMP_DIR');" +
                      "END;");
-             outputString+=" orderdataSource CREATE_DATABASE_LINK " + orderToInventoryLinkName + " successful";
-             outputString += " link from order to inventory complete, create link from inventory to order...";
+             appendAndPrintOutputString(outputString," orderdataSource CREATE_DATABASE_LINK " + orderToInventoryLinkName + " successful");
+             appendAndPrintOutputString(outputString," link from order to inventory complete, create link from inventory to order...");
              System.out.println(outputString);
              // create link from inventory to order ...
              connection = inventorydataSource.getConnection(inventoryuser, inventorypassword);
@@ -127,7 +127,7 @@ class PropagationSetup {
                      "object_uri => '" + ATPAQAdminResource.cwalletobjecturi + "', " +
                      "directory_name => 'DATA_PUMP_DIR'); " +
                      "END;");
-             outputString+=" inventorydataSource GET_OBJECT cwalletobjecturi successful,";
+             appendAndPrintOutputString(outputString," inventorydataSource GET_OBJECT cwalletobjecturi successful,");
              connection.createStatement().execute("BEGIN " +
                      "DBMS_CLOUD.CREATE_CREDENTIAL(" +
                      "credential_name => 'ORDERPDB_CRED'," +
@@ -135,7 +135,7 @@ class PropagationSetup {
                      "password => '" + ATPAQAdminResource.orderpw + "'" +
                      ");" +
                      "END;");
-             outputString+=" inventorydataSource CREATE_CREDENTIAL ORDERPDB_CRED successful";
+             appendAndPrintOutputString(outputString, " inventorydataSource CREATE_CREDENTIAL ORDERPDB_CRED successful");
              connection.createStatement().execute("BEGIN " +
                      "DBMS_CLOUD_ADMIN.CREATE_DATABASE_LINK(" +
                      "db_link_name => '" + inventoryToOrderLinkName + "'," +
@@ -146,13 +146,18 @@ class PropagationSetup {
                      "credential_name => 'ORDERPDB_CRED'," +
                      "directory_name => 'DATA_PUMP_DIR');" +
                      "END;");
-             outputString+=" inventorydataSource CREATE_DATABASE_LINK " + inventoryToOrderLinkName + " successful";
-             outputString += "link from inventory to order complete";
+             appendAndPrintOutputString(outputString," inventorydataSource CREATE_DATABASE_LINK " + inventoryToOrderLinkName + " successful");
+             appendAndPrintOutputString(outputString,"link from inventory to order complete");
              System.out.println(outputString);
          } catch (SQLException ex) {
              ex.printStackTrace();
-             outputString+=ex;
+             outputString += ex;
          }
+        return outputString;
+    }
+
+    String appendAndPrintOutputString(String outputString, String stringToAppend) {
+        System.out.println(outputString+=stringToAppend);
         return outputString;
     }
 

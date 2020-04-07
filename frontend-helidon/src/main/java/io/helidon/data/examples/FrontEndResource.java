@@ -296,8 +296,10 @@ public class FrontEndResource {
                 "<form action=\"orderservicecall\"><input type=\"submit\" name =\"test\" value=\"startCPUStress\">" +
                 "   <input type=\"submit\" name =\"test\" value=\"stopCPUStress\"></form> " +
                 "   <h3>Cleanup...</h3> " +
+                "<form action=\"adminservicetest\">" +
                 "   <input type=\"submit\" name =\"test\" value=\"unschedulePropagation\">" +
                 "   <input type=\"submit\" name =\"test\" value=\"deleteUsers\">" +
+                "</form>" +
       "<br>__________________________________________________________________" +
                 "<br>Results......." +
                 "<br>" + output + "</th>" +
