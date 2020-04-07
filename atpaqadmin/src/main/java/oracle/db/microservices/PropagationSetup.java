@@ -81,7 +81,7 @@ class PropagationSetup {
 
     private String createDBLinks(DataSource orderdataSource, DataSource inventorydataSource,
                                  String orderuser, String orderpassword, String inventoryuser, String inventorypassword,
-                                 String orderToInventoryLinkName, String inventoryToOrderLinkName) throws SQLException {
+                                 String orderToInventoryLinkName, String inventoryToOrderLinkName)  {
         String outputString = "\nPropagationSetup.createDBLink " +
                 "orderdataSource = [" + orderdataSource + "], " +
                 "inventorydataSource = [" + inventorydataSource + "], " +
@@ -89,59 +89,70 @@ class PropagationSetup {
                 "inventoryuser = [" + inventoryuser + "], inventorypassword = [" + inventorypassword + "], " +
                 " orderToInventoryLinkName = [" + orderToInventoryLinkName + "]" +
                 ", inventoryToOrderLinkName = [" + inventoryToOrderLinkName + "]";
-        System.out.println(outputString);
-        // create link from order to inventory...
-        Connection connection = orderdataSource.getConnection(orderuser, orderpassword);
-        connection.createStatement().execute("BEGIN " +
-                "DBMS_CLOUD.GET_OBJECT(" +
-                "object_uri => '" + ATPAQAdminResource.cwalletobjecturi + "', " +
-                "directory_name => 'DATA_PUMP_DIR'); " +
-                "END;");
-        connection.createStatement().execute("BEGIN " +
-                "DBMS_CLOUD.CREATE_CREDENTIAL(" +
-                "credential_name => 'INVENTORYPDB_CRED'," +
-                "username => '" + ATPAQAdminResource.inventoryuser + "'" +
-                "password => '" + ATPAQAdminResource.inventorypw + "'" +
-                ");" +
-                "END;");
-        connection.createStatement().execute("BEGIN " +
-                "DBMS_CLOUD_ADMIN.CREATE_DATABASE_LINK(" +
-                "db_link_name => '" + orderToInventoryLinkName + "'," +
-                "hostname => '" + ATPAQAdminResource.inventoryhostname + "'," +
-                "port => '"+ ATPAQAdminResource.inventoryport +"'," +
-                "service_name => '"+ ATPAQAdminResource.inventoryservice_name +"'," +
-                "ssl_server_cert_dn => '"+ ATPAQAdminResource.inventoryssl_server_cert_dn +"'," +
-                "credential_name => 'INVENTORYPDB_CRED'," +
-                "directory_name => 'DATA_PUMP_DIR');" +
-                "END;");
-        outputString += "link from order to inventory complete, create link from inventory to order...";
-        System.out.println(outputString);
-        // create link from inventory to order ...
-        connection = inventorydataSource.getConnection(inventoryuser, inventorypassword);
-        connection.createStatement().execute("BEGIN " +
-                "DBMS_CLOUD.GET_OBJECT(" +
-                "object_uri => '" + ATPAQAdminResource.cwalletobjecturi + "', " +
-                "directory_name => 'DATA_PUMP_DIR'); " +
-                "END;");
-        connection.createStatement().execute("BEGIN " +
-                "DBMS_CLOUD.CREATE_CREDENTIAL(" +
-                "credential_name => 'ORDERPDB_CRED'," +
-                "username => 'ORDERUSER'," +
-                "password => '" + ATPAQAdminResource.orderpw + "'" +
-                ");" +
-                "END;");
-        connection.createStatement().execute("BEGIN " +
-                "DBMS_CLOUD_ADMIN.CREATE_DATABASE_LINK(" +
-                "db_link_name => '" + inventoryToOrderLinkName + "'," +
-                "hostname => '" + ATPAQAdminResource.orderhostname + "'," +
-                "port => '"+ ATPAQAdminResource.orderport +"'," +
-                "service_name => '"+ ATPAQAdminResource.orderservice_name +"'," +
-                "ssl_server_cert_dn => '"+ ATPAQAdminResource.orderssl_server_cert_dn +"'," +
-                "credential_name => 'ORDERPDB_CRED'," +
-                "directory_name => 'DATA_PUMP_DIR');" +
-                "END;");
-        outputString += "link from inventory to order complete";
-        System.out.println(outputString);
+         try {
+             System.out.println(outputString);
+             // create link from order to inventory...
+             Connection connection = orderdataSource.getConnection(orderuser, orderpassword);
+             connection.createStatement().execute("BEGIN " +
+                     "DBMS_CLOUD.GET_OBJECT(" +
+                     "object_uri => '" + ATPAQAdminResource.cwalletobjecturi + "', " +
+                     "directory_name => 'DATA_PUMP_DIR'); " +
+                     "END;");
+             outputString+=" orderdataSource GET_OBJECT cwalletobjecturi successful,";
+             connection.createStatement().execute("BEGIN " +
+                     "DBMS_CLOUD.CREATE_CREDENTIAL(" +
+                     "credential_name => 'INVENTORYPDB_CRED'," +
+                     "username => '" + ATPAQAdminResource.inventoryuser + "'," +
+                     "password => '" + ATPAQAdminResource.inventorypw + "'" +
+                     ");" +
+                     "END;");
+             outputString+=" orderdataSource CREATE_CREDENTIAL INVENTORYPDB_CRED successful";
+             connection.createStatement().execute("BEGIN " +
+                     "DBMS_CLOUD_ADMIN.CREATE_DATABASE_LINK(" +
+                     "db_link_name => '" + orderToInventoryLinkName + "'," +
+                     "hostname => '" + ATPAQAdminResource.inventoryhostname + "'," +
+                     "port => '" + ATPAQAdminResource.inventoryport + "'," +
+                     "service_name => '" + ATPAQAdminResource.inventoryservice_name + "'," +
+                     "ssl_server_cert_dn => '" + ATPAQAdminResource.inventoryssl_server_cert_dn + "'," +
+                     "credential_name => 'INVENTORYPDB_CRED'," +
+                     "directory_name => 'DATA_PUMP_DIR');" +
+                     "END;");
+             outputString+=" orderdataSource CREATE_DATABASE_LINK " + orderToInventoryLinkName + " successful";
+             outputString += " link from order to inventory complete, create link from inventory to order...";
+             System.out.println(outputString);
+             // create link from inventory to order ...
+             connection = inventorydataSource.getConnection(inventoryuser, inventorypassword);
+             connection.createStatement().execute("BEGIN " +
+                     "DBMS_CLOUD.GET_OBJECT(" +
+                     "object_uri => '" + ATPAQAdminResource.cwalletobjecturi + "', " +
+                     "directory_name => 'DATA_PUMP_DIR'); " +
+                     "END;");
+             outputString+=" inventorydataSource GET_OBJECT cwalletobjecturi successful,";
+             connection.createStatement().execute("BEGIN " +
+                     "DBMS_CLOUD.CREATE_CREDENTIAL(" +
+                     "credential_name => 'ORDERPDB_CRED'," +
+                     "username => '" + ATPAQAdminResource.orderuser + "'," +
+                     "password => '" + ATPAQAdminResource.orderpw + "'" +
+                     ");" +
+                     "END;");
+             outputString+=" inventorydataSource CREATE_CREDENTIAL ORDERPDB_CRED successful";
+             connection.createStatement().execute("BEGIN " +
+                     "DBMS_CLOUD_ADMIN.CREATE_DATABASE_LINK(" +
+                     "db_link_name => '" + inventoryToOrderLinkName + "'," +
+                     "hostname => '" + ATPAQAdminResource.orderhostname + "'," +
+                     "port => '" + ATPAQAdminResource.orderport + "'," +
+                     "service_name => '" + ATPAQAdminResource.orderservice_name + "'," +
+                     "ssl_server_cert_dn => '" + ATPAQAdminResource.orderssl_server_cert_dn + "'," +
+                     "credential_name => 'ORDERPDB_CRED'," +
+                     "directory_name => 'DATA_PUMP_DIR');" +
+                     "END;");
+             outputString+=" inventorydataSource CREATE_DATABASE_LINK " + inventoryToOrderLinkName + " successful";
+             outputString += "link from inventory to order complete";
+             System.out.println(outputString);
+         } catch (SQLException ex) {
+             ex.printStackTrace();
+             outputString+=ex;
+         }
         return outputString;
     }
 
