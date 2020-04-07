@@ -54,14 +54,6 @@ public class ATPAQAdminResource {
   static {
     System.setProperty("oracle.jdbc.fanEnabled", "false");
     System.out.println("ATPAQAdminResource.static inventoryhostname:" + inventoryhostname);
-    System.out.println("ATPAQAdminResource.static oracle.ucp.jdbc.PoolDataSource.orderpdb.user getProperty:" +
-            System.getProperty("oracle.ucp.jdbc.PoolDataSource.orderpdb.user"));
-    System.out.println("ATPAQAdminResource.static oracle.ucp.jdbc.PoolDataSource.orderpdb.user getenv:" +
-            System.getenv("oracle.ucp.jdbc.PoolDataSource.orderpdb.user"));
-    System.out.println("ATPAQAdminResource.static oracle.ucp.jdbc.PoolDataSource.orderpdb.password getProperty:" +
-            System.getProperty("oracle.ucp.jdbc.PoolDataSource.orderpdb.password"));
-    System.out.println("ATPAQAdminResource.static oracle.ucp.jdbc.PoolDataSource.orderpdb.password getenv:" +
-            System.getenv("oracle.ucp.jdbc.PoolDataSource.orderpdb.password"));
   }
 
   @Inject
@@ -91,16 +83,17 @@ public class ATPAQAdminResource {
   @Produces(MediaType.TEXT_HTML)
   public String testdatasources() {
       System.out.println("test datasources...");
-      String resultString = "test datasources...";
+      String resultString = "<br>test datasources... <br>orderpdbDataSource...";
     try {
-      resultString += "ATPAQAdminResource.testdatasources orderpdbDataSource connection:" + orderpdbDataSource.getConnection();
+      resultString += " connection:" + orderpdbDataSource.getConnection();
       System.out.println(resultString);
     } catch (Exception e) {
       resultString += e;
       e.printStackTrace();
     }
+    resultString += "<br>inventorypdbDataSource...";
       try {
-        resultString += "ATPAQAdminResource.testdatasources inventorypdbDataSource connection:" + inventorypdbDataSource.getConnection();
+        resultString += " connection:" + inventorypdbDataSource.getConnection();
         System.out.println(resultString);
       } catch (Exception e) {
         resultString += e;
