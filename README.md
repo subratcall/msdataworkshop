@@ -112,19 +112,18 @@ Task 7 (Verify and understand ATP connectivity via Helidon microservice deployme
             - `kubectl port-forward [atpadmin pod] -n msdataworkshop 8080:8080`
             - http://localhost:8080/test
             
-Task 8 (Setup DB links between ATP PDBs, AQ, and Queue propagation, order and inventory, saga, and CQRS)...
+Task 8 (Setup DB links between ATP PDBs, AQ, and Queue propagation)...
    - Download connection information zip for ATP instances from console.
    - Upload cwallet.sso to objectstore, obtain and note pre-authorized URL for cwallet.sso
         - (this is for convenience, alternatively a DBMS_CLOUD.CREATE_CREDENTIAL can be used to create a credential that is then used to execute GET_OBJECT in PropagationSetup.java)
    - `cd $MSDATAWORKSHOP_LOCATION/atpaqadmin`
    - Edit `atpaqadmin-deployment.yaml` and provide values in the section marked with `PROVIDE VALUES FOR THE FOLLOWING...`
-   - Run `kubectl delete -f atpaqadmin-deployment.yaml -n msdataworkshop`
-   - Run `kubectl create -f atpaqadmin-deployment.yaml -n msdataworkshop`
-   - Run `kubectl get pods -n msdataworkshop` and verify the atpaqadmin pod is in running state
-   - Open the frontend microservice home page and hit the following buttons in order
+   - Run `./redeploy.sh` 
+   - Run `pods` and verify the atpaqadmin pod is in running state
+   - Open the frontend microservice home page and hit the following buttons in order  
         - `createUsers`, `createInventoryTable`, `createDBLinks`, `setupTablesQueuesAndPropagation`
                 
-Task 9 (Demonstrate Converged database, Event-driven Order/Inventory Saga, Event Sourcing, CQRS, etc. application)
+Task 9 (Demonstrate Converged database, Event-driven Order/Inventory Saga, Event Sourcing, CQRS, etc. via Order/Inventory store application)
    - `cd $MSDATAWORKSHOP_LOCATION/order-helidon ; ./build.sh ; ./deploy.sh`
    - `cd $MSDATAWORKSHOP_LOCATION/inventory-helidon ; ./build.sh ; ./deploy.sh`
    - `cd $MSDATAWORKSHOP_LOCATION/supplier-helidon-se ; ./build.sh ; ./deploy.sh`
