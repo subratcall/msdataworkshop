@@ -53,6 +53,7 @@ public class ATPAQAdminResource {
 
   static {
     System.setProperty("oracle.jdbc.fanEnabled", "false");
+    System.out.println("ATPAQAdminResource.static cwalletobjecturi:" + cwalletobjecturi);
   }
 
   @Inject
