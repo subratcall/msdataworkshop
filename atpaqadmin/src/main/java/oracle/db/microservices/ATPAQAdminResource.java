@@ -54,6 +54,14 @@ public class ATPAQAdminResource {
   static {
     System.setProperty("oracle.jdbc.fanEnabled", "false");
     System.out.println("ATPAQAdminResource.static inventoryhostname:" + inventoryhostname);
+    System.out.println("ATPAQAdminResource.static oracle.ucp.jdbc.PoolDataSource.orderpdb.user getProperty:" +
+            System.getProperty("oracle.ucp.jdbc.PoolDataSource.orderpdb.user"));
+    System.out.println("ATPAQAdminResource.static oracle.ucp.jdbc.PoolDataSource.orderpdb.user getenv:" +
+            System.getenv("oracle.ucp.jdbc.PoolDataSource.orderpdb.user"));
+    System.out.println("ATPAQAdminResource.static oracle.ucp.jdbc.PoolDataSource.orderpdb.password getProperty:" +
+            System.getProperty("oracle.ucp.jdbc.PoolDataSource.orderpdb.password"));
+    System.out.println("ATPAQAdminResource.static oracle.ucp.jdbc.PoolDataSource.orderpdb.password getenv:" +
+            System.getenv("oracle.ucp.jdbc.PoolDataSource.orderpdb.password"));
   }
 
   @Inject
