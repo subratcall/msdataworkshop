@@ -25,7 +25,7 @@ spec:
           mountPath: /creds
       containers:
       - name: inventory
-        image: ${DOCKER_REGISTRY}/inventory-helidon:0.1
+        image: %DOCKER_REGISTRY%/inventory-helidon:0.1
         imagePullPolicy: Always
         env:
         - name: oracle.ucp.jdbc.PoolDataSource.inventorypdb.user

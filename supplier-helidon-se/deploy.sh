@@ -10,9 +10,7 @@ if [ -z "DOCKER_REGISTRY" ]; then
     exit 1
 fi
 
-eval "cat <<EOF
-$(<$SCRIPT_DIR/supplier-helidon-se-atp-deployment.yaml)
-EOF" > $SCRIPT_DIR/supplier-helidon-se-atp-deployment.yaml
+sed -i "s|%DOCKER_REGISTRY%|${DOCKER_REGISTRY}|g" atpaqadmin-deployment.yaml
 
 export IMAGE=${DOCKER_REGISTRY}/${IMAGE_NAME}:${IMAGE_VERSION}
 

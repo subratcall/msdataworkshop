@@ -40,7 +40,7 @@ spec:
           mountPath: /creds-inventory
       containers:
       - name: orderstreaming
-        image: ${DOCKER_REGISTRY}/orderstreaming-helidon-se:0.1
+        image: %DOCKER_REGISTRY%/orderstreaming-helidon-se:0.1
         imagePullPolicy: Always
         env:
         - name: database.user
