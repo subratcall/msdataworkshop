@@ -71,28 +71,19 @@ class PropagationSetup {
     String createDBLinks(DataSource orderpdbDataSource, DataSource inventorypdbDataSource) throws SQLException {
         String outputString = "\ncreateDBLinks...";
         System.out.println(outputString);
-        outputString += createDBLinks(orderpdbDataSource, inventorypdbDataSource,
-                ATPAQAdminResource.orderuser, ATPAQAdminResource.orderpw,
-                ATPAQAdminResource.inventoryuser, ATPAQAdminResource.inventorypw,
-                ATPAQAdminResource.orderToInventoryLinkName, ATPAQAdminResource.inventoryToOrderLinkName);
+        outputString += doCreateDBLinks(orderpdbDataSource, inventorypdbDataSource);
         outputString += verifyDBLinks(orderpdbDataSource, inventorypdbDataSource, outputString);
         return outputString;
     }
 
-    private String createDBLinks(DataSource orderdataSource, DataSource inventorydataSource,
-                                 String orderuser, String orderpassword, String inventoryuser, String inventorypassword,
-                                 String orderToInventoryLinkName, String inventoryToOrderLinkName)  {
+    private String doCreateDBLinks(DataSource orderdataSource, DataSource inventorydataSource)  {
         String outputString = "PropagationSetup.createDBLink " +
                 "orderdataSource = [" + orderdataSource + "], " +
-                "inventorydataSource = [" + inventorydataSource + "], " +
-                "fromuser = [" + orderuser + "], orderpassword = [" + orderpassword + "], " +
-                "inventoryuser = [" + inventoryuser + "], inventorypassword = [" + inventorypassword + "], " +
-                " orderToInventoryLinkName = [" + orderToInventoryLinkName + "]" +
-                ", inventoryToOrderLinkName = [" + inventoryToOrderLinkName + "]";
+                "inventorydataSource = [" + inventorydataSource + "]" ;
          try {
              System.out.println(outputString);
              // create link from order to inventory...
-             Connection connection = orderdataSource.getConnection(orderuser, orderpassword);
+             Connection connection = orderdataSource.getConnection(ATPAQAdminResource.orderuser, ATPAQAdminResource.orderpw);
              connection.createStatement().execute("BEGIN " +
                      "DBMS_CLOUD.GET_OBJECT(" +
                      "object_uri => '" + ATPAQAdminResource.cwalletobjecturi + "', " +
@@ -109,7 +100,7 @@ class PropagationSetup {
              outputString = appendAndPrintOutputString(outputString," orderdataSource CREATE_CREDENTIAL INVENTORYPDB_CRED successful");
              connection.createStatement().execute("BEGIN " +
                      "DBMS_CLOUD_ADMIN.CREATE_DATABASE_LINK(" +
-                     "db_link_name => '" + orderToInventoryLinkName + "'," +
+                     "db_link_name => '" + ATPAQAdminResource.orderToInventoryLinkName + "'," +
                      "hostname => '" + ATPAQAdminResource.inventoryhostname + "'," +
                      "port => '" + ATPAQAdminResource.inventoryport + "'," +
                      "service_name => '" + ATPAQAdminResource.inventoryservice_name + "'," +
@@ -117,11 +108,11 @@ class PropagationSetup {
                      "credential_name => 'INVENTORYPDB_CRED'," +
                      "directory_name => 'DATA_PUMP_DIR');" +
                      "END;");
-             outputString = appendAndPrintOutputString(outputString," orderdataSource CREATE_DATABASE_LINK " + orderToInventoryLinkName + " successful");
+             outputString = appendAndPrintOutputString(outputString," orderdataSource CREATE_DATABASE_LINK " + ATPAQAdminResource.orderToInventoryLinkName + " successful");
              outputString = appendAndPrintOutputString(outputString," link from order to inventory complete, create link from inventory to order...");
              System.out.println(outputString);
              // create link from inventory to order ...
-             connection = inventorydataSource.getConnection(inventoryuser, inventorypassword);
+             connection = inventorydataSource.getConnection(ATPAQAdminResource.inventoryuser, ATPAQAdminResource.inventorypw);
              connection.createStatement().execute("BEGIN " +
                      "DBMS_CLOUD.GET_OBJECT(" +
                      "object_uri => '" + ATPAQAdminResource.cwalletobjecturi + "', " +
@@ -138,7 +129,7 @@ class PropagationSetup {
              outputString = appendAndPrintOutputString(outputString, " inventorydataSource CREATE_CREDENTIAL ORDERPDB_CRED successful");
              connection.createStatement().execute("BEGIN " +
                      "DBMS_CLOUD_ADMIN.CREATE_DATABASE_LINK(" +
-                     "db_link_name => '" + inventoryToOrderLinkName + "'," +
+                     "db_link_name => '" + ATPAQAdminResource.inventoryToOrderLinkName + "'," +
                      "hostname => '" + ATPAQAdminResource.orderhostname + "'," +
                      "port => '" + ATPAQAdminResource.orderport + "'," +
                      "service_name => '" + ATPAQAdminResource.orderservice_name + "'," +
@@ -146,7 +137,7 @@ class PropagationSetup {
                      "credential_name => 'ORDERPDB_CRED'," +
                      "directory_name => 'DATA_PUMP_DIR');" +
                      "END;");
-             outputString = appendAndPrintOutputString(outputString," inventorydataSource CREATE_DATABASE_LINK " + inventoryToOrderLinkName + " successful");
+             outputString = appendAndPrintOutputString(outputString," inventorydataSource CREATE_DATABASE_LINK " + ATPAQAdminResource.inventoryToOrderLinkName + " successful");
              outputString = appendAndPrintOutputString(outputString,"link from inventory to order complete");
              System.out.println(outputString);
          } catch (SQLException ex) {
@@ -157,8 +148,8 @@ class PropagationSetup {
     }
 
     String appendAndPrintOutputString(String outputString, String stringToAppend) {
-        System.out.println(outputString+=stringToAppend);
-        return outputString;
+        System.out.println(stringToAppend);
+        return outputString+stringToAppend;
     }
 
 
@@ -177,8 +168,6 @@ class PropagationSetup {
                                  String orderuser, String orderpassword, String inventoryuser, String inventorypassword,
                                  String orderToInventoryLinkName, String inventoryToOrderLinkName) throws SQLException {
         String outputString = "PropagationSetup.verifyDBLinks " +
-                "orderdataSource = [" + orderdataSource + "], " +
-                "inventorydataSource = [" + inventorydataSource + "], " +
                 "fromuser = [" + orderuser + "], orderpassword = [" + orderpassword + "], " +
                 "inventoryuser = [" + inventoryuser + "], inventorypassword = [" + inventorypassword + "], " +
                 " orderToInventoryLinkName = [" + orderToInventoryLinkName + "]" +
@@ -191,10 +180,10 @@ class PropagationSetup {
         outputString = appendAndPrintOutputString(outputString,"PropagationSetup.verifyDBLinks temp table created on order");
         inventoryconnection.createStatement().execute("create table templinktest (id varchar(32))");
         outputString = appendAndPrintOutputString(outputString,"PropagationSetup.verifyDBLinks temp table created on inventory");
-        // verify orderuser select on inventorytable using link...
+        // verify orderuser select on inventorypdb using link...
         orderconnection.createStatement().execute("select count(*) from inventoryuser.templinktest@" + orderToInventoryLinkName);
         outputString = appendAndPrintOutputString(outputString,"PropagationSetup.verifyDBLinks select on inventoryuser.templinktest");
-        // verify inventoryuser select to inventory using link  ...
+        // verify inventoryuser select on orderpdb using link  ...
         inventoryconnection.createStatement().execute("select count(*) from orderuser.templinktest@" + inventoryToOrderLinkName);
         outputString = appendAndPrintOutputString(outputString,"PropagationSetup.verifyDBLinks select on orderuser.templinktest");
         orderconnection.createStatement().execute("drop table templinktest");
