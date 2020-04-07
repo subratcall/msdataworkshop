@@ -53,7 +53,7 @@ spec:
           readOnly: false
       containers:
       - name: helidonatp
-        image: ${DOCKER_REGISTRY}/helidonatp:0.1
+        image: %DOCKER_REGISTRY%/helidonatp:0.1
         imagePullPolicy: Always
         env:
         # orderpdb...
