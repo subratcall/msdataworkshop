@@ -124,7 +124,7 @@ Task 8 (Setup DB links between ATP PDBs, AQ, and Queue propagation, order and in
    - Open the frontend microservice home page and hit the following buttons in order
         - `createUsers`, `createInventoryTable`, `createDBLinks`, `setupTablesQueuesAndPropagation`
                 
-Task 9 (Demonstrate Converged database, Order/Inventory Saga, etc. application)
+Task 9 (Demonstrate Converged database, Event-driven Order/Inventory Saga, Event Sourcing, CQRS, etc. application)
    - `cd $MSDATAWORKSHOP_LOCATION/order-helidon ; ./build.sh ; ./deploy.sh`
    - `cd $MSDATAWORKSHOP_LOCATION/inventory-helidon ; ./build.sh ; ./deploy.sh`
    - `cd $MSDATAWORKSHOP_LOCATION/supplier-helidon-se ; ./build.sh ; ./deploy.sh`

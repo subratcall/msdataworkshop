@@ -31,14 +31,14 @@ import javax.ws.rs.core.Response;
 @ApplicationScoped
 public class ATPAQAdminResource {
   PropagationSetup propagationSetup = new PropagationSetup();
-  static String orderuser = "orderuser";
-  static String orderpw = "Welcome12345";
-  static String inventoryuser = "inventoryuser";
-  static String inventorypw = "Welcome12345";
-  static String orderQueueName = "orderqueue";
-  static String orderQueueTableName = "orderqueuetable";
-  static String inventoryQueueName = "inventoryqueue";
-  static String inventoryQueueTableName = "inventoryqueuetable";
+  static String orderuser = "ORDERUSER";
+  static String orderpw =  System.getenv("oracle.ucp.jdbc.PoolDataSource.orderpdb.password");
+  static String inventoryuser = "INVENTORYUSER";
+  static String inventorypw =  System.getenv("oracle.ucp.jdbc.PoolDataSource.inventorypdb.password");
+  static String orderQueueName = "ORDERQUEUE";
+  static String orderQueueTableName = "ORDERQUEUETABLE";
+  static String inventoryQueueName = "INVENTORYQUEUE";
+  static String inventoryQueueTableName = "INVENTORYQUEUETABLE";
   static String orderToInventoryLinkName = "ORDERTOINVENTORYLINK";
   static String inventoryToOrderLinkName = "INVENTORYTOORDERLINK";
   static String cwalletobjecturi =   System.getenv("cwalletobjecturi");
@@ -54,6 +54,8 @@ public class ATPAQAdminResource {
   static {
     System.setProperty("oracle.jdbc.fanEnabled", "false");
     System.out.println("ATPAQAdminResource.static inventoryhostname:" + inventoryhostname);
+    System.out.println("ATPAQAdminResource.static orderpw:" + orderpw);
+    System.out.println("ATPAQAdminResource.static inventorypw:" + inventorypw);
   }
 
   @Inject
@@ -287,22 +289,6 @@ public class ATPAQAdminResource {
     }
   }
 
-
-  @Path("/unschedulePropagation")
-  @GET
-  @Produces(MediaType.TEXT_PLAIN)
-  public Response unschedulePropagation() throws SQLException {
-    System.out.println("ATPAQAdminResource.unschedulePropagation");
-    String returnString =  propagationSetup.unscheduleOrderToInventoryPropagation(
-            orderpdbDataSource, orderuser, orderpw, orderQueueName, orderToInventoryLinkName);
-    returnString +=  propagationSetup.unscheduleOrderToInventoryPropagation(
-            inventorypdbDataSource, inventoryuser, inventorypw, inventoryQueueName, inventoryToOrderLinkName);
-    final Response returnValue = Response.ok()
-            .entity("unschedulePropagation:" + returnString)
-            .build();
-    return returnValue;
-  }
-
   @Path("/enablePropagation")
   @GET
   @Produces(MediaType.TEXT_PLAIN)
@@ -329,6 +315,37 @@ public class ATPAQAdminResource {
             .entity("enablePropagationInventoryToOrder:" + returnString)
             .build();
     return returnValue;
+  }
+
+  @Path("/unschedulePropagation")
+  @GET
+  @Produces(MediaType.TEXT_PLAIN)
+  public Response unschedulePropagation() throws SQLException {
+    System.out.println("ATPAQAdminResource.unschedulePropagation");
+    String returnString =  propagationSetup.unschedulePropagation(
+            orderpdbDataSource, orderuser, orderpw, orderQueueName, orderToInventoryLinkName);
+    returnString +=  propagationSetup.unschedulePropagation(
+            inventorypdbDataSource, inventoryuser, inventorypw, inventoryQueueName, inventoryToOrderLinkName);
+    final Response returnValue = Response.ok()
+            .entity("unschedulePropagation:" + returnString)
+            .build();
+    return returnValue;
+  }
+
+  @Path("/deleteUsers")
+  @GET
+  @Produces(MediaType.TEXT_HTML)
+  public String deleteUsers() {
+    String returnValue = "";
+    try {
+      System.out.println("deleteUsers ...");
+      returnValue += propagationSetup.deleteUsers(orderpdbDataSource, inventorypdbDataSource);
+      return " result of deleteUsers : success... " + returnValue;
+    } catch (Exception e) {
+      e.printStackTrace();
+      returnValue += e;
+      return " result of deleteUsers : " + returnValue;
+    }
   }
 
   @Path("/getConnectionMetaData")

@@ -278,10 +278,12 @@ public class FrontEndResource {
                 "   <input type=\"submit\" name =\"test\" value=\"createInventoryTable\">" +
                 "   <input type=\"submit\" name =\"test\" value=\"createDBLinks\">" +
                 "   <input type=\"submit\" name =\"test\" value=\"setupTablesQueuesAndPropagation\">" +
+                "   <br> cleanup..." +
+                "   <input type=\"submit\" name =\"test\" value=\"unschedulePropagation\">" +
+                "   <input type=\"submit\" name =\"test\" value=\"deleteUsers\">" +
 //                "   <input type=\"submit\" name =\"test\" value=\"enablePropagationInventoryToOrder\">" +
                 "</form>" +
                 "<form action=\"inventoryservicetest\"><input type=\"submit\" name =\"test\" value=\"listenForMessages\"></form>" +
-                "<form action=\"inventoryservicetest\"><input type=\"submit\" name =\"test\" value=\"cleanUpResources\"></form>" +
        /**         "<h4>Cleanup (drain queues and streams, delete tables and JSON/docs, etc.)...</h4>" +
                 "<form action=\"executeonorderpdb\" id=\"executeonorderpdb\">" +
                 "<textarea form=\"executeonorderpdb\" rows=\"4\" cols=\"50\" name =\"sql\"\">GRANT PDB_DBA TO orderuser identified by orderuserPW</textarea>" +

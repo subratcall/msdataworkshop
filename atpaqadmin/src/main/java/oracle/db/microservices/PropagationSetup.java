@@ -332,7 +332,6 @@ class PropagationSetup {
             sendMessages(topicSession, topic1);
             Thread.sleep(50000);
             receiveMessages(queueSession, subs);
-//            ((AQjmsDestination) topic1).unschedulePropagation(topicSession, linkName);
         } catch (Exception e) {
             System.out.println("Error in performJmsOperations: " + e);
             throw e;
@@ -348,23 +347,6 @@ class PropagationSetup {
         ((AQjmsSession) topicSession).createRemoteSubscriber(topic1, agt, "JMSPriority = 2");
         ((AQjmsDestination) topic1).schedulePropagation(
                 topicSession, linkName, null, null, null, new Double(0));
-    }
-
-
-    String unscheduleOrderToInventoryPropagation(DataSource dataSource, String topicUser, String topicPassword, String topicName, String linkName) {
-        System.out.println("PropagationSetup.unscheduleOrderToInventoryPropagation");
-        TopicConnection tconn = null;
-        try {
-            tconn = AQjmsFactory.getTopicConnectionFactory(dataSource).createTopicConnection(
-                    topicUser, topicPassword);
-            TopicSession tsess = tconn.createTopicSession(true, Session.CLIENT_ACKNOWLEDGE);
-            Topic topic1 = ((AQjmsSession) tsess).getTopic(topicUser, topicName);
-            ((AQjmsDestination) topic1).unschedulePropagation(tsess, linkName);
-        } catch (JMSException e) {
-            e.printStackTrace();
-            return e.toString();
-        }
-        return "success";
     }
 
     String enablePropagation(DataSource dataSource, String topicUser, String topicPassword, String topicName, String linkName) {
@@ -430,14 +412,48 @@ class PropagationSetup {
         }
     }
 
-    private void cleanup(DataSource orderpdbDataSource, DataSource inventorypdbDataSource) throws SQLException {
-//            ((AQjmsDestination) topic1).unschedulePropagation(topicSession, linkName);
-        orderpdbDataSource.getConnection().createStatement().execute(
-                "execute dbms_aqadm.unschedule_propagation(queue_name => 'paul.orders', " +
-                "destination => 'inventorydb_link', destination_queue => 'paul.orders_propqueue');" +
-                " execute dbms_lock.sleep(10);" +
-                " DROP USER paul CASCADE" +
-                " GRANT DBA TO paul IDENTIFIED BY paul");
+    String unschedulePropagation(DataSource dataSource, String topicUser,
+                                 String topicPassword, String topicName, String linkName) {
+        String resultString = "PropagationSetup.unschedulePropagation dataSource = [" + dataSource + "], " +
+                "topicUser = [" + topicUser + "], topicPassword = [" + topicPassword + "], " +
+                "topicName = [" + topicName + "], linkName = [" + linkName + "]";
+        System.out.println(resultString);
+        TopicConnection tconn;
+        try {
+            tconn = AQjmsFactory.getTopicConnectionFactory(dataSource).createTopicConnection(
+                    topicUser, topicPassword);
+            TopicSession tsess = tconn.createTopicSession(true, Session.CLIENT_ACKNOWLEDGE);
+            Topic topic1 = ((AQjmsSession) tsess).getTopic(topicUser, topicName);
+            ((AQjmsDestination) topic1).unschedulePropagation(tsess, linkName);
+            resultString += "success";
+        } catch (JMSException e) {
+            e.printStackTrace();
+            resultString += e.toString();
+        }
+        return resultString;
+    }
+
+    String deleteUsers(DataSource orderpdbDataSource, DataSource inventorypdbDataSource) throws SQLException {
+        String returnValue = "";
+        try {
+            Connection connection = orderpdbDataSource.getConnection();
+            System.out.println("orderpdbDataSource connection:" + connection);
+            connection.createStatement().execute("drop user ORDERUSER cascade ");
+            returnValue += " ORDERUSER dropped successfully";
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            returnValue += ex.toString();
+        }
+        try {
+            Connection connection = inventorypdbDataSource.getConnection();
+            System.out.println("inventorypdbDataSource connection:" + connection);
+            connection.createStatement().execute("drop user INVENTORYUSER cascade ");
+            returnValue += " INVENTORYUSER dropped successfully";
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            returnValue += ex.toString();
+        }
+        return returnValue;
     }
 }
 

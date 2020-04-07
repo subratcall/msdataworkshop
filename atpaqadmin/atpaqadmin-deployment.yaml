@@ -38,7 +38,7 @@ spec:
           readOnly: false
         - name: creds-inventory
           mountPath: /creds-inventory
-      - name: combine-tnsnamesora # as a  convenience for creating dblinks
+      - name: combine-tnsnamesora # as a  convenience for creating dblinks -- todo OSB future will make this unnecessary as tnsnames.ora will contain entries for both pdbs
         command:
         - bash
         - -c
@@ -81,7 +81,7 @@ spec:
             secretKeyRef:
               name: atp-user-cred-orderadmin
               key: walletPassword
-# PROVIDE VALUES FOR THE FOLLOWING... todo get/parse these from /msdataworkshop/creds-*
+# PROVIDE VALUES FOR THE FOLLOWING...
         - name: cwalletobjecturi
           value: "https://objectstorage.us-phoenix-1.oraclecloud.com/p/W09lHtI_JWR8qR7w45P7hRn46y390V4hTGqWlso01Ds/n/paul.parkinson/b/msdataworkshop/o/cwallet.sso"
         - name: orderhostname
@@ -100,6 +100,7 @@ spec:
           value: "mnisopbygm56hii_inventorydb_high.atp.oraclecloud.com"
         - name: inventoryssl_server_cert_dn
           value: "CN=adwc.uscom-east-1.oraclecloud.com,OU=Oracle BMCS US,O=Oracle Corporation,L=Redwood City,ST=California,C=US"
+# ...PROVIDE VALUES FOR THE FOLLOWING END
         volumeMounts:
         - name: creds-order
           mountPath: /msdataworkshop/creds-order
