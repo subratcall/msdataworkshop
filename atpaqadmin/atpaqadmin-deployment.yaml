@@ -95,7 +95,7 @@ spec:
               key: walletPassword
 # PROVIDE VALUES FOR THE FOLLOWING...
         - name: cwalletobjecturi
-          value: "https://objectstorage.us-phoenix-1.oraclecloud.com/p/W09lHtI_JWR8qR7w45P7hRn46y390V4hTGqWlso01Ds/n/paul.parkinson/b/msdataworkshop/o/cwallet.sso"
+          value: "https://objectstorage.us-phoenix-1.oraclecloud.com/p/T3rEVg-abJcGE8m-DaO1LcyfGn_ysR2FIqiMdayivNc/n/ax2mkfmpukkx/b/msdataworkshopbucket/o/cwallet.sso"
         - name: orderhostname
           value: "adb.us-phoenix-1.oraclecloud.com"
         - name: orderport

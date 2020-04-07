@@ -53,9 +53,6 @@ public class ATPAQAdminResource {
 
   static {
     System.setProperty("oracle.jdbc.fanEnabled", "false");
-    System.out.println("ATPAQAdminResource.static inventoryhostname:" + inventoryhostname);
-    System.out.println("ATPAQAdminResource.static orderpw:" + orderpw);
-    System.out.println("ATPAQAdminResource.static inventorypw:" + inventorypw);
   }
 
   @Inject
