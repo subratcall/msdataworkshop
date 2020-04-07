@@ -218,6 +218,32 @@ public class FrontEndResource {
                 "<table width=\"100%\" align=\"left\">" +
                 "  <tr>" +
                 "    <th width=\"50%\" align=\"left\" valign=\"top\">" +
+                "<h3>Task 7 and 8...</h3>" +
+                "<form action=\"adminservicetest\">" +
+                "   <input type=\"submit\" name =\"test\" value=\"testdatasources\"><br>" +
+                "   <input type=\"submit\" name =\"test\" value=\"createUsers\">" +
+                "   <input type=\"submit\" name =\"test\" value=\"createInventoryTable\">" +
+                "   <input type=\"submit\" name =\"test\" value=\"createDBLinks\">" +
+                "   <input type=\"submit\" name =\"test\" value=\"setupTablesQueuesAndPropagation\">" +
+                "   <br> cleanup..." +
+                "   <input type=\"submit\" name =\"test\" value=\"unschedulePropagation\">" +
+                "   <input type=\"submit\" name =\"test\" value=\"deleteUsers\">" +
+//                "   <input type=\"submit\" name =\"test\" value=\"enablePropagationInventoryToOrder\">" +
+                "</form>" +
+                "<form action=\"inventoryservicetest\"><input type=\"submit\" name =\"test\" value=\"listenForMessages\"></form>" +
+                /**         "<h4>Cleanup (drain queues and streams, delete tables and JSON/docs, etc.)...</h4>" +
+                 "<form action=\"executeonorderpdb\" id=\"executeonorderpdb\">" +
+                 "<textarea form=\"executeonorderpdb\" rows=\"4\" cols=\"50\" name =\"sql\"\">GRANT PDB_DBA TO orderuser identified by orderuserPW</textarea>" +
+                 "<br>    user : <input type=\"text\" name=\"orderuser\"  size=\"20\" value=\"\"> " +
+                 "    password : <input type=\"password\" name=\"orderpassword\"  size=\"20\" value=\"\"> " +
+                 "   <input type=\"submit\" value=\"executeonorderpdb\"></form>" +
+
+                 "<form action=\"executeoninventorypdb\" id=\"executeoninventorypdb\">" +
+                 "<textarea form=\"executeoninventorypdb\"  rows=\"4\" cols=\"50\" name =\"sql\"\">GRANT PDB_DBA TO inventoryuser identified by inventoryuserPW</textarea>" +
+                 "<br>    user : <input type=\"text\" name=\"inventoryuser\"  size=\"20\" value=\"\"> " +
+                 "    password : <input type=\"password\" name=\"inventorypassword\"  size=\"20\" value=\"\"> " +
+                 "   <input type=\"submit\" value=\"executeoninventorypdb\"></form>" +
+                 */
                 "<h3>Task 9...</h3>" +
                "<h4>JSON data, AQ transactional event-driven communication, and choreography saga (order and inventory service)</h4>" +
                 "<form action=\"placeorder\">" +
@@ -249,15 +275,18 @@ public class FrontEndResource {
                 "<input type=\"hidden\" id = \"geojson\" name=\"geojson\" value=\"" +
               "{&quot;type&quot;:&quot;LineString&quot;,&quot;coordinates&quot;:[[-74.00501,40.70583],[-74.00457,40.70549],[-74.00447,40.70541],[-74.00418,40.70559],[-74.00386,40.70579],[-74.00361,40.70595],[-74.00346,40.70605],[-74.00335,40.70611],[-74.00318,40.70621],[-74.00231,40.7067],[-74.00274,40.70722],[-74.00311,40.70767],[-74.00336,40.708],[-74.00345,40.70808],[-74.00407,40.70745],[-74.00412,40.70757],[-74.00433,40.70783],[-74.00477,40.70841],[-74.00505,40.70876],[-74.00513,40.70885],[-74.00524,40.70893],[-74.00532,40.70899],[-74.00547,40.70909],[-74.00643,40.70956],[-74.00705,40.70987],[-74.00774,40.71022],[-74.00906,40.71089],[-74.01046,40.71153],[-74.01013,40.71209],[-74.00967,40.71274],[-74.00927,40.71326],[-74.00902,40.71359],[-74.00885,40.71381],[-74.0084,40.71437],[-74.00795,40.71494],[-74.00755,40.71544],[-74.00882,40.71602],[-74.0092,40.71619],[-74.00911,40.71692],[-74.00906,40.71726],[-74.009,40.7176],[-74.00894,40.71793],[-74.00888,40.71827],[-74.00882,40.71864],[-74.00875,40.71903],[-74.0087,40.7193],[-74.00858,40.71996],[-74.00847,40.72065],[-74.00842,40.72089],[-74.00837,40.7212],[-74.00834,40.72133],[-74.00823,40.72198],[-74.00812,40.72264],[-74.00801,40.72328],[-74.00795,40.72365],[-74.00793,40.72376],[-74.00786,40.72382],[-74.00777,40.72388],[-74.00773,40.72392],[-74.00771,40.72393],[-74.00745,40.72412],[-74.00736,40.72417],[-74.00728,40.72424],[-74.00723,40.72429],[-74.0071,40.72441],[-74.00703,40.7245]]}" +
                 "\"/>"  +
-   */             "<input type=\"submit\" value=\"deliveryDetail\"></form>" +
-   "<h3>Task 10...</h3>" +
+   */
+                "</th>" +
+                "    <th width=\"50%\" align=\"left\" valign=\"top\">" +
+                "<input type=\"submit\" value=\"deliveryDetail\"></form>" +
+                "<h3>Task 10...</h3>" +
                 "<h4>OCI Streaming Service via Kafka API (orderstreaming service and order service)</h4>" +
                 "<form action=\"orderservicecall\">" +
                 "# of orders to stream : <input type=\"text\" name=\"numberoforderstostream\"  size=\5\" value=\"5\"> " +
                 "<input type=\"submit\" name =\"test\" value=\"produceStreamOrders\">" +
                 "<input type=\"submit\" name =\"test\" value=\"consumeStreamOrders\"></form>" +
-   "<h3>Task 11...</h3>" +
-              "<h4>Helidon Health Checks and OKE Health Probes (order service)</h4>" +
+                "<h3>Task 11...</h3>" +
+                "<h4>Helidon Health Checks and OKE Health Probes (order service)</h4>" +
                 "<form action=\"orderservicecall\"><input type=\"submit\" name =\"test\" value=\"health\">" +
                 "   <input type=\"submit\" name =\"test\" value=\"health/live\">" +
                 "   <input type=\"submit\" name =\"test\" value=\"health/ready\"></form>" +
@@ -268,35 +297,8 @@ public class FrontEndResource {
                 "<h4>Helidon Metrics and OKE horizontal-autoscaling (order service)</h4>" +
                 "<form action=\"orderservicecall\"><input type=\"submit\" name =\"test\" value=\"metrics\"></form>" +
                 "<form action=\"orderservicecall\"><input type=\"submit\" name =\"test\" value=\"startCPUStress\">" +
-                "   <input type=\"submit\" name =\"test\" value=\"stopCPUStress\"></form>" +
-                "<br> </th>" +
-                "    <th width=\"50%\" align=\"left\" valign=\"top\">" +
-                "<h3>Task 7 and 8...</h3>" +
-                "<form action=\"adminservicetest\">" +
-                "   <input type=\"submit\" name =\"test\" value=\"testdatasources\"><br>" +
-                "   <input type=\"submit\" name =\"test\" value=\"createUsers\">" +
-                "   <input type=\"submit\" name =\"test\" value=\"createInventoryTable\">" +
-                "   <input type=\"submit\" name =\"test\" value=\"createDBLinks\">" +
-                "   <input type=\"submit\" name =\"test\" value=\"setupTablesQueuesAndPropagation\">" +
-                "   <br> cleanup..." +
-                "   <input type=\"submit\" name =\"test\" value=\"unschedulePropagation\">" +
-                "   <input type=\"submit\" name =\"test\" value=\"deleteUsers\">" +
-//                "   <input type=\"submit\" name =\"test\" value=\"enablePropagationInventoryToOrder\">" +
-                "</form>" +
-                "<form action=\"inventoryservicetest\"><input type=\"submit\" name =\"test\" value=\"listenForMessages\"></form>" +
-       /**         "<h4>Cleanup (drain queues and streams, delete tables and JSON/docs, etc.)...</h4>" +
-                "<form action=\"executeonorderpdb\" id=\"executeonorderpdb\">" +
-                "<textarea form=\"executeonorderpdb\" rows=\"4\" cols=\"50\" name =\"sql\"\">GRANT PDB_DBA TO orderuser identified by orderuserPW</textarea>" +
-                "<br>    user : <input type=\"text\" name=\"orderuser\"  size=\"20\" value=\"\"> " +
-                "    password : <input type=\"password\" name=\"orderpassword\"  size=\"20\" value=\"\"> " +
-                "   <input type=\"submit\" value=\"executeonorderpdb\"></form>" +
-
-                "<form action=\"executeoninventorypdb\" id=\"executeoninventorypdb\">" +
-                "<textarea form=\"executeoninventorypdb\"  rows=\"4\" cols=\"50\" name =\"sql\"\">GRANT PDB_DBA TO inventoryuser identified by inventoryuserPW</textarea>" +
-                "<br>    user : <input type=\"text\" name=\"inventoryuser\"  size=\"20\" value=\"\"> " +
-                "    password : <input type=\"password\" name=\"inventorypassword\"  size=\"20\" value=\"\"> " +
-                "   <input type=\"submit\" value=\"executeoninventorypdb\"></form>" +
-          */      "<br>__________________________________________________________________" +
+                "   <input type=\"submit\" name =\"test\" value=\"stopCPUStress\"></form><br> " +
+      "<br>__________________________________________________________________" +
                 "<br>Results......." +
                 "<br>" + output + "</th>" +
                 "  </tr>" +
