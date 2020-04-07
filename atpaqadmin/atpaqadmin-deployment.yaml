@@ -109,6 +109,7 @@ spec:
         ports:
         - containerPort: 8080
       restartPolicy: Always
+      volumes:
       - name: creds-raw-order
         secret:
           secretName: atp-demo-binding-order
