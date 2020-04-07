@@ -218,16 +218,14 @@ public class FrontEndResource {
                 "<table width=\"100%\" align=\"left\">" +
                 "  <tr>" +
                 "    <th width=\"50%\" align=\"left\" valign=\"top\">" +
-                "<h3>Task 7 and 8...</h3>" +
+                "<h3>Task 7...</h3>" +
                 "<form action=\"adminservicetest\">" +
                 "   <input type=\"submit\" name =\"test\" value=\"testdatasources\"><br>" +
+                "<h3>Task 8...</h3>" +
                 "   <input type=\"submit\" name =\"test\" value=\"createUsers\">" +
                 "   <input type=\"submit\" name =\"test\" value=\"createInventoryTable\">" +
                 "   <input type=\"submit\" name =\"test\" value=\"createDBLinks\">" +
                 "   <input type=\"submit\" name =\"test\" value=\"setupTablesQueuesAndPropagation\">" +
-                "   <br> cleanup..." +
-                "   <input type=\"submit\" name =\"test\" value=\"unschedulePropagation\">" +
-                "   <input type=\"submit\" name =\"test\" value=\"deleteUsers\">" +
 //                "   <input type=\"submit\" name =\"test\" value=\"enablePropagationInventoryToOrder\">" +
                 "</form>" +
                 "<form action=\"inventoryservicetest\"><input type=\"submit\" name =\"test\" value=\"listenForMessages\"></form>" +
@@ -298,6 +296,9 @@ public class FrontEndResource {
                 "<form action=\"orderservicecall\"><input type=\"submit\" name =\"test\" value=\"metrics\"></form>" +
                 "<form action=\"orderservicecall\"><input type=\"submit\" name =\"test\" value=\"startCPUStress\">" +
                 "   <input type=\"submit\" name =\"test\" value=\"stopCPUStress\"></form><br> " +
+                "   <h3>Cleanup...</h3> " +
+                "   <input type=\"submit\" name =\"test\" value=\"unschedulePropagation\">" +
+                "   <input type=\"submit\" name =\"test\" value=\"deleteUsers\">" +
       "<br>__________________________________________________________________" +
                 "<br>Results......." +
                 "<br>" + output + "</th>" +
