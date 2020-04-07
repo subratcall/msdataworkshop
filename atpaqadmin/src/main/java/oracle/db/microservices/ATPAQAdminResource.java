@@ -133,7 +133,7 @@ public class ATPAQAdminResource {
     try {
       System.out.println("createUsers ...");
       returnValue += propagationSetup.createUsers(orderpdbDataSource, inventorypdbDataSource);
-      return " result of createUsers : success... " + returnValue;
+      return " result of createUsers : " + returnValue;
     } catch (Exception e) {
       e.printStackTrace();
       returnValue += e;

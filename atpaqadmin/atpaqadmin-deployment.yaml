@@ -66,6 +66,12 @@ spec:
               key: password
         - name: oracle.ucp.jdbc.PoolDataSource.orderpdb.URL
           value: "jdbc:oracle:thin:@orderdb_high?TNS_ADMIN=/msdataworkshop/creds-order"
+        # orderuser.password is used in getConnection(orderuser, orderuser.password) of adminuser datasource not for a dedicated datasource...
+        - name: orderuser.password
+          valueFrom:
+            secretKeyRef:
+              name: atp-user-cred-orderuser
+              key: password
         # inventorypdb...
         - name: oracle.ucp.jdbc.PoolDataSource.inventorypdb.user
           value: "admin"
@@ -74,13 +80,14 @@ spec:
             secretKeyRef:
               name: atp-user-cred-inventoryadmin
               key: password
+        - name: oracle.ucp.jdbc.PoolDataSource.inventorypdb.URL
+          value: "jdbc:oracle:thin:@inventorydb_high?TNS_ADMIN=/msdataworkshop/creds-inventory"
+          # inventoryuser.password is used in getConnection(inventoryuser, inventoryuser.password) of adminuser datasource not for a dedicated datasource...
         - name: inventoryuser.password
           valueFrom:
             secretKeyRef:
               name: atp-user-cred-inventoryuser
               key: password
-        - name: oracle.ucp.jdbc.PoolDataSource.inventorypdb.URL
-          value: "jdbc:oracle:thin:@inventorydb_high?TNS_ADMIN=/msdataworkshop/creds-inventory"
         - name: WALLET_PWD
           valueFrom:
             secretKeyRef:
