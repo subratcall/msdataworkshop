@@ -278,9 +278,8 @@ public class FrontEndResource {
                 "<h3>Task 10...</h3>" +
                 "<h4>OCI Streaming Service via Kafka API (orderstreaming service and order service)</h4>" +
                 "<form action=\"orderservicecall\">" +
-                "# of orders to stream : <input type=\"text\" name=\"numberoforderstostream\"  size=\5\" value=\"5\"> " +
+                "# of orders to stream : <input type=\"text\" name=\"numberoforderstostream\"  size=\"5\" value=\"5\"> " +
                 "<input type=\"submit\" name =\"test\" value=\"produceStreamOrders\">" +
-                "<input type=\"submit\" name =\"test\" value=\"consumeStreamOrders\"></form>" +
                 "</th>" +
                 "    <th width=\"50%\" align=\"left\" valign=\"top\">" +
                 "<h3>Task 11...</h3>" +
