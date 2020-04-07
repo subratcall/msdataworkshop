@@ -149,7 +149,7 @@ public class ATPAQAdminResource {
     try {
       System.out.println("createInventoryTable ...");
       returnValue += propagationSetup.createInventoryTable(inventorypdbDataSource);
-      return " result of createInventoryTable : success... " + returnValue;
+      return " result of createInventoryTable :  " + returnValue;
     } catch (Exception e) {
       e.printStackTrace();
       returnValue += e;
@@ -165,7 +165,7 @@ public class ATPAQAdminResource {
     try {
       System.out.println("createDBLinks ...");
       returnValue += propagationSetup.createDBLinks(orderpdbDataSource, inventorypdbDataSource);
-      return " result of createDBLinks : success... " + returnValue;
+      return " result of createDBLinks :  " + returnValue;
     } catch (Exception e) {
       e.printStackTrace();
       returnValue += e;
@@ -181,7 +181,7 @@ public class ATPAQAdminResource {
     try {
       System.out.println("verifyDBLinks ...");
       returnValue += propagationSetup.verifyDBLinks(orderpdbDataSource, inventorypdbDataSource, "verifyDBLinks");
-      return " result of verifyDBLinks : success... " + returnValue;
+      return " result of verifyDBLinks :  " + returnValue;
     } catch (Exception e) {
       e.printStackTrace();
       returnValue += e;
@@ -198,7 +198,7 @@ public class ATPAQAdminResource {
       System.out.println("setupTablesQueuesAndPropagation ...");
       returnValue += propagationSetup.setup(orderpdbDataSource, inventorypdbDataSource,
               true, true);
-      return " result of setupTablesQueuesAndPropagation : success... " + returnValue;
+      return " result of setupTablesQueuesAndPropagation :  " + returnValue;
     } catch (Exception e) {
       e.printStackTrace();
       returnValue += e;
@@ -213,7 +213,7 @@ public class ATPAQAdminResource {
   public String setupOrderToInventory() {
     String returnValue = "";
     return getString(returnValue, "setupOrderToInventory ...", true, false,
-            " result of setupOrderToInventory : success... ", " result of setupOrderToInventory : ");
+            " result of setupOrderToInventory :  ", " result of setupOrderToInventory : ");
   }
 
   @Path("/setupInventoryToOrder")
@@ -222,14 +222,13 @@ public class ATPAQAdminResource {
   public String setupInventoryToOrder() {
     String returnValue = "";
     return getString(returnValue, "setupInventoryToOrder ...", false, true,
-            " result of setupInventoryToOrder : success... ", " result of setupInventoryToOrder : ");
+            " result of setupInventoryToOrder :  ", " result of setupInventoryToOrder : ");
   }
 
   private String getString(String returnValue, String s, boolean b, boolean b2, String s2, String s3) {
     try {
       System.out.println(s);
-      returnValue += propagationSetup.setup(orderpdbDataSource, inventorypdbDataSource,
-              b, b2);
+      returnValue += propagationSetup.setup(orderpdbDataSource, inventorypdbDataSource,  b, b2);
       return s2 + returnValue;
     } catch (Exception e) {
       e.printStackTrace();
@@ -246,7 +245,7 @@ public class ATPAQAdminResource {
     try {
       System.out.println("testInventoryToOrder ...");
       returnValue += propagationSetup.testInventoryToOrder(orderpdbDataSource, inventorypdbDataSource);
-      return " result of testInventoryToOrder : success... " + returnValue;
+      return " result of testInventoryToOrder :  " + returnValue;
     } catch (Exception e) {
       e.printStackTrace();
       returnValue += e;
@@ -262,7 +261,7 @@ public class ATPAQAdminResource {
     try {
       System.out.println("testOrderToInventory ...");
       returnValue += propagationSetup.testOrderToInventory(orderpdbDataSource, inventorypdbDataSource);
-      return " result of testOrderToInventory : success... " + returnValue;
+      return " result of testOrderToInventory :  " + returnValue;
     } catch (Exception e) {
       e.printStackTrace();
       returnValue += e;
@@ -340,7 +339,7 @@ public class ATPAQAdminResource {
     try {
       System.out.println("deleteUsers ...");
       returnValue += propagationSetup.deleteUsers(orderpdbDataSource, inventorypdbDataSource);
-      return " result of deleteUsers : success... " + returnValue;
+      return " result of deleteUsers : " + returnValue;
     } catch (Exception e) {
       e.printStackTrace();
       returnValue += e;

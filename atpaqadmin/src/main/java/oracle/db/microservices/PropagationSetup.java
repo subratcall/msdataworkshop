@@ -50,7 +50,7 @@ class PropagationSetup {
     }
 
     Object createAQUser(DataSource ds, String queueOwner, String queueOwnerPW) throws SQLException {
-        String outputString = "\nPropagationSetup.createAQUser ds = [" + ds + "], queueOwner = [" + queueOwner + "]";
+        String outputString = "\nPropagationSetup.createAQUser queueOwner = [" + queueOwner + "]";
         System.out.println(outputString);
         Connection connection = ds.getConnection();
         System.out.println("PropagationSetup.createAQUser connection:" + connection);
@@ -75,7 +75,7 @@ class PropagationSetup {
                 ATPAQAdminResource.orderuser, ATPAQAdminResource.orderpw,
                 ATPAQAdminResource.inventoryuser, ATPAQAdminResource.inventorypw,
                 ATPAQAdminResource.orderToInventoryLinkName, ATPAQAdminResource.inventoryToOrderLinkName);
-        outputString = verifyDBLinks(orderpdbDataSource, inventorypdbDataSource, outputString);
+        outputString += verifyDBLinks(orderpdbDataSource, inventorypdbDataSource, outputString);
         return outputString;
     }
 
