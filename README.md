@@ -98,7 +98,7 @@ Task 6 (Using OCI service broker, create binding to 2 existing ATP instances)
   
 Task 7 (Verify and understand ATP connectivity via Helidon microservice deployment in OKE)
    - `cd $MSDATAWORKSHOP_LOCATION/atpaqadmin`
-   - Notice atpadmin-deployment.yaml wallet, secret, decode initcontainer, etc. 
+   - Notice [atpadmin-deployment.yaml](atpaqadmin/atpadmin-deployment.yaml) wallet, secret, decode initcontainer, etc. 
    - Notice `atp*` references in [microprofile-config.properties](atpaqadmin/src/main/resources/META-INF/microprofile-config.properties) 
    - Notice @Inject dataSources in [ATPAQAdminResource.java](atpaqadmin/src/main/java/oracle/db/microservices/ATPAQAdminResource.java)
    - Run `./deploy.sh` to create deployment and service
