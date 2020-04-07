@@ -16,13 +16,16 @@ class PropagationSetup {
         String returnValue = "PropagationSetup.createInventoryTable and add items\n";
         try {
             Connection connection = inventorypdbDataSource.getConnection(ATPAQAdminResource.inventoryuser, ATPAQAdminResource.inventorypw);
-            connection.createStatement().executeUpdate( "drop table inventory ");
-            connection.createStatement().executeUpdate(
+            connection.createStatement().execute( "drop table inventory ");
+            returnValue +=" table dropped, ";
+            connection.createStatement().execute(
                     "create table inventory (inventoryid varchar(16), inventorylocation varchar(32), inventorycount integer)");
-            connection.createStatement().executeUpdate("insert into inventory values ('carrots', '1st Street', 0)");
-            connection.createStatement().executeUpdate("insert into inventory values ('cucumbers', '2nd Street', 0)");
-            connection.createStatement().executeUpdate("insert into inventory values ('tomatoes', '3rd Street', 0)");
-            connection.createStatement().executeUpdate("insert into inventory values ('onions', '4th Street', 0)");
+            returnValue +=" table created, ";
+            connection.createStatement().execute("insert into inventory values ('carrots', '1st Street', 0)");
+            connection.createStatement().execute("insert into inventory values ('cucumbers', '2nd Street', 0)");
+            connection.createStatement().execute("insert into inventory values ('tomatoes', '3rd Street', 0)");
+            connection.createStatement().execute("insert into inventory values ('onions', '4th Street', 0)");
+            returnValue +=" table populated with veggie types, ";
             returnValue += "success";
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -49,7 +52,7 @@ class PropagationSetup {
     }
 
     Object createAQUser(DataSource ds, String queueOwner, String queueOwnerPW) throws SQLException {
-        String outputString = "\nPropagationSetup.createAQUser ds = [" + ds + "], queueOwner = [" + queueOwner + "], queueOwnerPW = [" + queueOwnerPW + "]";
+        String outputString = "\nPropagationSetup.createAQUser ds = [" + ds + "], queueOwner = [" + queueOwner + "]";
         System.out.println(outputString);
         Connection connection = ds.getConnection();
         System.out.println("PropagationSetup.createAQUser connection:" + connection);
