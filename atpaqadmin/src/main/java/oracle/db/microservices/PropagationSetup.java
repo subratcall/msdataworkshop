@@ -16,7 +16,7 @@ class PropagationSetup {
         String returnValue = "PropagationSetup.createInventoryTable and add items\n";
         try {
             Connection connection = inventorypdbDataSource.getConnection(ATPAQAdminResource.inventoryuser, ATPAQAdminResource.inventorypw);
-            connection.createStatement().execute( "drop table inventory ");
+            connection.createStatement().execute( "drop if exits table inventory ");
             returnValue +=" table dropped, ";
             connection.createStatement().execute(
                     "create table inventory (inventoryid varchar(16), inventorylocation varchar(32), inventorycount integer)");
