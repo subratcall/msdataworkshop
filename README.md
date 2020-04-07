@@ -97,6 +97,8 @@ Task 6 (Using OCI service broker, create binding to 2 existing ATP instances)
         - https://www.youtube.com/watch?v=qW_pw6Nd5hM
   
 Task 7 (Verify and understand ATP connectivity via Helidon microservice deployment in OKE)
+   - Estimated task time 5 minutes
+   - Video walk through: https://www.youtube.com/watch?v=k44qrpdohTM
    - Notice [atpaqadmin-deployment.yaml](atpaqadmin/atpaqadmin-deployment.yaml) wallet, secret, decode initcontainer, etc. 
    - Notice `atp*` references in [microprofile-config.properties](atpaqadmin/src/main/resources/META-INF/microprofile-config.properties) 
    - Notice @Inject dataSources in [ATPAQAdminResource.java](atpaqadmin/src/main/java/oracle/db/microservices/ATPAQAdminResource.java)
