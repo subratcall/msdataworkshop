@@ -221,7 +221,7 @@ public class FrontEndResource {
                 "<h3>Task 9...</h3>" +
                "<h4>JSON data, AQ transactional event-driven communication, and choreography saga (order and inventory service)</h4>" +
                 "<form action=\"placeorder\">" +
-                "itemid : <input type=\"text\" name=\"itemid\" size=\"5\" value=\"11\">  " +
+                "itemid : <input type=\"text\" name=\"itemid\" size=\"5\" value=\"cucumbers\"> <br> " +
                 "deliver to : <input type=\"text\" name=\"deliverylocation\" size=\"35\" value=\"780 PANORAMA DR,San Francisco,CA\"><br>  " +
                 "orderid : <input type=\"text\" name=\"orderid\"  size=\"6\" value=\"66\"> " +
                 "<input type=\"submit\" value=\"place order\"></p>" +

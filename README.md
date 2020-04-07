@@ -121,13 +121,21 @@ Task 8 (Setup DB links between ATP PDBs, AQ, and Queue propagation, order and in
    - Run `kubectl delete -f atpaqadmin-deployment.yaml -n msdataworkshop`
    - Run `kubectl create -f atpaqadmin-deployment.yaml -n msdataworkshop`
    - Run `kubectl get pods -n msdataworkshop` and verify the atpaqadmin pod is in running state
-   - Open the frontend microservice home page and hit the submit `setupAll` button 
+   - Open the frontend microservice home page and hit the following buttons in order
+        - `createUsers`, `createInventoryTable`, `createDBLinks`, `setupTablesQueuesAndPropagation`
                 
-Task 9 (Using OCI service broker, provision and create binding to stream, and verify with app)
-   - demonstrate placeorder for choreography saga (success and fail/compensate)
-   - demonstrate showorder for CQRS
+Task 9 (Demonstrate Converged database, Order/Inventory Saga, etc. application)
+   - `cd $MSDATAWORKSHOP_LOCATION/order-helidon ; ./build.sh ; ./deploy.sh`
+   - `cd $MSDATAWORKSHOP_LOCATION/inventory-helidon ; ./build.sh ; ./deploy.sh`
+   - `cd $MSDATAWORKSHOP_LOCATION/supplier-helidon-se ; ./build.sh ; ./deploy.sh`
+   - Open the frontend microservice home page
+   - Check inventory for a given item such as a cucumbers and insure (remove if necessary) no inventory exists
+   - Place an order for that item and then select show order and notice failed order due to choreography saga compensation
+   - Add inventory for the item and place and show the order again noticing the order was successful 
+   - This demonstrates atomic exactly once event-driven communication over AQ, 
+   - This also demonstrates CQRS as the command is executed on the database while the query is derived from events received.
    
-Task 10 (Using OCI service broker, provision and create binding to stream, and verify with app)
+Task 10 (OSS streaming service)
    - Insure Task 4 is complete and refer to https://github.com/oracle/oci-service-broker and specifically...
         - https://github.com/oracle/oci-service-broker/blob/master/charts/oci-service-broker/docs/oss.md
    - In Cloud Shell and streaming policy
@@ -148,7 +156,7 @@ Task 10 (Using OCI service broker, provision and create binding to stream, and v
    - Run `kubectl get secrets test-stream-binding-order -o yaml -n msdataworkshop`
    - Demonstrate streaming orders in frontend app by hitting `producerstream` button
 
-Task 11 (Demonstrate health/readiness) 
+Task 11 (Helidon/OKE health/readiness) 
    - eg order service is not ready until some data load (from view or eventsourcing or lazily) is done
    - show src and probes in deployment
    - https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
@@ -173,6 +181,7 @@ Task 12 (Demonstrate OKE horizontal pod scaling)
             order-helidon   Deployment/order-helidon   <unknown>/50%   1         2         0          16s
    - increase cpu, notice cpu increase and scale to 2 pods
 
+Task 13 (Tracing)
 
 Future here to end...
 
