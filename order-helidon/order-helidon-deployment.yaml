@@ -48,10 +48,10 @@ spec:
               key: walletPassword
         resources:
           requests:
-            memory: "64Mi"
-            cpu: "4m"
+#            memory: "64Mi"
+            cpu: "20m"
           limits:
-            memory: "128Mi"
+#            memory: "128Mi"
             cpu: "100m"
 #        - name: tenancyName
 #          valueFrom:
@@ -87,12 +87,12 @@ spec:
           httpGet: #alternatives include exec with command, etc.
             path: /health/live
             port: 8080
-          initialDelaySeconds: 20
+          initialDelaySeconds: 120
         readinessProbe:
           httpGet:
             path: /health/ready
             port: 8080
-          initialDelaySeconds: 40
+          initialDelaySeconds: 120
       restartPolicy: Always
       volumes:
       - name: creds-raw
