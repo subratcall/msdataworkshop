@@ -42,6 +42,7 @@ public class InventoryResource {
     static String inventorypw = "Welcome12345";
     static String inventoryQueueName = "inventoryqueue";
     static String orderQueueName = "orderqueue";
+    static boolean isDirectSupplierQuickTest = Boolean.valueOf(System.getProperty("isDirectSupplierQuickTest", "true"));
 
     static {
         System.setProperty("oracle.jdbc.fanEnabled", "false");
@@ -54,6 +55,45 @@ public class InventoryResource {
         new Thread(new InventoryServiceOrderEventConsumer(this)).start();
         final Response returnValue = Response.ok()
                 .entity("now listening for messages...")
+                .build();
+        return returnValue;
+    }
+
+    // for quick test, bypassing supplier...
+    static int inventorycount;
+
+    @Path("/addInventory")
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response addInventory(@QueryParam("itemid") String itemid) throws Exception {
+        System.out.println("--->addInventory for itemid:" + itemid);
+        String returnString = "--->addInventory for itemid:" + itemid + " inventoryCount now " + inventorycount++;
+        final Response returnValue = Response.ok()
+                .entity(returnString)
+                .build();
+        return returnValue;
+    }
+
+    @Path("/removeInventory")
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response removeInventory(@QueryParam("itemid") String itemid) throws Exception {
+        System.out.println("--->removeInventory for itemid:" + itemid);
+        String returnString = "--->removeInventory for itemid:" + itemid + " inventoryCount now " + inventorycount--;
+        final Response returnValue = Response.ok()
+                .entity(returnString)
+                .build();
+        return returnValue;
+    }
+
+    @Path("/getInventory")
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response getInventory(@QueryParam("itemid") String itemid) throws Exception {
+        System.out.println("--->getInventory for itemid:" + itemid);
+        String returnString = "--->getInventory for itemid:" + itemid + " inventoryCount  " + inventorycount;
+        final Response returnValue = Response.ok()
+                .entity(returnString)
                 .build();
         return returnValue;
     }

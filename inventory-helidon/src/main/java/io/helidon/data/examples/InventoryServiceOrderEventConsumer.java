@@ -65,12 +65,12 @@ public class InventoryServiceOrderEventConsumer implements Runnable {
     }
 
     private void updateDataAndSendEventOnInventory(AQjmsSession session, String orderid, String itemid) throws Exception {
-//        String inventorylocation = evaluateInventory(session, itemid);
-        String inventorylocation = "Philadelphia"; //todo get from evaluateInventory
+        String inventorylocation = InventoryResource.isDirectSupplierQuickTest ?
+                (InventoryResource.inventorycount > 0 ?"Philadelphia": "noinventoryforitem") : evaluateInventory(session, itemid);
         String jsonString = "{ \"orderid\" : \"" + orderid + "\", \"item\" : " + itemid +
                 "\", \"inventoryLocation\" : " + inventorylocation + " }";
         Topic topic =  session.getTopic(InventoryResource.inventoryuser, InventoryResource.inventoryQueueName);
-        System.out.println("send inventory status message... jsonString:" + jsonString + " topic:" + topic) ;
+        System.out.println("send inventory status message... \njsonString:" + jsonString + " topic:" + topic) ;
         TextMessage objmsg = session.createTextMessage();
         TopicPublisher publisher = session.createPublisher(topic);
         objmsg.setIntProperty("Id", 1);

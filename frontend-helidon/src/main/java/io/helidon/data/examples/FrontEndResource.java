@@ -32,6 +32,9 @@ import javax.ws.rs.core.MediaType;
 @ApplicationScoped
 @Traced
 public class FrontEndResource {
+
+    static boolean isDirectSupplierQuickTest = Boolean.valueOf(System.getProperty("isDirectSupplierQuickTest", "true"));
+
     @Path("/")
     @GET
     @Produces(MediaType.TEXT_HTML)
@@ -232,7 +235,7 @@ public class FrontEndResource {
                 "<br><input type=\"submit\" value=\"place order\">" +
                 "</form>" +
                 "<h4>Relational data (supplier service)</h4>" +
-                "<form action=\"supplierservicecall\">" +
+                "<form action=\"" + (isDirectSupplierQuickTest?"inventoryservicetest":"supplierservicecall") + "\">" +
                 "veggie (cucumbers, carrots, tomatoes, onions): <br><input type=\"text\" name=\"itemid\" size=\"12\" value=\"cucumbers\">  <br>" +
                 "<input type=\"submit\" name =\"test\" value=\"addInventory\">" +
                 "<input type=\"submit\" name =\"test\" value=\"removeInventory\">" +

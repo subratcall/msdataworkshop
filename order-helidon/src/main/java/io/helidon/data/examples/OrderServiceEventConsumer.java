@@ -62,7 +62,7 @@ public class OrderServiceEventConsumer implements Runnable {
                     System.out.print(" inventorylocation:" + inventorylocation);
                     System.out.println(" " + textMessage.getIntProperty("Priority"));
                     if(orderDetail != null) {
-                        orderDetail.setOrderStatus((inventorylocation==null || inventorylocation.equals(""))?
+                        orderDetail.setOrderStatus((inventorylocation==null || inventorylocation.equals("")|| inventorylocation.equals("noinventoryforitem"))?
                                 "failed inventory does not exist":"success inventory exists");
                         orderDetail.setInventoryLocation(inventorylocation);
                     }
