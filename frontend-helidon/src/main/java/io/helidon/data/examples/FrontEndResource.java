@@ -157,6 +157,19 @@ public class FrontEndResource {
 
     @GET
     @Produces(MediaType.TEXT_HTML)
+    @Path("/inventoryservicetestwithitem")
+    public String inventoryservicetestwithitem(@QueryParam("test") String test, @QueryParam("itemid") String itemid) {
+        try {
+            URL url = new URL("http://inventory.msdataworkshop:8080/" + test + "?itemid=" + itemid;
+            return getFullPage(makeRequest(url));
+        } catch (IOException e) {
+            e.printStackTrace();
+            return home();
+        }
+    }
+
+    @GET
+    @Produces(MediaType.TEXT_HTML)
     @Path("/adminservicetest")
     public String adminservicetest(@QueryParam("test") String test) {
         try {
@@ -235,7 +248,7 @@ public class FrontEndResource {
                 "<br><input type=\"submit\" value=\"place order\">" +
                 "</form>" +
                 "<h4>Relational data (supplier service)</h4>" +
-                "<form action=\"" + (isDirectSupplierQuickTest?"inventoryservicetest":"supplierservicecall") + "\">" +
+                "<form action=\"" + (isDirectSupplierQuickTest?"inventoryservicetestwithitem":"supplierservicecall") + "\">" +
                 "veggie (cucumbers, carrots, tomatoes, onions): <br><input type=\"text\" name=\"itemid\" size=\"12\" value=\"cucumbers\">  <br>" +
                 "<input type=\"submit\" name =\"test\" value=\"addInventory\">" +
                 "<input type=\"submit\" name =\"test\" value=\"removeInventory\">" +

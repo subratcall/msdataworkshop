@@ -67,7 +67,7 @@ public class InventoryResource {
     @Produces(MediaType.TEXT_PLAIN)
     public Response addInventory(@QueryParam("itemid") String itemid) throws Exception {
         System.out.println("--->addInventory for itemid:" + itemid);
-        String returnString = "--->addInventory for itemid:" + itemid + " inventoryCount now " + inventorycount++;
+        String returnString = "--->addInventory for itemid:" + itemid + " inventoryCount now " + ++inventorycount;
         final Response returnValue = Response.ok()
                 .entity(returnString)
                 .build();
@@ -78,8 +78,8 @@ public class InventoryResource {
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     public Response removeInventory(@QueryParam("itemid") String itemid) throws Exception {
-        System.out.println("--->removeInventory for itemid:" + itemid);
-        String returnString = "--->removeInventory for itemid:" + itemid + " inventoryCount now " + inventorycount--;
+        System.out.println("--->removeInventory for item");
+        String returnString = "--->removeInventory for itemid:" + itemid + " inventoryCount now " + --inventorycount;
         final Response returnValue = Response.ok()
                 .entity(returnString)
                 .build();
@@ -90,7 +90,7 @@ public class InventoryResource {
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     public Response getInventory(@QueryParam("itemid") String itemid) throws Exception {
-        System.out.println("--->getInventory for itemid:" + itemid);
+        System.out.println("--->getInventory for item");
         String returnString = "--->getInventory for itemid:" + itemid + " inventoryCount  " + inventorycount;
         final Response returnValue = Response.ok()
                 .entity(returnString)

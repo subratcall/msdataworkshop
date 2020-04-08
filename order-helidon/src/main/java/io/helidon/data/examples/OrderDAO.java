@@ -9,10 +9,7 @@ import oracle.soda.OracleException;
 import oracle.soda.rdbms.OracleRDBMSClient;
 
 public class OrderDAO {
-    private static final String QUEUE_SENDER_NAME = "ORDERS_SENDER";
-    private static final String QUEUE_SENDER_ADDRESS = "ORDERS_SENDER_ADDRESS";
     private final String collectionName = "orderscollection";
-
 
     public Order get(Connection conn, String id) throws OracleException {
         OracleDatabase soda = new OracleRDBMSClient().getDatabase(conn);
@@ -43,13 +40,9 @@ public class OrderDAO {
     }
 
     public int delete(Connection conn, String id) throws OracleException {
-//        OracleDatabase soda = database.getSoda().getDatabase(conn);
         OracleDatabase soda = new OracleRDBMSClient().getDatabase(conn);
         OracleCollection col = soda.openCollection(collectionName);
         return col.find().key(id).remove();
     }
 
-//    public String pushToQueue(OracleConnection conn, Order order) throws SQLException {
-//        return QueueUtils.sendMessage(conn, new OrderMessage(order), queue, QUEUE_SENDER_NAME, QUEUE_SENDER_ADDRESS);
-//    }
 }

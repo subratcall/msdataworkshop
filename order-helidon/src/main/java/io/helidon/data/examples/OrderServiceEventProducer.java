@@ -28,7 +28,7 @@ public class OrderServiceEventProducer {
             System.out.println("sendMessage jdbcConnection:" + jdbcConnection);
             String jsonString = "{ \"orderid\" : \"" + orderid + "\", \"item\" : " + itemid +
                     "\", \"deliverylocation\" : " + deliverylocation + " }";
-//            insertOrderViaSODA(orderid, itemid, deliverylocation, jdbcConnection, jsonString);
+            insertOrderViaSODA(orderid, itemid, deliverylocation, jdbcConnection);
             Topic topic = ((AQjmsSession) session).getTopic(OrderResource.orderQueueOwner, OrderResource.orderQueueName);
             System.out.println("Send order messages...");
             TextMessage objmsg = session.createTextMessage();
@@ -62,7 +62,7 @@ public class OrderServiceEventProducer {
     }
 
     private void insertOrderViaSODA(String orderid, String itemid, String deliverylocation,
-                                    Connection jdbcConnection, String jsonString)
+                                    Connection jdbcConnection)
             throws OracleException {
         Order order = new Order(orderid, itemid, deliverylocation);
         new OrderDAO().create(jdbcConnection, order);
