@@ -33,7 +33,7 @@ public class ATPAQAdminResource {
   PropagationSetup propagationSetup = new PropagationSetup();
   static String orderuser = "orderuser";
   static String orderpw =  "Welcome12345"; // System.getenv("orderuser.password");
-  static String inventoryuser = "orderuser";
+  static String inventoryuser = "inventoryuser";
   static String inventorypw =  "Welcome12345"; //System.getenv("inventoryuser.password");
   static String orderQueueName = "ORDERQUEUE";
   static String orderQueueTableName = "ORDERQUEUETABLE";
