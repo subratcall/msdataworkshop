@@ -236,7 +236,7 @@ public class FrontEndResource {
                 "veggie (cucumbers, carrots, tomatoes, onions): <br><input type=\"text\" name=\"itemid\" size=\"12\" value=\"cucumbers\">  <br>" +
                 "<input type=\"submit\" name =\"test\" value=\"addInventory\">" +
                 "<input type=\"submit\" name =\"test\" value=\"removeInventory\">" +
-                "<input type=\"submit\" name =\"test\" value=\"getinventory\">" +
+                "<input type=\"submit\" name =\"test\" value=\"getInventory\">" +
                 "</form>" +
                "<h4>Event sourcing and CQRS (order service)</h4>" +
                 "<form action=\"showorderservicecall\">" +
