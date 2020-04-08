@@ -50,6 +50,7 @@ public class OrderResource {
     OrderServiceCPUStress orderServiceCPUStress = new OrderServiceCPUStress();
     Map<String, OrderDetail> orders = new HashMap<>();
 
+    //Task 11 (Helidon/OKE health liveness/readiness)
     static {
         lastContainerStartTime = new java.util.Date().toString();
         System.out.println("____________________________________________________");
@@ -68,7 +69,9 @@ public class OrderResource {
                 .build();
         return returnValue;
     }
+    //END Task 11 (Helidon/OKE health liveness/readiness)
 
+    //Task 9 (Demonstrate Converged database, Event-driven Order/Inventory Saga, Event Sourcing, CQRS, etc. via Order/Inventory store application)
     @Path("/placeOrder")
     @GET
     @Produces(MediaType.TEXT_PLAIN)
@@ -80,7 +83,6 @@ public class OrderResource {
                                @QueryParam("deliverylocation") String deliverylocation) throws Exception {
             System.out.println("--->placeOrder... orderid:" + orderid + " itemid:" + itemid);
         startEventConsumerIfNotStarted();
-//        itemid(Integer.valueOf(widget));
         OrderDetail orderDetail = new OrderDetail();
         orderDetail.setOrderId(orderid);
         orderDetail.setOrderStatus("pending");
@@ -102,11 +104,6 @@ public class OrderResource {
             isOrderEventConsumerStarted = true;
         }
     }
-
-//    @Gauge ...
-//    int itemid(int itemid) {
-//        return itemid;
-//    }
 
     @Path("/showorder")
     @GET
@@ -137,7 +134,10 @@ public class OrderResource {
                 .build();
         return returnValue;
     }
+    //END Task 9 (Demonstrate Converged database, Event-driven Order/Inventory Saga, Event Sourcing, CQRS, etc. via Order/Inventory store application)
 
+
+    //Task 10 (OSS streaming service)
     @Path("/consumeStreamOrders")
     @GET
     @Produces(MediaType.TEXT_PLAIN)
@@ -148,8 +148,9 @@ public class OrderResource {
                 .build();
         return returnValue;
     }
+    //END Task 10 (OSS streaming service)
 
-
+    //Task 11 (Helidon/OKE health liveness/readiness)
     @Path("/ordersetlivenesstofalse")
     @GET
     @Produces(MediaType.TEXT_PLAIN)
@@ -160,8 +161,9 @@ public class OrderResource {
                 .build();
         return returnValue;
     }
+    //END Task 11 (Helidon/OKE health liveness/readiness)
 
-
+    //Task 12 (Demonstrate OKE horizontal pod scaling)
     @Path("/startCPUStress")
     @GET
     @Produces(MediaType.TEXT_PLAIN)
@@ -185,5 +187,6 @@ public class OrderResource {
                 .build();
         return returnValue;
     }
+    //END Task 12 (Demonstrate OKE horizontal pod scaling)
 
 }
