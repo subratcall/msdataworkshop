@@ -42,7 +42,7 @@ public class OrderResource {
     private boolean isOrderEventConsumerStarted = false;
     private OrderServiceEventProducer orderServiceEventProducer = new OrderServiceEventProducer();
     // todo get from env
-    static final String orderQueueOwner = "orderuser";
+    static final String orderQueueOwner = "ORDERUSER";
     static final String orderQueueName = "orderqueue";
     static final String inventoryQueueName = "inventoryqueue";
     static boolean liveliness = true;

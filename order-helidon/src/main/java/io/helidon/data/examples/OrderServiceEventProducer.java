@@ -23,16 +23,14 @@ public class OrderServiceEventProducer {
         try {
             TopicConnectionFactory q_cf = AQjmsFactory.getTopicConnectionFactory(dataSource);
             TopicConnection q_conn = q_cf.createTopicConnection();
-
             session = q_conn.createTopicSession(true, Session.CLIENT_ACKNOWLEDGE);
             Connection jdbcConnection = ((AQjmsSession) session).getDBConnection();
             System.out.println("sendMessage jdbcConnection:" + jdbcConnection);
             String jsonString = "{ \"orderid\" : \"" + orderid + "\", \"item\" : " + itemid +
                     "\", \"deliverylocation\" : " + deliverylocation + " }";
 //            insertOrderViaSODA(orderid, itemid, deliverylocation, jdbcConnection, jsonString);
-
             Topic topic = ((AQjmsSession) session).getTopic(OrderResource.orderQueueOwner, OrderResource.orderQueueName);
-            System.out.println("Publish messages...");
+            System.out.println("Send order messages...");
             TextMessage objmsg = session.createTextMessage();
             TopicPublisher publisher = session.createPublisher(topic);
             objmsg.setIntProperty("Id", 1);
@@ -45,8 +43,7 @@ public class OrderServiceEventProducer {
             objmsg.setJMSPriority(2);
             publisher.publish(topic, objmsg, DeliveryMode.PERSISTENT,2, AQjmsConstants.EXPIRATION_NEVER);
             session.commit();
-            System.out.println("OrderServiceEventProducer.updateDataAndSendEvent committed message with payload:" +
-                    jsonString);
+            System.out.println("committed JSON order in database and sent message in the same tx with payload:" +   jsonString);
             return topic.toString();
         } catch (Exception e) {
             System.out.println("sendMessage failed " +
@@ -67,13 +64,8 @@ public class OrderServiceEventProducer {
     private void insertOrderViaSODA(String orderid, String itemid, String deliverylocation,
                                     Connection jdbcConnection, String jsonString)
             throws OracleException {
-        oracle.soda.OracleDatabase db = new OracleRDBMSClient().getDatabase(jdbcConnection);
-        String collectionName = "orderid" + orderid;
-        oracle.soda.OracleCollection collection = db.openCollection(collectionName);
-        if (collection == null) collection = db.admin().createCollection(collectionName);
-        collection.insert(db.createDocumentFromString(jsonString));
-//        OracleOperationBuilder key = collection.find().key(orderid);
-//        OracleDocument one = key.getOne();
+        Order order = new Order(orderid, itemid, deliverylocation);
+        new OrderDAO().create(jdbcConnection, order);
     }
 
 }

@@ -8,14 +8,56 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-class PropagationSetup {
+import static oracle.db.microservices.ATPAQAdminResource.*;
 
+class PropagationSetup {
+     String GET_OBJECT_CWALLETSSO_DATA_PUMP_DIR = "BEGIN " +
+             "DBMS_CLOUD.GET_OBJECT(" +
+             "object_uri => '" + cwalletobjecturi + "', " +
+             "directory_name => 'DATA_PUMP_DIR'); " +
+             "END;";
+
+     String CREATE_CREDENTIAL_INVENTORYPDB_CRED_SQL = "BEGIN " +
+             "DBMS_CLOUD.CREATE_CREDENTIAL(" +
+             "credential_name => 'INVENTORYPDB_CRED'," +
+             "username => '" + inventoryuser + "'," +
+             "password => '" + inventorypw + "'" +
+             ");" +
+             "END;";
+     String CREATE_DBLINK_ORDERTOINVENTORY_SQL = "BEGIN " +
+            "DBMS_CLOUD_ADMIN.CREATE_DATABASE_LINK(" +
+            "db_link_name => '" + orderToInventoryLinkName + "'," +
+            "hostname => '" + inventoryhostname + "'," +
+            "port => '" + inventoryport + "'," +
+            "service_name => '" + inventoryservice_name + "'," +
+            "ssl_server_cert_dn => '" + inventoryssl_server_cert_dn + "'," +
+            "credential_name => 'INVENTORYPDB_CRED'," +
+            "directory_name => 'DATA_PUMP_DIR');" +
+            "END;";
+
+    String CREATE_CREDENTIAL_ORDERPDB_CRED_SQL = "BEGIN " +
+            "DBMS_CLOUD.CREATE_CREDENTIAL(" +
+            "credential_name => 'ORDERPDB_CRED'," +
+            "username => '" + orderuser + "'," +
+            "password => '" + orderpw + "'" +
+            ");" +
+            "END;";
+    String CREATE_DBLINK_INVENTORYTOORDER_SQL = "BEGIN " +
+            "DBMS_CLOUD_ADMIN.CREATE_DATABASE_LINK(" +
+            "db_link_name => '" + inventoryToOrderLinkName + "'," +
+            "hostname => '" + orderhostname + "'," +
+            "port => '" + orderport + "'," +
+            "service_name => '" + orderservice_name + "'," +
+            "ssl_server_cert_dn => '" + orderssl_server_cert_dn + "'," +
+            "credential_name => 'ORDERPDB_CRED'," +
+            "directory_name => 'DATA_PUMP_DIR');" +
+            "END;";
 
      String createInventoryTable(DataSource inventorypdbDataSource) throws SQLException {
         System.out.println("PropagationSetup.createInventoryTable and add items");
         String returnValue = "PropagationSetup.createInventoryTable and add items\n";
         try {
-            Connection connection = inventorypdbDataSource.getConnection(ATPAQAdminResource.inventoryuser, ATPAQAdminResource.inventorypw);
+            Connection connection = inventorypdbDataSource.getConnection(inventoryuser, inventorypw);
             connection.createStatement().execute(
                     "create table inventory (inventoryid varchar(16), inventorylocation varchar(32), inventorycount integer)");
             returnValue +=" table created, ";
@@ -35,13 +77,13 @@ class PropagationSetup {
      String createUsers(DataSource orderpdbDataSource, DataSource inventorypdbDataSource) throws SQLException {
         String returnValue = "";
         try {
-            returnValue += createAQUser(orderpdbDataSource, ATPAQAdminResource.orderuser, ATPAQAdminResource.orderpw);
+            returnValue += createAQUser(orderpdbDataSource, orderuser, orderpw);
         } catch (SQLException ex) {
             ex.printStackTrace();
             returnValue += ex.toString();
         }
         try {
-            returnValue += createAQUser(inventorypdbDataSource, ATPAQAdminResource.inventoryuser, ATPAQAdminResource.inventorypw);
+            returnValue += createAQUser(inventorypdbDataSource, inventoryuser, inventorypw);
         } catch (SQLException ex) {
             ex.printStackTrace();
             returnValue += ex.toString();
@@ -51,9 +93,8 @@ class PropagationSetup {
 
     Object createAQUser(DataSource ds, String queueOwner, String queueOwnerPW) throws SQLException {
         String outputString = "\nPropagationSetup.createAQUser queueOwner = [" + queueOwner + "]";
-        System.out.println(outputString);
+        System.out.println(outputString + "queueOwnerPW = [" + queueOwnerPW + "]");
         Connection connection = ds.getConnection();
-        System.out.println("PropagationSetup.createAQUser connection:" + connection);
         connection.createStatement().execute("grant pdb_dba to " + queueOwner + " identified by " + queueOwnerPW);
         connection.createStatement().execute("GRANT EXECUTE ON DBMS_CLOUD_ADMIN TO " + queueOwner);
         connection.createStatement().execute("GRANT EXECUTE ON DBMS_CLOUD TO " + queueOwner);
@@ -83,61 +124,25 @@ class PropagationSetup {
          try {
              System.out.println(outputString);
              // create link from order to inventory...
-             Connection connection = orderdataSource.getConnection(ATPAQAdminResource.orderuser, ATPAQAdminResource.orderpw);
-             connection.createStatement().execute("BEGIN " +
-                     "DBMS_CLOUD.GET_OBJECT(" +
-                     "object_uri => '" + ATPAQAdminResource.cwalletobjecturi + "', " +
-                     "directory_name => 'DATA_PUMP_DIR'); " +
-                     "END;");
-             outputString = appendAndPrintOutputString(outputString," orderdataSource GET_OBJECT cwalletobjecturi successful,");
-             connection.createStatement().execute("BEGIN " +
-                     "DBMS_CLOUD.CREATE_CREDENTIAL(" +
-                     "credential_name => 'INVENTORYPDB_CRED'," +
-                     "username => '" + ATPAQAdminResource.inventoryuser + "'," +
-                     "password => '" + ATPAQAdminResource.inventorypw + "'" +
-                     ");" +
-                     "END;");
-             outputString = appendAndPrintOutputString(outputString," orderdataSource CREATE_CREDENTIAL INVENTORYPDB_CRED successful");
-             connection.createStatement().execute("BEGIN " +
-                     "DBMS_CLOUD_ADMIN.CREATE_DATABASE_LINK(" +
-                     "db_link_name => '" + ATPAQAdminResource.orderToInventoryLinkName + "'," +
-                     "hostname => '" + ATPAQAdminResource.inventoryhostname + "'," +
-                     "port => '" + ATPAQAdminResource.inventoryport + "'," +
-                     "service_name => '" + ATPAQAdminResource.inventoryservice_name + "'," +
-                     "ssl_server_cert_dn => '" + ATPAQAdminResource.inventoryssl_server_cert_dn + "'," +
-                     "credential_name => 'INVENTORYPDB_CRED'," +
-                     "directory_name => 'DATA_PUMP_DIR');" +
-                     "END;");
-             outputString = appendAndPrintOutputString(outputString," orderdataSource CREATE_DATABASE_LINK " + ATPAQAdminResource.orderToInventoryLinkName + " successful");
-             outputString = appendAndPrintOutputString(outputString," link from order to inventory complete, create link from inventory to order...");
+             Connection connection = orderdataSource.getConnection(orderuser, orderpw);
+             outputString = appendAndPrintOutputString(outputString," about to " + GET_OBJECT_CWALLETSSO_DATA_PUMP_DIR);
+             connection.createStatement().execute(GET_OBJECT_CWALLETSSO_DATA_PUMP_DIR);
+             outputString = appendAndPrintOutputString(outputString," orderdataSource GET_OBJECT cwalletobjecturi successful, about to " + CREATE_CREDENTIAL_INVENTORYPDB_CRED_SQL);
+             connection.createStatement().execute(CREATE_CREDENTIAL_INVENTORYPDB_CRED_SQL);
+             outputString = appendAndPrintOutputString(outputString," orderdataSource CREATE_CREDENTIAL INVENTORYPDB_CRED successful, about to " + CREATE_DBLINK_ORDERTOINVENTORY_SQL);
+             connection.createStatement().execute(CREATE_DBLINK_ORDERTOINVENTORY_SQL);
+             outputString = appendAndPrintOutputString(outputString," orderdataSource CREATE_DATABASE_LINK " + orderToInventoryLinkName + " successful,");
+             outputString = appendAndPrintOutputString(outputString," create link from inventory to order...");
              System.out.println(outputString);
              // create link from inventory to order ...
-             connection = inventorydataSource.getConnection(ATPAQAdminResource.inventoryuser, ATPAQAdminResource.inventorypw);
-             connection.createStatement().execute("BEGIN " +
-                     "DBMS_CLOUD.GET_OBJECT(" +
-                     "object_uri => '" + ATPAQAdminResource.cwalletobjecturi + "', " +
-                     "directory_name => 'DATA_PUMP_DIR'); " +
-                     "END;");
-             outputString = appendAndPrintOutputString(outputString," inventorydataSource GET_OBJECT cwalletobjecturi successful,");
-             connection.createStatement().execute("BEGIN " +
-                     "DBMS_CLOUD.CREATE_CREDENTIAL(" +
-                     "credential_name => 'ORDERPDB_CRED'," +
-                     "username => '" + ATPAQAdminResource.orderuser + "'," +
-                     "password => '" + ATPAQAdminResource.orderpw + "'" +
-                     ");" +
-                     "END;");
-             outputString = appendAndPrintOutputString(outputString, " inventorydataSource CREATE_CREDENTIAL ORDERPDB_CRED successful");
-             connection.createStatement().execute("BEGIN " +
-                     "DBMS_CLOUD_ADMIN.CREATE_DATABASE_LINK(" +
-                     "db_link_name => '" + ATPAQAdminResource.inventoryToOrderLinkName + "'," +
-                     "hostname => '" + ATPAQAdminResource.orderhostname + "'," +
-                     "port => '" + ATPAQAdminResource.orderport + "'," +
-                     "service_name => '" + ATPAQAdminResource.orderservice_name + "'," +
-                     "ssl_server_cert_dn => '" + ATPAQAdminResource.orderssl_server_cert_dn + "'," +
-                     "credential_name => 'ORDERPDB_CRED'," +
-                     "directory_name => 'DATA_PUMP_DIR');" +
-                     "END;");
-             outputString = appendAndPrintOutputString(outputString," inventorydataSource CREATE_DATABASE_LINK " + ATPAQAdminResource.inventoryToOrderLinkName + " successful");
+             connection = inventorydataSource.getConnection(inventoryuser, inventorypw);
+             outputString = appendAndPrintOutputString(outputString," about to " + GET_OBJECT_CWALLETSSO_DATA_PUMP_DIR);
+             connection.createStatement().execute(GET_OBJECT_CWALLETSSO_DATA_PUMP_DIR);
+             outputString = appendAndPrintOutputString(outputString," inventorydataSource GET_OBJECT cwalletobjecturi successful, about to " + CREATE_CREDENTIAL_ORDERPDB_CRED_SQL);
+             connection.createStatement().execute(CREATE_CREDENTIAL_ORDERPDB_CRED_SQL);
+             outputString = appendAndPrintOutputString(outputString, " inventorydataSource CREATE_CREDENTIAL ORDERPDB_CRED successful, about to " + CREATE_DBLINK_INVENTORYTOORDER_SQL);
+             connection.createStatement().execute(CREATE_DBLINK_INVENTORYTOORDER_SQL);
+             outputString = appendAndPrintOutputString(outputString," inventorydataSource CREATE_DATABASE_LINK " + inventoryToOrderLinkName + " successful");
              outputString = appendAndPrintOutputString(outputString,"link from inventory to order complete");
              System.out.println(outputString);
          } catch (SQLException ex) {
@@ -155,25 +160,8 @@ class PropagationSetup {
 
     String verifyDBLinks(DataSource orderpdbDataSource, DataSource inventorypdbDataSource, String outputString) throws SQLException {
         outputString += "\nverifyDBLinks...";
-        System.out.println(outputString);
-        outputString += verifyDBLinks(orderpdbDataSource, inventorypdbDataSource,
-                ATPAQAdminResource.orderuser, ATPAQAdminResource.orderpw,
-                ATPAQAdminResource.inventoryuser, ATPAQAdminResource.inventorypw,
-                ATPAQAdminResource.orderToInventoryLinkName, ATPAQAdminResource.inventoryToOrderLinkName);
-        System.out.println(outputString);
-        return outputString;
-    }
-
-    private String verifyDBLinks(DataSource orderdataSource, DataSource inventorydataSource,
-                                 String orderuser, String orderpassword, String inventoryuser, String inventorypassword,
-                                 String orderToInventoryLinkName, String inventoryToOrderLinkName) throws SQLException {
-        String outputString = "PropagationSetup.verifyDBLinks " +
-                "fromuser = [" + orderuser + "], orderpassword = [" + orderpassword + "], " +
-                "inventoryuser = [" + inventoryuser + "], inventorypassword = [" + inventorypassword + "], " +
-                " orderToInventoryLinkName = [" + orderToInventoryLinkName + "]" +
-                ", inventoryToOrderLinkName = [" + inventoryToOrderLinkName + "]";
-        Connection orderconnection = orderdataSource.getConnection(orderuser, orderpassword);
-        Connection inventoryconnection = inventorydataSource.getConnection(inventoryuser, inventorypassword);
+        Connection orderconnection = orderpdbDataSource.getConnection(orderuser, orderpw);
+        Connection inventoryconnection = inventorypdbDataSource.getConnection(inventoryuser, inventorypw);
         outputString = appendAndPrintOutputString(outputString,"PropagationSetup.verifyDBLinks orderconnection:" + orderconnection +
                 " inventoryconnection:" + inventoryconnection);
         orderconnection.createStatement().execute("create table templinktest (id varchar(32))");
@@ -197,14 +185,14 @@ class PropagationSetup {
                 "isSetupOrderToInventory:" + isSetupOrderToInventory + " isSetupInventoryToOrder:" + isSetupInventoryToOrder;
         //propagation of order queue from orderpdb to inventorypdb
         if (isSetupOrderToInventory) returnString += setup(orderpdbDataSource, inventorypdbDataSource,
-                ATPAQAdminResource.orderuser, ATPAQAdminResource.orderpw, ATPAQAdminResource.orderQueueName,
-                ATPAQAdminResource.orderQueueTableName, ATPAQAdminResource.inventoryuser, ATPAQAdminResource.inventorypw,
-                ATPAQAdminResource.orderToInventoryLinkName, false);
+                orderuser, orderpw, orderQueueName,
+                orderQueueTableName, inventoryuser, inventorypw,
+                orderToInventoryLinkName, false);
         //propagation of inventory queue from inventorypdb to orderpdb
         if (isSetupInventoryToOrder) returnString += setup(inventorypdbDataSource, orderpdbDataSource,
-                ATPAQAdminResource.inventoryuser, ATPAQAdminResource.inventorypw, ATPAQAdminResource.inventoryQueueName,
-                ATPAQAdminResource.inventoryQueueTableName, ATPAQAdminResource.orderuser, ATPAQAdminResource.orderpw,
-                ATPAQAdminResource.inventoryToOrderLinkName, false);
+                inventoryuser, inventorypw, inventoryQueueName,
+                inventoryQueueTableName, orderuser, orderpw,
+                inventoryToOrderLinkName, false);
         return returnString;
     }
 
@@ -212,9 +200,9 @@ class PropagationSetup {
         String returnString = "in testOrderToInventory...";
         //propagation of order queue from orderpdb to inventorypdb
         returnString += setup(orderpdbDataSource, inventorypdbDataSource,
-                ATPAQAdminResource.orderuser, ATPAQAdminResource.orderpw, ATPAQAdminResource.orderQueueName,
-                ATPAQAdminResource.orderQueueTableName, ATPAQAdminResource.inventoryuser, ATPAQAdminResource.inventorypw,
-                ATPAQAdminResource.orderToInventoryLinkName, true);
+                orderuser, orderpw, orderQueueName,
+                orderQueueTableName, inventoryuser, inventorypw,
+                orderToInventoryLinkName, true);
         return returnString;
     }
 
@@ -222,9 +210,9 @@ class PropagationSetup {
         String returnString = "in testInventoryToOrder...";
         //propagation of inventory queue from inventorypdb to orderpdb
         returnString += setup(inventorypdbDataSource, orderpdbDataSource,
-                ATPAQAdminResource.inventoryuser, ATPAQAdminResource.inventorypw, ATPAQAdminResource.inventoryQueueName,
-                ATPAQAdminResource.inventoryQueueTableName, ATPAQAdminResource.orderuser, ATPAQAdminResource.orderpw,
-                ATPAQAdminResource.inventoryToOrderLinkName, true);
+                inventoryuser, inventorypw, inventoryQueueName,
+                inventoryQueueTableName, orderuser, orderpw,
+                inventoryToOrderLinkName, true);
         return returnString;
     }
 

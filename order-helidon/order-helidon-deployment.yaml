@@ -29,7 +29,7 @@ spec:
         imagePullPolicy: Always
         env:
         - name: oracle.ucp.jdbc.PoolDataSource.orderpdb.user
-          value: "orderuser"
+          value: "ORDERUSER"
         - name: oracle.ucp.jdbc.PoolDataSource.orderpdb.password
           valueFrom:
             secretKeyRef:

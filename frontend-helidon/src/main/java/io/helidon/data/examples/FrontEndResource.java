@@ -316,7 +316,7 @@ public class FrontEndResource {
                 "        <script type=\"text/javascript\" src=\"https://code.jquery.com/jquery-3.3.1.min.js\"></script>" +
                 "<style>" +
                 "body {background-color: powderblue;}" +
-                "h4   {color: blue;}" +
+                "h4   {color: gray;}" +
                 "</style></head>" +
                 "  <body>" + "<h1 color=\"#BDB76B;\" align=\"left\">" +
                 "Event-driven Stateful Microservices with Helidon and Autonomous Database on OCI</h1>" +

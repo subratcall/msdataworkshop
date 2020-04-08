@@ -38,7 +38,7 @@ public class InventoryResource {
     private InventoryServiceInitialization dbandMessagingInitialization= new InventoryServiceInitialization();
     private InventoryServiceOrderEventConsumer oracleAQEventListener;
     // todo get these from env
-    static String inventoryuser = "inventoryuser";
+    static String inventoryuser = "INVENTORYUSER";
     static String inventorypw = "Welcome12345";
     static String inventoryQueueName = "inventoryqueue";
     static String orderQueueName = "orderqueue";

@@ -9,13 +9,13 @@ Task 1 (Create OCI account, OKE cluster, ATP databases)
    - Get (free) OCI account and tenancy 
         - https://myservices.us.oraclecloud.com/mycloud/signup
         - note tenancy ocid, region name, user ocid
-   - Create user api key and note the private key/pem location, fingerprint, and passphrase 
+   - Create user api key and note the private key/pem location, fingerprint, and passphrase (be sure to use a passphrase)
         - https://docs.cloud.oracle.com/en-us/iaas/Content/Functions/Tasks/functionssetupapikey.htm
    - Create compartment
         - https://docs.cloud.oracle.com/en-us/iaas/Content/Identity/Tasks/managingcompartments.htm?Highlight=creating%20a%20comparment
         - https://oracle-base.com/articles/vm/oracle-cloud-infrastructure-oci-create-a-compartment#create-compartment
    - Create OCIR repos and auth key
-        - Create a meaningful repos name such as `paul.parkinson/msdataworkshop`and note the repo-name you've created as it will be used in Task 4
+        - Create a meaningful repos name such as `paul.parkinson/msdataworkshop` and note the repo-name you've created as it will be used in Task 4
         - https://docs.cloud.oracle.com/en-us/iaas/Content/Registry/Tasks/registrycreatingarepository.htm
    - Create OKE cluster
         - https://docs.cloud.oracle.com/en-us/iaas/Content/ContEng/Tasks/contengcreatingclusterusingoke.htm
@@ -158,11 +158,11 @@ Task 10 (OSS streaming service)
 Task 11 (Helidon/OKE health/readiness) 
    - eg order service is not ready until some data load (from view or eventsourcing or lazily) is done
    - show src and probes in deployment
-   - https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
-   - http://heidloff.net/article/implementing-health-checks-microprofile-istio
-   - https://github.com/oracle/helidon/blob/master/docs/src/main/docs/health/02_health_in_k8s.adoc
-   - https://github.com/oracle/helidon/blob/master/docs/src/main/docs/guides/07_health_se_guide.adoc
-   - https://dmitrykornilov.net/2019/08/08/helidon-brings-microprofile-2-2-support/
+   - documentaion references...
+       - https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
+       - https://github.com/oracle/helidon/blob/master/docs/src/main/docs/health/02_health_in_k8s.adoc
+       - https://github.com/oracle/helidon/blob/master/docs/src/main/docs/guides/07_health_se_guide.adoc
+       - https://dmitrykornilov.net/2019/08/08/helidon-brings-microprofile-2-2-support/
     
 Task 12 (Demonstrate OKE horizontal pod scaling)
    - install metrics-server

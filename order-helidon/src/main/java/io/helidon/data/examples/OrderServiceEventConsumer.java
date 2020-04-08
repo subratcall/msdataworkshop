@@ -25,8 +25,6 @@ public class OrderServiceEventConsumer implements Runnable {
         QueueSession session;
         try {
             DataSource dataSource = orderResource.atpOrderPdb;
-            System.out.println("listenForMessages... " + "dataSource:" + dataSource + " queueOwner:" + OrderResource.orderQueueOwner +
-                    " queueName:" + OrderResource.inventoryQueueName);
             QueueConnectionFactory q_cf = AQjmsFactory.getQueueConnectionFactory(dataSource);
             QueueConnection queueConnectionconnection = q_cf.createQueueConnection();
             session = queueConnectionconnection.createQueueSession(true, Session.CLIENT_ACKNOWLEDGE);

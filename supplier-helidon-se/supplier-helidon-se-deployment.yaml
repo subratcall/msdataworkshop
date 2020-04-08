@@ -29,7 +29,7 @@ spec:
         imagePullPolicy: Always
         env:
         - name: database.user
-          value: "inventoryuser"
+          value: "INVENTORYUSER"
         - name: database.password
           valueFrom:
             secretKeyRef:
