@@ -118,9 +118,7 @@ class PropagationSetup {
     }
 
     private String doCreateDBLinks(DataSource orderdataSource, DataSource inventorydataSource)  {
-        String outputString = "PropagationSetup.createDBLink " +
-                "orderdataSource = [" + orderdataSource + "], " +
-                "inventorydataSource = [" + inventorydataSource + "]" ;
+        String outputString = "" ;
          try {
              System.out.println(outputString);
              // create link from order to inventory...
@@ -153,6 +151,7 @@ class PropagationSetup {
     }
 
     String appendAndPrintOutputString(String outputString, String stringToAppend) {
+        System.out.println();
         System.out.println(stringToAppend);
         return outputString+stringToAppend;
     }
