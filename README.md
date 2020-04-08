@@ -134,6 +134,10 @@ Task 9 (Demonstrate Converged database, Event-driven Order/Inventory Saga, Event
    - This demonstrates atomic exactly once event-driven communication over AQ, 
    - This also demonstrates CQRS as the command is executed on the database while the query is derived from events received.
    
+   
+Task 9.5 tbd (Demonstrate spatial service running on Weblogic (operator) via order delivery routing service )
+   - ...
+   
 Task 10 (OSS streaming service)
    - Insure Task 4 is complete and refer to https://github.com/oracle/oci-service-broker and specifically...
         - https://github.com/oracle/oci-service-broker/blob/master/charts/oci-service-broker/docs/oss.md
