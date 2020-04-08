@@ -45,7 +45,8 @@ public class SupplierService implements Service {
         try {
             Connection conn = pool.getConnection();
             conn.createStatement().execute(
-                    "UPDATE inventory SET inventorycount = inventorycount + 1 where inventoryid = '" + itemid + "'");
+                    "UPDATE inventory SET inventorycount = 1");
+//                    "UPDATE inventory SET inventorycount = inventorycount + 1 where inventoryid = '" + itemid + "'");
             response = getInventoryCount(itemid, conn);
         } catch (SQLException ex) {
             response = ex.getMessage();
@@ -59,7 +60,8 @@ public class SupplierService implements Service {
         System.out.println("SupplierService.removeInventory itemid:" + itemid);
         try (Connection conn = pool.getConnection()) {
             conn.createStatement().execute(
-                    "UPDATE inventory SET inventorycount = inventorycount - 1 where inventoryid = '" + itemid + "'");
+                    "UPDATE inventory SET inventorycount = 0");
+//                    "UPDATE inventory SET inventorycount = inventorycount - 1 where inventoryid = '" + itemid + "'");
             response = getInventoryCount(itemid, conn);
         } catch (SQLException ex) {
             response = ex.getMessage();
