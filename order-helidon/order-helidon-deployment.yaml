@@ -46,13 +46,13 @@ spec:
             secretKeyRef:
               name: atp-user-cred-orderuser
               key: walletPassword
-        resources:
-          requests:
-#            memory: "64Mi"
-            cpu: "4m"
-          limits:
-#            memory: "128Mi"
-            cpu: "10m"
+# Task 12 (Demonstrate OKE horizontal pod scaling)
+#        resources:
+#          requests:
+#            cpu: "200m"
+#          limits:
+#            cpu: "500m"
+# Task 10 (OSS streaming service)
 #        - name: tenancyName
 #          valueFrom:
 #            secretKeyRef:
@@ -83,16 +83,19 @@ spec:
           mountPath: /msdataworkshop/creds
         ports:
         - containerPort: 8080
+# Task 11 (Helidon/OKE health liveness/readiness)
         livenessProbe:
           httpGet: #alternatives include exec with command, etc.
             path: /health/live
             port: 8080
-          initialDelaySeconds: 120
+          initialDelaySeconds: 20
+          periodSeconds: 3
         readinessProbe:
           httpGet:
             path: /health/ready
             port: 8080
-          initialDelaySeconds: 120
+          initialDelaySeconds: 40
+          periodSeconds: 3
       restartPolicy: Always
       volumes:
       - name: creds-raw

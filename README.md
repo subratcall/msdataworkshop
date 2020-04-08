@@ -155,7 +155,7 @@ Task 10 (OSS streaming service)
    - Run `kubectl get secrets test-stream-binding-order -o yaml -n msdataworkshop`
    - Demonstrate streaming orders in frontend app by hitting `producerstream` button
 
-Task 11 (Helidon/OKE health/readiness) 
+Task 11 (Helidon/OKE health liveness/readiness) 
    - eg order service is not ready until some data load (from view or eventsourcing or lazily) is done
    - show src and probes in deployment
    - documentaion references...
@@ -167,11 +167,27 @@ Task 11 (Helidon/OKE health/readiness)
 Task 12 (Demonstrate OKE horizontal pod scaling)
    - `cd $MSDATAWORKSHOP_LOCATION`
    - Run `./installMetricsServer.sh` 
+   - `cd $MSDATAWORKSHOP_LOCATION/order-helidon`
+   - uncomment `resources` section `Task 12` in `order-helidon-deployment.yaml`
+   - Run `./redeploy.sh`
    - Run `toppod order` and notice CPU and memory usage
    - Run `kubectl autoscale deployment order-helidon --cpu-percent=50 --min=1 --max=2 -n msdataworkshop`
    - Run `hpa` and notice output
    - Open the frontend microservice home page and hit the `startCPUStress` button
    - increase cpu, notice cpu increase and scale to 2 pods
+   - `kubectl delete hpa order-helidon -n msdataworkshop` to clean up
+   - alternate demo...
+       - `kubectl run oraclelinux77-hpa-demo --image=phx.ocir.io/oraclegilsonmel/oraclelinux77-demo:latest --requests=cpu=200m --limits=cpu=500m tailf /dev/null -n msdatademoworkshop`
+       - `pods | grep linux`
+       - `kubectl autoscale deployment oraclelinux77-hpa-demo --cpu-percent=50 --min=1 --max=10 -n msdataworkshop`
+       - `hpa ; toppod linux ; k get deployment oraclelinux77-hpa-demo -n msdataworkshop  ; pods |grep linux ;echo ----------------`
+       - `podshell linux`
+       - `stress --cpu 4 &` and exit
+       - `hpa ; toppod linux ; k get deployment oraclelinux77-hpa-demo -n msdataworkshop  ; pods |grep linux ;echo ----------------` 
+       - repeated above command as necessary noting changes and additional pods
+       - cleanup...
+       - `k delete deployment oraclelinux77-hpa-demo -n msdataworkshop`
+       - `k delete hpa oraclelinux77-hpa-demo -n msdataworkshop`
 
 Task 13 (Tracing)
 
