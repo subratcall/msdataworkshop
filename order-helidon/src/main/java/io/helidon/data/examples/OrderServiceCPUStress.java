@@ -5,7 +5,7 @@ public class OrderServiceCPUStress {
 
     public void start() {
         isStressOn = true;
-        for (int thread = 0; thread < 10; thread++) {
+        for (int thread = 0; thread < 4; thread++) {
             new CPUStressThread().start();
         }
     }
