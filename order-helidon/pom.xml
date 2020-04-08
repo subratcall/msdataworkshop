@@ -171,7 +171,7 @@
             <groupId>io.jaegertracing</groupId>
             <artifactId>jaeger-client</artifactId>
             <version>0.32.0</version>
-        </dependency>`
+        </dependency>
 
         <dependency>
             <groupId>javax.jms</groupId>
