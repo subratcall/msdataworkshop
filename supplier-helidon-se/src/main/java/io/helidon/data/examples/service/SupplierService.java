@@ -15,6 +15,7 @@ import oracle.ucp.jdbc.PoolDataSourceFactory;
 public class SupplierService implements Service {
 
     private PoolDataSource pool = null;
+    int inventorycount;
 
     public SupplierService(Config config) throws SQLException {
 
@@ -39,6 +40,7 @@ public class SupplierService implements Service {
 
 
     void addInventory(ServerRequest serverRequest, ServerResponse serverResponse) {
+        inventorycount =1;
         String response;
         String itemid = serverRequest.queryParams().first("itemid").get();
         System.out.println("SupplierService.addInventory itemid:" + itemid);
@@ -55,6 +57,7 @@ public class SupplierService implements Service {
     }
 
     void removeInventory(ServerRequest serverRequest, ServerResponse serverResponse) {
+        inventorycount = 0;
         String response;
         String itemid = serverRequest.queryParams().first("itemid").get();
         System.out.println("SupplierService.removeInventory itemid:" + itemid);
@@ -84,7 +87,7 @@ public class SupplierService implements Service {
     private String getInventoryCount(String itemid, Connection conn) throws SQLException {
         String response;
         ResultSet resultSet = conn.createStatement().executeQuery(
-                "select inventorycount from inventory");
+                "select INVENTORYCOUNT from inventory");
 //                "select inventorycount from inventory  where inventoryid = '" + itemid + "'");
         int inventorycount;
         if (resultSet.next()) {
@@ -92,7 +95,8 @@ public class SupplierService implements Service {
             System.out.println("MessagingService.doIncomingOutgoing inventorycount:" + inventorycount);
         } else inventorycount = 0;
         conn.close();
-        response = "inventorycount for " + itemid + " is now " + inventorycount;
+//        response = "inventorycount for " + itemid + " is now " + inventorycount;
+        response = "inventorycount for " + itemid + " is now " + this.inventorycount;
         return response;
     }
 
