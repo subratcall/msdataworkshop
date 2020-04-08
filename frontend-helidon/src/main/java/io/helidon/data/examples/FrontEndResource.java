@@ -63,25 +63,11 @@ public class FrontEndResource {
 
     @GET
     @Produces(MediaType.TEXT_HTML)
-    @Path("/showorder")
-    public String showorder(@QueryParam("orderid") String orderid) {
-        System.out.println("-----> FrontEnd showorder orderid:" + orderid);
+    @Path("/showorderservicecall")
+    public String showorderservicecall(@QueryParam("orderid") String orderid, @QueryParam("test") String test) {
+        System.out.println("-----> FrontEnd " + test + " orderid:" + orderid);
         try {
-            URL url = new URL("http://order.msdataworkshop:8080/showorder?orderid=" + orderid );
-            return getFullPage(makeRequest(url));
-        } catch (IOException e) {
-            e.printStackTrace();
-            return home();
-        }
-    }
-
-    @GET
-    @Produces(MediaType.TEXT_HTML)
-    @Path("/showallorders")
-    public String showallorders() {
-        System.out.println("-----> FrontEnd showallorders");
-        try {
-            URL url = new URL("http://order.msdataworkshop:8080/showallorders");
+            URL url = new URL("http://order.msdataworkshop:8080/" + test + "?orderid=" + orderid );
             return getFullPage(makeRequest(url));
         } catch (IOException e) {
             e.printStackTrace();
@@ -258,13 +244,14 @@ public class FrontEndResource {
                 "<input type=\"submit\" name =\"test\" value=\"getinventory\">" +
                 "</form>" +
                "<h4>Event sourcing and CQRS (order service)</h4>" +
-                "<form action=\"showorder\">" +
+                "<form action=\"showorderservicecall\">" +
                 "orderid : <input type=\"text\" name=\"orderid\"  size=\"6\" value=\"66\"> " +
-                " <br>   <input type=\"submit\" value=\"show order\">" +
+                " <br>   <input type=\"submit\" name =\"test\" value=\"showorder\">" +
+                "   <input type=\"submit\" name =\"test\" value=\"showallorders\">" +
                 "</form>" +
-  /**              "<h4>Spatial data (map service)</h4>" +
+              "<h4>Spatial data (map service on WebLogic)</h4>" +
                 " <label>From:</label>" +
-                "        <input type=\"text\" size=\"35\" id=\"start_address\" name=\"start_address\" value=\"1469 WEBSTER ST,San Francisco,CA\">" +
+                /**                "        <input type=\"text\" size=\"35\" id=\"start_address\" name=\"start_address\" value=\"1469 WEBSTER ST,San Francisco,CA\">" +
                 "        <label>To:</label>" +
                 "        <input type=\"text\" size=\"35\" id=\"end_address\" name=\"end_address\" value=\"780 PANORAMA DR,San Francisco,CA\">" +
                 "        <button type=\"button\" onclick=\"find_path_address_render()\">deliveryDetail</button>" +
@@ -274,7 +261,6 @@ public class FrontEndResource {
                 "\"/>"  +
    */
                 "<input type=\"submit\" value=\"deliveryDetail\"></form>" +
-                "<form action=\"showallorders\"><input type=\"submit\" name =\"test\" value=\"showallorders\"></form>" +
                 "<h3>Task 10...</h3>" +
                 "<h4>OCI Streaming Service via Kafka API (orderstreaming service and order service)</h4>" +
                 "<form action=\"orderservicecall\">" +

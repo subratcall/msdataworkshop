@@ -101,8 +101,7 @@ spec:
         - name: orderport
           value: "1522"
         - name: orderservice_name
-          value: "orderdb_high.atp.oraclecloud.com"
-#          value: "fcnesu1k4xmzwf1_orderdb_high.atp.oraclecloud.com"
+          value: "fcnesu1k4xmzwf1_orderdb_high.atp.oraclecloud.com"
         - name: orderssl_server_cert_dn
           value: "CN=adwc.uscom-east-1.oraclecloud.com,OU=Oracle BMCS US,O=Oracle Corporation,L=Redwood City,ST=California,C=US"
         - name: inventoryhostname
@@ -110,8 +109,7 @@ spec:
         - name: inventoryport
           value: "1522"
         - name: inventoryservice_name
-          value: "inventorydb_high.atp.oraclecloud.com"
-#          value: "fcnesu1k4xmzwf1_inventorydb_high.atp.oraclecloud.com"
+          value: "fcnesu1k4xmzwf1_inventorydb_high.atp.oraclecloud.com"
         - name: inventoryssl_server_cert_dn
           value: "CN=adwc.uscom-east-1.oraclecloud.com,OU=Oracle BMCS US,O=Oracle Corporation,L=Redwood City,ST=California,C=US"
 # ...PROVIDE VALUES FOR THE FOLLOWING END

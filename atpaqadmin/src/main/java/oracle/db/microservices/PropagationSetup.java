@@ -54,8 +54,8 @@ class PropagationSetup {
             "END;";
 
      String createInventoryTable(DataSource inventorypdbDataSource) throws SQLException {
-        System.out.println("PropagationSetup.createInventoryTable and add items");
-        String returnValue = "PropagationSetup.createInventoryTable and add items\n";
+        System.out.println("createInventoryTable and add items");
+        String returnValue = "createInventoryTable and add items\n";
         try {
             Connection connection = inventorypdbDataSource.getConnection(inventoryuser, inventorypw);
             connection.createStatement().execute(
@@ -92,7 +92,7 @@ class PropagationSetup {
     }
 
     Object createAQUser(DataSource ds, String queueOwner, String queueOwnerPW) throws SQLException {
-        String outputString = "\nPropagationSetup.createAQUser queueOwner = [" + queueOwner + "]";
+        String outputString = "createAQUser queueOwner = [" + queueOwner + "]";
         System.out.println(outputString + "queueOwnerPW = [" + queueOwnerPW + "]");
         Connection connection = ds.getConnection();
         connection.createStatement().execute("grant pdb_dba to " + queueOwner + " identified by " + queueOwnerPW);
@@ -110,7 +110,7 @@ class PropagationSetup {
     }
 
     String createDBLinks(DataSource orderpdbDataSource, DataSource inventorypdbDataSource) throws SQLException {
-        String outputString = "\ncreateDBLinks...";
+        String outputString = "createDBLinks...";
         System.out.println(outputString);
         outputString += doCreateDBLinks(orderpdbDataSource, inventorypdbDataSource);
         outputString += verifyDBLinks(orderpdbDataSource, inventorypdbDataSource, outputString);
@@ -161,18 +161,18 @@ class PropagationSetup {
         outputString += "\nverifyDBLinks...";
         Connection orderconnection = orderpdbDataSource.getConnection(orderuser, orderpw);
         Connection inventoryconnection = inventorypdbDataSource.getConnection(inventoryuser, inventorypw);
-        outputString = appendAndPrintOutputString(outputString,"PropagationSetup.verifyDBLinks orderconnection:" + orderconnection +
+        outputString = appendAndPrintOutputString(outputString,"verifyDBLinks orderconnection:" + orderconnection +
                 " inventoryconnection:" + inventoryconnection);
         orderconnection.createStatement().execute("create table templinktest (id varchar(32))");
-        outputString = appendAndPrintOutputString(outputString,"PropagationSetup.verifyDBLinks temp table created on order");
+        outputString = appendAndPrintOutputString(outputString,"verifyDBLinks temp table created on order");
         inventoryconnection.createStatement().execute("create table templinktest (id varchar(32))");
-        outputString = appendAndPrintOutputString(outputString,"PropagationSetup.verifyDBLinks temp table created on inventory");
+        outputString = appendAndPrintOutputString(outputString,"verifyDBLinks temp table created on inventory");
         // verify orderuser select on inventorypdb using link...
         orderconnection.createStatement().execute("select count(*) from inventoryuser.templinktest@" + orderToInventoryLinkName);
-        outputString = appendAndPrintOutputString(outputString,"PropagationSetup.verifyDBLinks select on inventoryuser.templinktest");
+        outputString = appendAndPrintOutputString(outputString,"verifyDBLinks select on inventoryuser.templinktest");
         // verify inventoryuser select on orderpdb using link  ...
         inventoryconnection.createStatement().execute("select count(*) from orderuser.templinktest@" + inventoryToOrderLinkName);
-        outputString = appendAndPrintOutputString(outputString,"PropagationSetup.verifyDBLinks select on orderuser.templinktest");
+        outputString = appendAndPrintOutputString(outputString,"verifyDBLinks select on orderuser.templinktest");
         orderconnection.createStatement().execute("drop table templinktest");
         inventoryconnection.createStatement().execute("drop table templinktest");
         return outputString;
@@ -232,9 +232,9 @@ class PropagationSetup {
             QueueConnectionFactory qcfact = AQjmsFactory.getQueueConnectionFactory(targetpdbDataSource);
             QueueConnection qconn = qcfact.createQueueConnection(targetuser, targetpw);
             TopicSession tsess = tconn.createTopicSession(true, Session.CLIENT_ACKNOWLEDGE);
-            System.out.println("PropagationSetup.setup source topicsession:" + tsess);
+            System.out.println("setup source topicsession:" + tsess);
             QueueSession qsess = qconn.createQueueSession(true, Session.CLIENT_ACKNOWLEDGE);
-            System.out.println("PropagationSetup.setup destination queuesession:" + qsess);
+            System.out.println("setup destination queuesession:" + qsess);
             tconn.start();
             qconn.start();
             if (!isTest) setupTopicAndQueue(tsess, qsess, sourcename, targetuser, sourcequeuename, sourcequeuetable);
@@ -259,19 +259,19 @@ class PropagationSetup {
             String name,
             String tableName) throws Exception {
         try {
-            System.out.println("drop source Queue Table...");
+            System.out.println("drop source queue table if it exists...");
             try {
                 AQQueueTable qtable = ((AQjmsSession) topicSession).getQueueTable(topicuser, tableName);
                 qtable.drop(true);
             } catch (Exception e) {
-                System.out.println("Exception in dropping source " + e);
+                System.out.println("Exception in dropping source (expected if it does not exist)" + e);
             }
-            System.out.println("drop destination Queue Table...");
+            System.out.println("drop destination queue table if it exists...");
             try {
                 AQQueueTable qtable = ((AQjmsSession) queueSession).getQueueTable(queueuser, tableName);
                 qtable.drop(true);
             } catch (Exception e) {
-                System.out.println("Exception in dropping destination " + e);
+                System.out.println("Exception in dropping destination (expected if it does not exist)" + e);
             }
             System.out.println("Creating Input Topic Table...");
             AQQueueTableProperty aqQueueTableProperty = new AQQueueTableProperty("SYS.AQ$_JMS_TEXT_MESSAGE");
@@ -333,8 +333,8 @@ class PropagationSetup {
 
     private static void createRemoteSubAndSchedulePropagation(TopicSession topicSession, String destinationqueueuser, String name, String linkName, Topic topic1, Queue queue) throws JMSException, SQLException {
         System.out.println("_____________________________________________");
-        System.out.println("PropagationSetup.performJmsOperations queue.getQueueName():" + queue.getQueueName());
-        System.out.println("PropagationSetup.performJmsOperations name (prefixing " + destinationqueueuser + ". to this):" + name);
+        System.out.println("performJmsOperations queue.getQueueName():" + queue.getQueueName());
+        System.out.println("performJmsOperations name (prefixing " + destinationqueueuser + ". to this):" + name);
         System.out.println("_____________________________________________");
         AQjmsAgent agt = new AQjmsAgent("", destinationqueueuser + "." + name + "@" + linkName);
         ((AQjmsSession) topicSession).createRemoteSubscriber(topic1, agt, "JMSPriority = 2");
@@ -343,7 +343,7 @@ class PropagationSetup {
     }
 
     String enablePropagation(DataSource dataSource, String topicUser, String topicPassword, String topicName, String linkName) {
-        System.out.println("PropagationSetup.schedulePropagation");
+        System.out.println("schedulePropagation");
         TopicConnection tconn = null;
         try {
             tconn = AQjmsFactory.getTopicConnectionFactory(dataSource).createTopicConnection(
@@ -407,7 +407,7 @@ class PropagationSetup {
 
     String unschedulePropagation(DataSource dataSource, String topicUser,
                                  String topicPassword, String topicName, String linkName) {
-        String resultString = "PropagationSetup.unschedulePropagation dataSource = [" + dataSource + "], " +
+        String resultString = "unschedulePropagation dataSource = [" + dataSource + "], " +
                 "topicUser = [" + topicUser + "], topicPassword = [" + topicPassword + "], " +
                 "topicName = [" + topicName + "], linkName = [" + linkName + "]";
         System.out.println(resultString);
