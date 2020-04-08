@@ -160,7 +160,7 @@ public class FrontEndResource {
     @Path("/inventoryservicetestwithitem")
     public String inventoryservicetestwithitem(@QueryParam("test") String test, @QueryParam("itemid") String itemid) {
         try {
-            URL url = new URL("http://inventory.msdataworkshop:8080/" + test + "?itemid=" + itemid;
+            URL url = new URL("http://inventory.msdataworkshop:8080/" + test + "?itemid=" + itemid);
             return getFullPage(makeRequest(url));
         } catch (IOException e) {
             e.printStackTrace();
