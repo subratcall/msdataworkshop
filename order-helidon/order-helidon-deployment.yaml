@@ -49,10 +49,10 @@ spec:
         resources:
           requests:
 #            memory: "64Mi"
-            cpu: "20m"
+            cpu: "4m"
           limits:
 #            memory: "128Mi"
-            cpu: "100m"
+            cpu: "10m"
 #        - name: tenancyName
 #          valueFrom:
 #            secretKeyRef:
