@@ -144,11 +144,6 @@ public class FrontEndResource {
     @Path("/inventoryservicetest")
     public String inventoryservicetest(@QueryParam("test") String test) {
         try {
-            if (test.equals("setupTablesQueuesAndPropagation")) {
-                return "setupTablesQueuesAndPropagation complete"; //todo make appropriate calls on inventory.msdataworkshop and order.msdataworkshop
-            } else   if (test.equals("createDBUsers")) {
-                return "createDBUsers complete"; //todo make appropriate calls on inventory.msdataworkshop and order.msdataworkshop
-            }
             URL url = new URL("http://inventory.msdataworkshop:8080/" + test);
             return getFullPage(makeRequest(url));
         } catch (IOException e) {

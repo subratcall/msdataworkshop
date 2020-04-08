@@ -36,7 +36,7 @@ public class SupplierService implements Service {
                 .get("/test", this::test)
                 .get("/addInventory", this::addInventory)
                 .get("/removeInventory", this::removeInventory)
-                .get("/getInventoryCount", this::getInventoryCount);
+                .get("/getInventory", this::getInventoryCount);
     }
 
 
