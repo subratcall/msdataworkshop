@@ -66,7 +66,7 @@ public class InventoryServiceOrderEventConsumer implements Runnable {
 
     private void updateDataAndSendEventOnInventory(AQjmsSession session, String orderid, String itemid) throws Exception {
 //        String inventorylocation = evaluateInventory(session, itemid);
-        String inventorylocation = "Philadelphia"; //todo temp
+        String inventorylocation = "Philadelphia"; //todo get from evaluateInventory
         String jsonString = "{ \"orderid\" : \"" + orderid + "\", \"item\" : " + itemid +
                 "\", \"inventoryLocation\" : " + inventorylocation + " }";
         Topic topic =  session.getTopic(InventoryResource.inventoryuser, InventoryResource.inventoryQueueName);
@@ -77,6 +77,7 @@ public class InventoryServiceOrderEventConsumer implements Runnable {
         objmsg.setStringProperty("orderid", orderid);
         objmsg.setStringProperty("itemid", itemid);
         objmsg.setStringProperty("inventorylocation", inventorylocation);
+        objmsg.setStringProperty("suggestiveSale", "lettuce"); //static suggestiveSale
         objmsg.setIntProperty("Priority", 2);
         objmsg.setText(jsonString);
         objmsg.setJMSCorrelationID("" + 2);
@@ -94,7 +95,7 @@ public class InventoryServiceOrderEventConsumer implements Runnable {
                 "Session:" + session + " check inventory for inventoryid:" + itemid);
         int inventorycount;
         String inventoryLocation = "";
-        // todo this should be increment decrement, not select update...
+        // todo this should be increment decrement and handle violation rather than select update...
         ResultSet resultSet = dbConnection.createStatement().executeQuery(
                 "select * from inventory  where inventoryid = '" + itemid + "'");
         if (resultSet.next()) {

@@ -69,49 +69,6 @@ public class OrderResource {
         return returnValue;
     }
 
-    @Path("/listenForMessages")
-    @GET
-    @Produces(MediaType.TEXT_PLAIN)
-    public Response dequeue() {
-        startEventConsumerIfNotStarted();
-        final Response returnValue = Response.ok()
-                .entity("listening for messages on inventory queue...")
-                .build();
-        return returnValue;
-    }
-
-    @Path("/showorder")
-    @GET
-    @Produces(MediaType.TEXT_PLAIN)
-    public Response showorder(@QueryParam("orderid") String orderId) throws Exception {
-        System.out.println("--->showorder for orderId:" + orderId);
-        OrderDetail orderDetail = orders.get(orderId); //we can also lookup orderId if is null and we do order population lazily
-        String returnString = orderDetail == null ? "orderId not found:" + orderId :
-                "orderId = " + orderId + "<br>orderstatus = " + orderDetail.getOrderStatus() +
-                        "<br>suggestiveSale (event sourced from catalog) = " + orderDetail.getSuggestiveSale() +
-                        "<br>inventoryLocation (event sourced from supplier) = " + orderDetail.getInventoryLocation();
-        final Response returnValue = Response.ok()
-                .entity(returnString)
-                .build();
-        return returnValue;
-    }
-
-    @Path("/showallorders")
-    @GET
-    @Produces(MediaType.TEXT_PLAIN)
-    public Response showallorders() throws Exception {
-        System.out.println("showallorders...");
-        String returnString = "orders in cache...\n";
-        for (String order : orders.keySet()) {
-            returnString += orders.get(order);
-        }
-        // todo - make this an option if we dont automatically reload returnString += "orders in db...\n";
-        final Response returnValue = Response.ok()
-                .entity(returnString)
-                .build();
-        return returnValue;
-    }
-
     @Path("/placeOrder")
     @GET
     @Produces(MediaType.TEXT_PLAIN)
@@ -151,6 +108,35 @@ public class OrderResource {
 //        return itemid;
 //    }
 
+    @Path("/showorder")
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response showorder(@QueryParam("orderid") String orderId) throws Exception {
+        System.out.println("--->showorder for orderId:" + orderId);
+        OrderDetail orderDetail = orders.get(orderId); //we can also lookup orderId if is null and we do order population lazily
+        String returnString = orderDetail == null ? "orderId not found:" + orderId :
+                "orderId = " + orderId + "<br>orderDetail = " + orderDetail;
+        final Response returnValue = Response.ok()
+                .entity(returnString)
+                .build();
+        return returnValue;
+    }
+
+    @Path("/showallorders")
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response showallorders() throws Exception {
+        System.out.println("showallorders...");
+        String returnString = "orders in cache...\n";
+        for (String order : orders.keySet()) {
+            returnString += orders.get(order);
+        }
+        // todo - make this an option if we dont automatically reload returnString += "orders in db...\n";
+        final Response returnValue = Response.ok()
+                .entity(returnString)
+                .build();
+        return returnValue;
+    }
 
     @Path("/consumeStreamOrders")
     @GET
@@ -192,7 +178,7 @@ public class OrderResource {
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     public Response stopCPUStress() throws Exception {
-        System.out.println("--->startCPUStress...");
+        System.out.println("--->stopCPUStress...");
         orderServiceCPUStress.stop();
         final Response returnValue = Response.ok()
                 .entity("CPU stress stopped")

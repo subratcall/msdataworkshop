@@ -3,7 +3,6 @@ package io.helidon.data.examples.service;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Optional;
 
 import io.helidon.config.Config;
 import io.helidon.webserver.Routing.Rules;
@@ -33,26 +32,20 @@ public class SupplierService implements Service {
     @Override
     public void update(Rules rules) {
         rules
-                .get("/test", this::test)
                 .get("/addInventory", this::addInventory)
                 .get("/removeInventory", this::removeInventory)
                 .get("/getInventory", this::getInventoryCount);
     }
 
 
-    void test(ServerRequest serverRequest, ServerResponse serverResponse) {
-        System.out.println("SupplierService.addInventory test");
-        serverResponse.send("test reply");
-    }
-
     void addInventory(ServerRequest serverRequest, ServerResponse serverResponse) {
         String response;
         String itemid = serverRequest.queryParams().first("itemid").get();
         System.out.println("SupplierService.addInventory itemid:" + itemid);
-        try (Connection conn = pool.getConnection()) {
+        try {
+            Connection conn = pool.getConnection();
             conn.createStatement().execute(
                     "UPDATE inventory SET inventorycount = inventorycount + 1 where inventoryid = '" + itemid + "'");
-//              "update inventory set inventorycount = 1 where inventoryid = '"+ itemid + "'");?
             response = getInventoryCount(itemid, conn);
         } catch (SQLException ex) {
             response = ex.getMessage();

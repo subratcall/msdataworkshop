@@ -54,7 +54,8 @@ public class OrderServiceEventConsumer implements Runnable {
                     System.out.print(" Message: " + textMessage.getIntProperty("Id"));
                     String orderid = textMessage.getStringProperty("orderid");
                     OrderDetail orderDetail = orderResource.orders.get(orderid);
-                    System.out.print("existing orderid:" + orderid + " orderDetail:" + orderDetail);
+                    System.out.println("Lookup orderid:" + orderid + " orderDetail:" + orderDetail);
+
                     String itemid = textMessage.getStringProperty("itemid");
                     System.out.print(" itemid:" + itemid + " orderDetail:" + orderDetail);
                     String inventorylocation = textMessage.getStringProperty("inventorylocation");

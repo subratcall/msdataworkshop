@@ -28,7 +28,7 @@ public class OrderDetail {
         String returnString = "";
         returnString+="\n orderId =" + orderId;
 //        returnString+=" suggestiveSaleItem = " + suggestiveSaleItem;
-//        returnString+=" suggestiveSale = " + suggestiveSale;
+        returnString+=" suggestiveSale = " + suggestiveSale;
 //        returnString+=" inventoryLocationItem = " + inventoryLocationItem;
         returnString+="\n inventoryLocation = " + inventoryLocation;
 //        returnString+=" shippingEstimate = " + shippingEstimate;

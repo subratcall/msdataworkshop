@@ -105,7 +105,7 @@ Task 7 (Verify and understand ATP connectivity via Helidon microservice deployme
    - `cd $MSDATAWORKSHOP_LOCATION/atpaqadmin`
    - Run `./deploy.sh` to create deployment and service
    - Run `msdataworkshop` command to verify existence of deployment and service and verify pod is in Running state
-   - Open the frontend microservice home page and hit the submit `testdatasources` button 
+   - Open the frontend microservice home page and hit the `testdatasources` button 
    - Troubleshooting... 
         - Look at logs... `kubectl logs [podname] -n msdataworkshop`
         - If no request is shown in logs, try accessing the pod directly using port-forward
@@ -165,19 +165,12 @@ Task 11 (Helidon/OKE health/readiness)
        - https://dmitrykornilov.net/2019/08/08/helidon-brings-microprofile-2-2-support/
     
 Task 12 (Demonstrate OKE horizontal pod scaling)
-   - install metrics-server
-        - DOWNLOAD_URL=$(curl -Ls "https://api.github.com/repos/kubernetes-sigs/metrics-server/releases/latest" | jq -r .tarball_url)
-        - DOWNLOAD_VERSION=$(grep -o '[^/v]*$' <<< $DOWNLOAD_URL)
-        - curl -Ls $DOWNLOAD_URL -o metrics-server-$DOWNLOAD_VERSION.tar.gz
-        - mkdir metrics-server-$DOWNLOAD_VERSION
-        - tar -xzf metrics-server-$DOWNLOAD_VERSION.tar.gz --directory metrics-server-$DOWNLOAD_VERSION --strip-components 1
-        - kubectl apply -f metrics-server-$DOWNLOAD_VERSION/deploy/1.8+/
-   - kubectl get pods -n msdataworkshop |grep order-helidon
-   - kubectl top pod order-helidon-74f848d85c-gxfq7 -n msdataworkshop --containers 
-   - kubectl autoscale deployment order-helidon --cpu-percent=50 --min=1 --max=2 -n msdataworkshop
-   - kubectl get hpa -n msdataworkshop
-            NAME            REFERENCE                  TARGETS         MINPODS   MAXPODS   REPLICAS   AGE
-            order-helidon   Deployment/order-helidon   <unknown>/50%   1         2         0          16s
+   - `cd $MSDATAWORKSHOP_LOCATION`
+   - Run `./installMetricsServer.sh` 
+   - Run `toppod order` and notice CPU and memory usage
+   - Run `kubectl autoscale deployment order-helidon --cpu-percent=50 --min=1 --max=2 -n msdataworkshop`
+   - Run `hpa` and notice output
+   - Open the frontend microservice home page and hit the `startCPUStress` button
    - increase cpu, notice cpu increase and scale to 2 pods
 
 Task 13 (Tracing)

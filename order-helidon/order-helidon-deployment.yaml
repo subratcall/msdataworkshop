@@ -46,6 +46,13 @@ spec:
             secretKeyRef:
               name: atp-user-cred-orderuser
               key: walletPassword
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "250m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
 #        - name: tenancyName
 #          valueFrom:
 #            secretKeyRef:
