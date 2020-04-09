@@ -13,4 +13,3 @@ else
 fi
 
 kubectl delete -f $SCRIPT_DIR/inventory-helidon-service.yaml -n msdataworkshop
-

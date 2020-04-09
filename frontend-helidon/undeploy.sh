@@ -13,4 +13,3 @@ else
 fi
 
 kubectl delete -f $SCRIPT_DIR/frontend-helidon-service.yaml -n msdataworkshop
-

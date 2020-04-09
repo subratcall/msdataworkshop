@@ -13,4 +13,3 @@ else
 fi
 
 kubectl delete -f $SCRIPT_DIR/orderstreaming-helidon-se-service.yaml -n msdataworkshop
-
