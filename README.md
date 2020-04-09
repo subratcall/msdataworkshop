@@ -181,7 +181,7 @@ Task 12 (Demonstrate OKE horizontal pod scaling)
    - increase cpu, notice cpu increase and scale to 2 pods
    - `kubectl delete hpa order-helidon -n msdataworkshop` to clean up
    - alternate demo...
-       - `kubectl run oraclelinux77-hpa-demo --image=phx.ocir.io/oraclegilsonmel/oraclelinux77-demo:latest --requests=cpu=200m --limits=cpu=500m tailf /dev/null -n msdatademoworkshop`
+       - `kubectl run oraclelinux77-hpa-demo --image=phx.ocir.io/oraclegilsonmel/oraclelinux77-demo:latest --requests=cpu=200m --limits=cpu=500m tailf /dev/null -n msdataworkshop`
        - `pods | grep linux`
        - `kubectl autoscale deployment oraclelinux77-hpa-demo --cpu-percent=50 --min=1 --max=10 -n msdataworkshop`
        - `hpa ; toppod linux ; k get deployment oraclelinux77-hpa-demo -n msdataworkshop  ; pods |grep linux ;echo ----------------`

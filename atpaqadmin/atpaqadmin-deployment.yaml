@@ -14,43 +14,18 @@ spec:
       # This decode-creds initContainer takes care of decoding the files and writing them to a shared volume from which jdbc-app contianer
       # can read them and use it for connecting to ATP.
       initContainers:
-      - name: decode-creds-order
+      - name: decode-creds
         command:
         - bash
         - -c
-        - "for i in `ls -1 /tmp/creds-order | grep -v user_name`; do cat /tmp/creds-order/$i  | base64 --decode > /creds-order/$i; done; ls -l /creds-order/*;"
+        - "for i in `ls -1 /tmp/creds | grep -v user_name`; do cat /tmp/creds/$i  | base64 --decode > /creds/$i; done; ls -l /creds/*;"
         image: oraclelinux:7.5
         volumeMounts:
-        - name: creds-raw-order
-          mountPath: /tmp/creds-order
+        - name: creds-raw
+          mountPath: /tmp/creds
           readOnly: false
-        - name: creds-order
-          mountPath: /creds-order
-      - name: decode-creds-inventory
-        command:
-        - bash
-        - -c
-        - "for i in `ls -1 /tmp/creds-inventory | grep -v user_name`; do cat /tmp/creds-inventory/$i  | base64 --decode > /creds-inventory/$i; done; ls -l /creds-inventory/*;"
-        image: oraclelinux:7.5
-        volumeMounts:
-        - name: creds-raw-inventory
-          mountPath: /tmp/creds-inventory
-          readOnly: false
-        - name: creds-inventory
-          mountPath: /creds-inventory
-      - name: combine-tnsnamesora # as a  convenience for creating dblinks -- todo OSB future will make this unnecessary as tnsnames.ora will contain entries for both pdbs
-        command:
-        - bash
-        - -c
-        - "cat /tmp/creds-order/tnsnames.ora >> /tmp/creds-inventory/tnsnames.ora ; cp /tmp/creds-inventory/tnsnames.ora /tmp/creds-order/tnsnames.ora;"
-        image: oraclelinux:7.5
-        volumeMounts:
-        - name: creds-order
-          mountPath: /tmp/creds-order
-          readOnly: false
-        - name: creds-inventory
-          mountPath: /tmp/creds-inventory
-          readOnly: false
+        - name: creds
+          mountPath: /creds
       containers:
       - name: helidonatp
         image: %DOCKER_REGISTRY%/helidonatp:0.1
@@ -65,7 +40,7 @@ spec:
               name: atp-user-cred-orderadmin
               key: password
         - name: oracle.ucp.jdbc.PoolDataSource.orderpdb.URL
-          value: "jdbc:oracle:thin:@orderdb_high?TNS_ADMIN=/msdataworkshop/creds-order"
+          value: "jdbc:oracle:thin:@orderdb_high?TNS_ADMIN=/msdataworkshop/creds"
         # orderuser.password is used in getConnection(orderuser, orderuser.password) of adminuser datasource not for a dedicated datasource...
         - name: orderuser.password
           valueFrom:
@@ -81,7 +56,7 @@ spec:
               name: atp-user-cred-inventoryadmin
               key: password
         - name: oracle.ucp.jdbc.PoolDataSource.inventorypdb.URL
-          value: "jdbc:oracle:thin:@inventorydb_high?TNS_ADMIN=/msdataworkshop/creds-inventory"
+          value: "jdbc:oracle:thin:@inventorydb_high?TNS_ADMIN=/msdataworkshop/creds"
           # inventoryuser.password is used in getConnection(inventoryuser, inventoryuser.password) of adminuser datasource not for a dedicated datasource...
         - name: inventoryuser.password
           valueFrom:
@@ -91,6 +66,7 @@ spec:
         - name: WALLET_PWD
           valueFrom:
             secretKeyRef:
+              # wallet is the same for both order and inventory and so we only need to use one (in this case order)
               name: atp-user-cred-orderadmin
               key: walletPassword
 # PROVIDE VALUES FOR THE FOLLOWING...
@@ -114,21 +90,16 @@ spec:
           value: "CN=adwc.uscom-east-1.oraclecloud.com,OU=Oracle BMCS US,O=Oracle Corporation,L=Redwood City,ST=California,C=US"
 # ...PROVIDE VALUES FOR THE FOLLOWING END
         volumeMounts:
-        - name: creds-order
-          mountPath: /msdataworkshop/creds-order
-        - name: creds-inventory
-          mountPath: /msdataworkshop/creds-inventory
+        - name: creds
+          mountPath: /msdataworkshop/creds
         ports:
         - containerPort: 8080
       restartPolicy: Always
+      # we only need to mount one of the pdb's bindings (in this case we are mounting order)
+      #  as the wallet is the same and the tnsnames.ora contains entries for all pdbs in the compartment (ie both order and inventory)
       volumes:
-      - name: creds-raw-order
+      - name: creds-raw
         secret:
           secretName: atp-demo-binding-order
-      - name: creds-order
-        emptyDir: {}
-      - name: creds-raw-inventory
-        secret:
-          secretName: atp-demo-binding-inventory
-      - name: creds-inventory
+      - name: creds
         emptyDir: {}

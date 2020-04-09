@@ -128,9 +128,9 @@ class PropagationSetup {
              outputString = appendAndPrintOutputString(outputString,"\n orderdataSource GET_OBJECT cwalletobjecturi successful, about to " + CREATE_CREDENTIAL_INVENTORYPDB_CRED_SQL);
              connection.createStatement().execute(CREATE_CREDENTIAL_INVENTORYPDB_CRED_SQL);
              outputString = appendAndPrintOutputString(outputString,"\n orderdataSource CREATE_CREDENTIAL INVENTORYPDB_CRED successful, about to " + CREATE_DBLINK_ORDERTOINVENTORY_SQL);
-             connection.createStatement().execute(CREATE_DBLINK_ORDERTOINVENTORY_SQL);
-             outputString = appendAndPrintOutputString(outputString,"\n orderdataSource CREATE_DATABASE_LINK " + orderToInventoryLinkName + " successful,");
-             outputString = appendAndPrintOutputString(outputString,"\n create link from inventory to order...");
+//             connection.createStatement().execute(CREATE_DBLINK_ORDERTOINVENTORY_SQL);
+//             outputString = appendAndPrintOutputString(outputString,"\n orderdataSource CREATE_DATABASE_LINK " + orderToInventoryLinkName + " successful,");
+//             outputString = appendAndPrintOutputString(outputString,"\n create link from inventory to order...");
              System.out.println(outputString);
              // create link from inventory to order ...
              connection = inventorydataSource.getConnection(inventoryuser, inventorypw);
@@ -139,9 +139,9 @@ class PropagationSetup {
              outputString = appendAndPrintOutputString(outputString,"\n inventorydataSource GET_OBJECT cwalletobjecturi successful, about to " + CREATE_CREDENTIAL_ORDERPDB_CRED_SQL);
              connection.createStatement().execute(CREATE_CREDENTIAL_ORDERPDB_CRED_SQL);
              outputString = appendAndPrintOutputString(outputString, "\n inventorydataSource CREATE_CREDENTIAL ORDERPDB_CRED successful, about to " + CREATE_DBLINK_INVENTORYTOORDER_SQL);
-             connection.createStatement().execute(CREATE_DBLINK_INVENTORYTOORDER_SQL);
-             outputString = appendAndPrintOutputString(outputString,"\n inventorydataSource CREATE_DATABASE_LINK " + inventoryToOrderLinkName + " successful");
-             outputString = appendAndPrintOutputString(outputString,"\n link from inventory to order complete");
+//             connection.createStatement().execute(CREATE_DBLINK_INVENTORYTOORDER_SQL);
+//             outputString = appendAndPrintOutputString(outputString,"\n inventorydataSource CREATE_DATABASE_LINK " + inventoryToOrderLinkName + " successful");
+//             outputString = appendAndPrintOutputString(outputString,"\n link from inventory to order complete");
              System.out.println(outputString);
          } catch (SQLException ex) {
              ex.printStackTrace();
