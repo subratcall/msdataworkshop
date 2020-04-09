@@ -122,12 +122,16 @@ Task 8 (Setup DB links between ATP PDBs, AQ, and Queue propagation)...
    - Run `pods` and verify the atpaqadmin pod is in running state
    - Open the frontend microservice home page and hit the following buttons in order  
         - `createUsers`, `createInventoryTable`, `createDBLinks`, `setupTablesQueuesAndPropagation`
+   - If it is necessary to restart or rerun the process or to clean the database...
+        - hit the `unschedulePropagation` button only if `setupTablesQueuesAndPropagation` was run and then hti the `deleteUsers` button
+        - it may be necessary to run `deletepod admin` first as there may be open connections that need to be be released.
                 
 Task 9 (Demonstrate Converged database, Event-driven Order/Inventory Saga, Event Sourcing, CQRS, etc. via Order/Inventory store application)
    - `cd $MSDATAWORKSHOP_LOCATION/order-helidon ; ./build.sh ; ./deploy.sh`
    - `cd $MSDATAWORKSHOP_LOCATION/inventory-helidon ; ./build.sh ; ./deploy.sh`
    - `cd $MSDATAWORKSHOP_LOCATION/supplier-helidon-se ; ./build.sh ; ./deploy.sh`
    - Open the frontend microservice home page
+   - Hit the `listenForMessages` button 
    - Check inventory for a given item such as a cucumbers and insure (remove if necessary) no inventory exists
    - Place an order for that item and then select show order and notice failed order due to choreography saga compensation
    - Add inventory for the item and place and show the order again noticing the order was successful 

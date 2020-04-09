@@ -225,7 +225,6 @@ public class FrontEndResource {
                 "   <input type=\"submit\" name =\"test\" value=\"setupTablesQueuesAndPropagation\">" +
 //                "   <input type=\"submit\" name =\"test\" value=\"enablePropagationInventoryToOrder\">" +
                 "</form>" +
-                "<form action=\"inventoryservicetest\"><input type=\"submit\" name =\"test\" value=\"listenForMessages\"></form>" +
                 /**         "<h4>Cleanup (drain queues and streams, delete tables and JSON/docs, etc.)...</h4>" +
                  "<form action=\"executeonorderpdb\" id=\"executeonorderpdb\">" +
                  "<textarea form=\"executeonorderpdb\" rows=\"4\" cols=\"50\" name =\"sql\"\">GRANT PDB_DBA TO orderuser identified by orderuserPW</textarea>" +
@@ -241,6 +240,7 @@ public class FrontEndResource {
                  */
                 "<h3>Task 9...</h3>" +
                "<h4>JSON data, AQ transactional event-driven communication, and choreography saga (order and inventory service)</h4>" +
+                "<form action=\"inventoryservicetest\"><input type=\"submit\" name =\"test\" value=\"listenForMessages\"></form>" +
                 "<form action=\"placeorder\">" +
                 "veggie : <input type=\"text\" name=\"itemid\" size=\"12\" value=\"cucumbers\"> <br> " +
                 "deliver to : <input type=\"text\" name=\"deliverylocation\" size=\"35\" value=\"780 PANORAMA DR,San Francisco,CA\"><br>  " +
