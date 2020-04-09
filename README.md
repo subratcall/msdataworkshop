@@ -127,7 +127,7 @@ Task 8 (Setup DB links between ATP PDBs, AQ, and Queue propagation)...
         - it may be necessary to run `deletepod admin` first as there may be open connections that need to be be released.
    - If any changes are made to src code or deployment, simply run `./build.sh ; ./redeploy.sh` to rebuild and redeploy
                 
-Task 9 (Demonstrate Converged database, Event-driven Order/Inventory Saga, Event Sourcing, CQRS, etc. via Order/Inventory store application)
+Task 9 (Demonstrate Converged database (relational, JSON, spatial, etc.), Event-driven Order/Inventory Saga, Event Sourcing, CQRS, etc. via Order/Inventory store application)
    - `cd $MSDATAWORKSHOP_LOCATION/order-helidon ; ./build.sh ; ./deploy.sh`
    - `cd $MSDATAWORKSHOP_LOCATION/inventory-helidon ; ./build.sh ; ./deploy.sh`
    - `cd $MSDATAWORKSHOP_LOCATION/supplier-helidon-se ; ./build.sh ; ./deploy.sh`
@@ -139,6 +139,7 @@ Task 9 (Demonstrate Converged database, Event-driven Order/Inventory Saga, Event
    - This demonstrates atomic exactly once event-driven communication over AQ, 
    - This also demonstrates CQRS as the command is executed on the database while the query is derived from events received.
    - If any changes are made to src code or deployment, simply run `./build.sh ; ./redeploy.sh` to rebuild and redeploy
+   - todo add doc links on JSON both in db (eg SODA), Helidon, and in general
    
    
 Task 9.5 tbd (Demonstrate spatial service running on Weblogic (operator) via order delivery routing service )
