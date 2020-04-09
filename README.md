@@ -125,6 +125,7 @@ Task 8 (Setup DB links between ATP PDBs, AQ, and Queue propagation)...
    - If it is necessary to restart or rerun the process or to clean the database...
         - hit the `unschedulePropagation` button only if `setupTablesQueuesAndPropagation` was run and then hti the `deleteUsers` button
         - it may be necessary to run `deletepod admin` first as there may be open connections that need to be be released.
+   - If any changes are made to src code or deployment, simply run `./build.sh ; ./redeploy.sh` to rebuild and redeploy
                 
 Task 9 (Demonstrate Converged database, Event-driven Order/Inventory Saga, Event Sourcing, CQRS, etc. via Order/Inventory store application)
    - `cd $MSDATAWORKSHOP_LOCATION/order-helidon ; ./build.sh ; ./deploy.sh`
@@ -137,6 +138,7 @@ Task 9 (Demonstrate Converged database, Event-driven Order/Inventory Saga, Event
    - Add inventory for the item and place and show the order again noticing the order was successful 
    - This demonstrates atomic exactly once event-driven communication over AQ, 
    - This also demonstrates CQRS as the command is executed on the database while the query is derived from events received.
+   - If any changes are made to src code or deployment, simply run `./build.sh ; ./redeploy.sh` to rebuild and redeploy
    
    
 Task 9.5 tbd (Demonstrate spatial service running on Weblogic (operator) via order delivery routing service )
@@ -162,6 +164,7 @@ Task 10 (OSS streaming service)
    - Run `kubectl create -f create-oss-binding-order.yaml -n msdataworkshop`
    - Run `kubectl get secrets test-stream-binding-order -o yaml -n msdataworkshop`
    - Demonstrate streaming orders in frontend app by hitting `producerstream` button
+   - If any changes are made to src code or deployment, simply run `./build.sh ; ./redeploy.sh` to rebuild and redeploy
 
 Task 11 (Helidon/OKE health liveness/readiness) 
    - eg order service is not ready until some data load (from view or eventsourcing or lazily) is done
@@ -171,6 +174,7 @@ Task 11 (Helidon/OKE health liveness/readiness)
        - https://github.com/oracle/helidon/blob/master/docs/src/main/docs/health/02_health_in_k8s.adoc
        - https://github.com/oracle/helidon/blob/master/docs/src/main/docs/guides/07_health_se_guide.adoc
        - https://dmitrykornilov.net/2019/08/08/helidon-brings-microprofile-2-2-support/
+   - If any changes are made to src code or deployment, simply run `./build.sh ; ./redeploy.sh` to rebuild and redeploy
     
 Task 12 (Demonstrate OKE horizontal pod scaling)
    - `cd $MSDATAWORKSHOP_LOCATION`
@@ -196,8 +200,10 @@ Task 12 (Demonstrate OKE horizontal pod scaling)
        - cleanup...
        - `k delete deployment oraclelinux77-hpa-demo -n msdataworkshop`
        - `k delete hpa oraclelinux77-hpa-demo -n msdataworkshop`
+   - If any changes are made to src code or deployment, simply run `./build.sh ; ./redeploy.sh` to rebuild and redeploy
 
 Task 13 (Tracing)
+   - If any changes are made to src code or deployment, simply run `./build.sh ; ./redeploy.sh` to rebuild and redeploy
 
 Future here to end...
 
