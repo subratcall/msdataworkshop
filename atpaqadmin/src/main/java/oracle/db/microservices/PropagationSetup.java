@@ -11,35 +11,35 @@ import java.sql.SQLException;
 import static oracle.db.microservices.ATPAQAdminResource.*;
 
 class PropagationSetup {
-     String GET_OBJECT_CWALLETSSO_DATA_PUMP_DIR = "BEGIN " +
-             "DBMS_CLOUD.GET_OBJECT(" +
-             "object_uri => '" + cwalletobjecturi + "', " +
-             "directory_name => 'DATA_PUMP_DIR'); " +
-             "END;";
+    String GET_OBJECT_CWALLETSSO_DATA_PUMP_DIR = "BEGIN " +
+            "DBMS_CLOUD.GET_OBJECT(" +
+            "object_uri => '" + cwalletobjecturi + "', " +
+            "directory_name => 'DATA_PUMP_DIR'); " +
+            "END;";
 
-     String DROP_CREDENTIAL_INVENTORYPDB_CRED_SQL = "BEGIN " +
-             "DBMS_CLOUD.DROP_CREDENTIAL(" +
-             "credential_name => 'INVENTORYPDB_CRED'" +
-             ");" +
-             "END;";
+    String DROP_CREDENTIAL_INVENTORYPDB_CRED_SQL = "BEGIN " +
+            "DBMS_CLOUD.DROP_CREDENTIAL(" +
+            "credential_name => 'INVENTORYPDB_CRED'" +
+            ");" +
+            "END;";
 
-     String CREATE_CREDENTIAL_INVENTORYPDB_CRED_SQL = " BEGIN" +
-             "             DBMS_CLOUD.CREATE_CREDENTIAL(" +
-             "             credential_name => 'INVENTORYPDB_CRED'," +
-             "             username => 'INVENTORYUSER'," +
-             "             password => 'Welcome12345'" +
-             "             );" +
-             "            END;";
+    String CREATE_CREDENTIAL_INVENTORYPDB_CRED_SQL = " BEGIN" +
+            "             DBMS_CLOUD.CREATE_CREDENTIAL(" +
+            "             credential_name => 'INVENTORYPDB_CRED'," +
+            "             username => '" + inventoryuser + "'," +
+            "             password => 'Welcome12345'" +
+            "             );" +
+            "            END;";
 
-     String CREATE_CREDENTIAL_INVENTORYPDB_CRED_SQ = "BEGIN " +
-             "DBMS_CLOUD.CREATE_CREDENTIAL(" +
-             "credential_name => 'INVENTORYPDB_CRED', " +
-             "username => '" + inventoryuser + "', " +
-             "password => '" + inventorypw + "'" +
-             ");" +
-             "END;";
+    String CREATE_CREDENTIAL_INVENTORYPDB_CRED_SQ = "BEGIN " +
+            "DBMS_CLOUD.CREATE_CREDENTIAL(" +
+            "credential_name => 'INVENTORYPDB_CRED', " +
+            "username => '" + inventoryuser + "', " +
+            "password => '" + inventorypw + "'" +
+            ");" +
+            "END;";
 
-     String CREATE_DBLINK_ORDERTOINVENTORY_SQL = "BEGIN " +
+    String CREATE_DBLINK_ORDERTOINVENTORY_SQL = "BEGIN " +
             "DBMS_CLOUD_ADMIN.CREATE_DATABASE_LINK(" +
             "db_link_name => '" + orderToInventoryLinkName + "'," +
             "hostname => '" + inventoryhostname + "'," +
@@ -59,7 +59,7 @@ class PropagationSetup {
     String CREATE_CREDENTIAL_ORDERPDB_CRED_SQL = " BEGIN" +
             "             DBMS_CLOUD.CREATE_CREDENTIAL(" +
             "             credential_name => 'ORDERPDB_CRED'," +
-            "             username => 'ORDERUSER'," +
+            "             username => '" + orderuser + "'," +
             "             password => 'Welcome12345'" +
             "             );" +
             "            END;";
@@ -83,19 +83,19 @@ class PropagationSetup {
             "directory_name => 'DATA_PUMP_DIR');" +
             "END;";
 
-     String createInventoryTable(DataSource inventorypdbDataSource) throws SQLException {
+    String createInventoryTable(DataSource inventorypdbDataSource) throws SQLException {
         System.out.println("createInventoryTable and add items");
         String returnValue = "createInventoryTable and add items\n";
         try {
             Connection connection = inventorypdbDataSource.getConnection(inventoryuser, inventorypw);
             connection.createStatement().execute(
                     "create table inventory (inventoryid varchar(16), inventorylocation varchar(32), inventorycount integer)");
-            returnValue +=" table created, ";
+            returnValue += " table created, ";
             connection.createStatement().execute("insert into inventory values ('carrots', '1st Street', 0)");
             connection.createStatement().execute("insert into inventory values ('cucumbers', '2nd Street', 0)");
             connection.createStatement().execute("insert into inventory values ('tomatoes', '3rd Street', 0)");
             connection.createStatement().execute("insert into inventory values ('onions', '4th Street', 0)");
-            returnValue +=" table populated with veggie types, ";
+            returnValue += " table populated with veggie types, ";
             returnValue += "success";
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -104,7 +104,7 @@ class PropagationSetup {
         return returnValue;
     }
 
-     String createUsers(DataSource orderpdbDataSource, DataSource inventorypdbDataSource) throws SQLException {
+    String createUsers(DataSource orderpdbDataSource, DataSource inventorypdbDataSource) throws SQLException {
         String returnValue = "";
         try {
             returnValue += createAQUser(orderpdbDataSource, orderuser, orderpw);
@@ -140,74 +140,55 @@ class PropagationSetup {
     }
 
     String createDBLinks(DataSource orderpdbDataSource, DataSource inventorypdbDataSource) throws SQLException {
-        String outputString = "createDBLinks...";
-        System.out.println(outputString);
+        System.out.println("createDBLinks...");
         // create link from order to inventory...
-        outputString += createDBLink(orderpdbDataSource.getConnection(orderuser, orderpw),
+        createDBLink(orderpdbDataSource.getConnection(orderuser, orderpw),
                 GET_OBJECT_CWALLETSSO_DATA_PUMP_DIR, DROP_CREDENTIAL_INVENTORYPDB_CRED_SQL,
                 CREATE_CREDENTIAL_INVENTORYPDB_CRED_SQL, CREATE_DBLINK_ORDERTOINVENTORY_SQL, orderToInventoryLinkName);
         // create link from inventory to order...
-        outputString += createDBLink(inventorypdbDataSource.getConnection(inventoryuser, inventorypw),
+        createDBLink(inventorypdbDataSource.getConnection(inventoryuser, inventorypw),
                 GET_OBJECT_CWALLETSSO_DATA_PUMP_DIR, DROP_CREDENTIAL_ORDERPDB_CRED_SQL,
                 CREATE_CREDENTIAL_ORDERPDB_CRED_SQL, CREATE_DBLINK_INVENTORYTOORDER_SQL, inventoryToOrderLinkName);
-        outputString += verifyDBLinks(orderpdbDataSource, inventorypdbDataSource, outputString);
-        return outputString;
+        String verifyDBLinksReply = verifyDBLinks(orderpdbDataSource, inventorypdbDataSource);
+        return "DBLinks created and verified successfully";
     }
 
-    private String createDBLink(Connection connection, String getobject, String dropcred,
-                                   String createcred, String createlink, String linkname)  {
-        String outputString = " creating linke:" + linkname ;
-         try {
-             System.out.println(outputString);
-             outputString = appendAndPrintOutputString(outputString,"\n about to " + getobject);
-             connection.createStatement().execute(getobject);
-             try {
-                 outputString = appendAndPrintOutputString(outputString, "\n GET_OBJECT cwalletobjecturi successful, about to (if exists_" + dropcred);
-                 connection.createStatement().execute(dropcred);
-             } catch (SQLException ex) {
-                 System.out.println("SQLException from DROP_CREDENTIAL_INVENTORYPDB_CRED_SQL (likely expected) :" + ex);
-             }
-             outputString = appendAndPrintOutputString(outputString,"\n  GET_OBJECT cwalletobjecturi successful, about to " + createcred);
-             connection.createStatement().execute(createcred);
-             outputString = appendAndPrintOutputString(outputString,"\n CREATE_CREDENTIAL INVENTORYPDB_CRED successful, about to " + createlink);
-             connection.createStatement().execute(createlink);
-             outputString = appendAndPrintOutputString(outputString,"\n CREATE_DATABASE_LINK " + linkname + " successful,");
-             outputString = appendAndPrintOutputString(outputString,"\n create link from inventory to order...");
-             System.out.println(outputString);
-
-         } catch (SQLException ex) {
-             ex.printStackTrace();
-             outputString += ex;
-         }
-        return outputString;
+    private void createDBLink(Connection connection, String getobject, String dropcred,
+                                String createcred, String createlink, String linkname) throws SQLException {
+        System.out.println(" creating link:" + linkname);
+        System.out.println("\n about to " + getobject);
+        connection.createStatement().execute(getobject);
+        try {
+            System.out.println("\n GET_OBJECT cwalletobjecturi successful, about to (if exists_" + dropcred);
+            connection.createStatement().execute(dropcred);
+        } catch (SQLException ex) {
+            System.out.println("SQLException from DROP_CREDENTIAL_INVENTORYPDB_CRED_SQL (likely expected) :" + ex);
+        }
+        System.out.println("\n  GET_OBJECT cwalletobjecturi successful, about to " + createcred);
+        connection.createStatement().execute(createcred);
+        System.out.println("\n CREATE_CREDENTIAL INVENTORYPDB_CRED successful, about to " + createlink);
+        connection.createStatement().execute(createlink);
+        System.out.println("\n CREATE_DATABASE_LINK " + linkname + " successful,");
     }
 
-    String appendAndPrintOutputString(String outputString, String stringToAppend) {
-        System.out.println();
-        System.out.println(stringToAppend);
-        return outputString+stringToAppend;
-    }
-
-
-    String verifyDBLinks(DataSource orderpdbDataSource, DataSource inventorypdbDataSource, String outputString) throws SQLException {
-        outputString += "\nverifyDBLinks...";
+    String verifyDBLinks(DataSource orderpdbDataSource, DataSource inventorypdbDataSource) throws SQLException {
         Connection orderconnection = orderpdbDataSource.getConnection(orderuser, orderpw);
         Connection inventoryconnection = inventorypdbDataSource.getConnection(inventoryuser, inventorypw);
-        outputString = appendAndPrintOutputString(outputString,"verifyDBLinks orderconnection:" + orderconnection +
+        System.out.println("verifyDBLinks orderconnection:" + orderconnection +
                 " inventoryconnection:" + inventoryconnection);
         orderconnection.createStatement().execute("create table templinktest (id varchar(32))");
-        outputString = appendAndPrintOutputString(outputString,"verifyDBLinks temp table created on order");
+        System.out.println("verifyDBLinks temp table created on order");
         inventoryconnection.createStatement().execute("create table templinktest (id varchar(32))");
-        outputString = appendAndPrintOutputString(outputString,"verifyDBLinks temp table created on inventory");
+        System.out.println("verifyDBLinks temp table created on inventory");
         // verify orderuser select on inventorypdb using link...
         orderconnection.createStatement().execute("select count(*) from inventoryuser.templinktest@" + orderToInventoryLinkName);
-        outputString = appendAndPrintOutputString(outputString,"verifyDBLinks select on inventoryuser.templinktest");
+        System.out.println("verifyDBLinks select on inventoryuser.templinktest");
         // verify inventoryuser select on orderpdb using link  ...
         inventoryconnection.createStatement().execute("select count(*) from orderuser.templinktest@" + inventoryToOrderLinkName);
-        outputString = appendAndPrintOutputString(outputString,"verifyDBLinks select on orderuser.templinktest");
+        System.out.println("verifyDBLinks select on orderuser.templinktest");
         orderconnection.createStatement().execute("drop table templinktest");
         inventoryconnection.createStatement().execute("drop table templinktest");
-        return outputString;
+        return "success";
     }
 
     public String setup(DataSource orderpdbDataSource, DataSource inventorypdbDataSource,
@@ -353,7 +334,8 @@ class PropagationSetup {
             System.out.println("Creating Topic Subscribers... queue:" + queue.getQueueName());
             AQjmsConsumer[] subs = new AQjmsConsumer[1];
             subs[0] = (AQjmsConsumer) queueSession.createConsumer(queue);
-            if(!isTest)createRemoteSubAndSchedulePropagation(topicSession, destinationqueueuser, name, linkName, topic1, queue);
+            if (!isTest)
+                createRemoteSubAndSchedulePropagation(topicSession, destinationqueueuser, name, linkName, topic1, queue);
             sendMessages(topicSession, topic1);
             Thread.sleep(50000);
             receiveMessages(queueSession, subs);
