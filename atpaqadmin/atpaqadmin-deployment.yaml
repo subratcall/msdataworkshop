@@ -38,7 +38,7 @@ spec:
           readOnly: false
         - name: creds-inventory
           mountPath: /creds-inventory
-      - name: combine-tnsnamesora # as a  convenience for creating dblinks -- todo OSB future will make this unnecessary as tnsnames.ora will contain entries for both pdbs
+      - name: combine-tnsnamesora # as a  convenience for creating dblinks
         command:
         - bash
         - -c

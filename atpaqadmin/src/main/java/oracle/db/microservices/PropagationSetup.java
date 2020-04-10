@@ -17,13 +17,28 @@ class PropagationSetup {
              "directory_name => 'DATA_PUMP_DIR'); " +
              "END;";
 
-     String CREATE_CREDENTIAL_INVENTORYPDB_CRED_SQL = "BEGIN " +
+     String DROP_CREDENTIAL_INVENTORYPDB_CRED_SQL = "BEGIN " +
+             "DBMS_CLOUD.DROP_CREDENTIAL(" +
+             "credential_name => 'INVENTORYPDB_CRED'" +
+             ");" +
+             "END;";
+
+     String CREATE_CREDENTIAL_INVENTORYPDB_CRED_SQL = " BEGIN" +
+             "             DBMS_CLOUD.CREATE_CREDENTIAL(" +
+             "             credential_name => 'INVENTORYPDB_CRED'," +
+             "             username => 'INVENTORYUSER'," +
+             "             password => 'Welcome12345'" +
+             "             );" +
+             "            END;";
+
+     String CREATE_CREDENTIAL_INVENTORYPDB_CRED_SQ = "BEGIN " +
              "DBMS_CLOUD.CREATE_CREDENTIAL(" +
              "credential_name => 'INVENTORYPDB_CRED', " +
              "username => '" + inventoryuser + "', " +
              "password => '" + inventorypw + "'" +
              ");" +
              "END;";
+
      String CREATE_DBLINK_ORDERTOINVENTORY_SQL = "BEGIN " +
             "DBMS_CLOUD_ADMIN.CREATE_DATABASE_LINK(" +
             "db_link_name => '" + orderToInventoryLinkName + "'," +
@@ -35,13 +50,28 @@ class PropagationSetup {
             "directory_name => 'DATA_PUMP_DIR');" +
             "END;";
 
-    String CREATE_CREDENTIAL_ORDERPDB_CRED_SQL = "BEGIN " +
+    String DROP_CREDENTIAL_ORDERPDB_CRED_SQL = "BEGIN " +
+            "DBMS_CLOUD.DROP_CREDENTIAL(" +
+            "credential_name => 'ORDERPDB_CRED'" +
+            ");" +
+            "END;";
+
+    String CREATE_CREDENTIAL_ORDERPDB_CRED_SQL = " BEGIN" +
+            "             DBMS_CLOUD.CREATE_CREDENTIAL(" +
+            "             credential_name => 'ORDERPDB_CRED'," +
+            "             username => 'ORDERUSER'," +
+            "             password => 'Welcome12345'" +
+            "             );" +
+            "            END;";
+
+    String CREATE_CREDENTIAL_ORDERPDB_CRED_SQL0 = "BEGIN " +
             "DBMS_CLOUD.CREATE_CREDENTIAL(" +
             "credential_name => 'ORDERPDB_CRED', " +
             "username => '" + orderuser + "', " +
             "password => '" + orderpw + "'" +
             ");" +
             "END;";
+
     String CREATE_DBLINK_INVENTORYTOORDER_SQL = "BEGIN " +
             "DBMS_CLOUD_ADMIN.CREATE_DATABASE_LINK(" +
             "db_link_name => '" + inventoryToOrderLinkName + "'," +
@@ -112,37 +142,39 @@ class PropagationSetup {
     String createDBLinks(DataSource orderpdbDataSource, DataSource inventorypdbDataSource) throws SQLException {
         String outputString = "createDBLinks...";
         System.out.println(outputString);
-        outputString += doCreateDBLinks(orderpdbDataSource, inventorypdbDataSource);
+        // create link from order to inventory...
+        outputString += createDBLink(orderpdbDataSource.getConnection(orderuser, orderpw),
+                GET_OBJECT_CWALLETSSO_DATA_PUMP_DIR, DROP_CREDENTIAL_INVENTORYPDB_CRED_SQL,
+                CREATE_CREDENTIAL_INVENTORYPDB_CRED_SQL, CREATE_DBLINK_ORDERTOINVENTORY_SQL, orderToInventoryLinkName);
+        // create link from inventory to order...
+        outputString += createDBLink(inventorypdbDataSource.getConnection(inventoryuser, inventorypw),
+                GET_OBJECT_CWALLETSSO_DATA_PUMP_DIR, DROP_CREDENTIAL_ORDERPDB_CRED_SQL,
+                CREATE_CREDENTIAL_ORDERPDB_CRED_SQL, CREATE_DBLINK_INVENTORYTOORDER_SQL, inventoryToOrderLinkName);
         outputString += verifyDBLinks(orderpdbDataSource, inventorypdbDataSource, outputString);
         return outputString;
     }
 
-    private String doCreateDBLinks(DataSource orderdataSource, DataSource inventorydataSource)  {
-        String outputString = "" ;
+    private String createDBLink(Connection connection, String getobject, String dropcred,
+                                   String createcred, String createlink, String linkname)  {
+        String outputString = " creating linke:" + linkname ;
          try {
              System.out.println(outputString);
-             // create link from order to inventory...
-             Connection connection = orderdataSource.getConnection(orderuser, orderpw);
-             outputString = appendAndPrintOutputString(outputString,"\n about to " + GET_OBJECT_CWALLETSSO_DATA_PUMP_DIR);
-             connection.createStatement().execute(GET_OBJECT_CWALLETSSO_DATA_PUMP_DIR);
-             outputString = appendAndPrintOutputString(outputString,"\n orderdataSource GET_OBJECT cwalletobjecturi successful, about to " + CREATE_CREDENTIAL_INVENTORYPDB_CRED_SQL);
-             connection.createStatement().execute(CREATE_CREDENTIAL_INVENTORYPDB_CRED_SQL);
-             outputString = appendAndPrintOutputString(outputString,"\n orderdataSource CREATE_CREDENTIAL INVENTORYPDB_CRED successful, about to " + CREATE_DBLINK_ORDERTOINVENTORY_SQL);
-//             connection.createStatement().execute(CREATE_DBLINK_ORDERTOINVENTORY_SQL);
-//             outputString = appendAndPrintOutputString(outputString,"\n orderdataSource CREATE_DATABASE_LINK " + orderToInventoryLinkName + " successful,");
-//             outputString = appendAndPrintOutputString(outputString,"\n create link from inventory to order...");
+             outputString = appendAndPrintOutputString(outputString,"\n about to " + getobject);
+             connection.createStatement().execute(getobject);
+             try {
+                 outputString = appendAndPrintOutputString(outputString, "\n GET_OBJECT cwalletobjecturi successful, about to (if exists_" + dropcred);
+                 connection.createStatement().execute(dropcred);
+             } catch (SQLException ex) {
+                 System.out.println("SQLException from DROP_CREDENTIAL_INVENTORYPDB_CRED_SQL (likely expected) :" + ex);
+             }
+             outputString = appendAndPrintOutputString(outputString,"\n  GET_OBJECT cwalletobjecturi successful, about to " + createcred);
+             connection.createStatement().execute(createcred);
+             outputString = appendAndPrintOutputString(outputString,"\n CREATE_CREDENTIAL INVENTORYPDB_CRED successful, about to " + createlink);
+             connection.createStatement().execute(createlink);
+             outputString = appendAndPrintOutputString(outputString,"\n CREATE_DATABASE_LINK " + linkname + " successful,");
+             outputString = appendAndPrintOutputString(outputString,"\n create link from inventory to order...");
              System.out.println(outputString);
-             // create link from inventory to order ...
-             connection = inventorydataSource.getConnection(inventoryuser, inventorypw);
-             outputString = appendAndPrintOutputString(outputString,"\n about to " + GET_OBJECT_CWALLETSSO_DATA_PUMP_DIR);
-             connection.createStatement().execute(GET_OBJECT_CWALLETSSO_DATA_PUMP_DIR);
-             outputString = appendAndPrintOutputString(outputString,"\n inventorydataSource GET_OBJECT cwalletobjecturi successful, about to " + CREATE_CREDENTIAL_ORDERPDB_CRED_SQL);
-             connection.createStatement().execute(CREATE_CREDENTIAL_ORDERPDB_CRED_SQL);
-             outputString = appendAndPrintOutputString(outputString, "\n inventorydataSource CREATE_CREDENTIAL ORDERPDB_CRED successful, about to " + CREATE_DBLINK_INVENTORYTOORDER_SQL);
-//             connection.createStatement().execute(CREATE_DBLINK_INVENTORYTOORDER_SQL);
-//             outputString = appendAndPrintOutputString(outputString,"\n inventorydataSource CREATE_DATABASE_LINK " + inventoryToOrderLinkName + " successful");
-//             outputString = appendAndPrintOutputString(outputString,"\n link from inventory to order complete");
-             System.out.println(outputString);
+
          } catch (SQLException ex) {
              ex.printStackTrace();
              outputString += ex;
