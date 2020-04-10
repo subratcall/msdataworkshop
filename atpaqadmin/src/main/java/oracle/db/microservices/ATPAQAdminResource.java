@@ -177,7 +177,7 @@ public class ATPAQAdminResource {
     String returnValue = "";
     try {
       System.out.println("verifyDBLinks ...");
-      returnValue += propagationSetup.verifyDBLinks(orderpdbDataSource, inventorypdbDataSource, "verifyDBLinks");
+      returnValue += propagationSetup.verifyDBLinks(orderpdbDataSource, inventorypdbDataSource);
       return " result of verifyDBLinks :  " + returnValue;
     } catch (Exception e) {
       e.printStackTrace();
