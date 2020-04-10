@@ -28,17 +28,8 @@ class PropagationSetup {
             "             credential_name => 'INVENTORYPDB_CRED'," +
             "             username => '" + inventoryuser + "'," +
             "             password => '" + inventorypw.trim() + "'" +
-//            "             password => 'Welcome12345'" +
             "             );" +
             "            END;";
-
-    String CREATE_CREDENTIAL_INVENTORYPDB_CRED_SQ = "BEGIN " +
-            "DBMS_CLOUD.CREATE_CREDENTIAL(" +
-            "credential_name => 'INVENTORYPDB_CRED', " +
-            "username => '" + inventoryuser + "', " +
-            "password => '" + inventorypw + "'" +
-            ");" +
-            "END;";
 
     String CREATE_DBLINK_ORDERTOINVENTORY_SQL = "BEGIN " +
             "DBMS_CLOUD_ADMIN.CREATE_DATABASE_LINK(" +
@@ -62,17 +53,8 @@ class PropagationSetup {
             "             credential_name => 'ORDERPDB_CRED'," +
             "             username => '" + orderuser + "'," +
             "             password => '" + orderpw.trim() + "'" +
-//            "             password => 'Welcome12345'" +
             "             );" +
             "            END;";
-
-    String CREATE_CREDENTIAL_ORDERPDB_CRED_SQL0 = "BEGIN " +
-            "DBMS_CLOUD.CREATE_CREDENTIAL(" +
-            "credential_name => 'ORDERPDB_CRED', " +
-            "username => '" + orderuser + "', " +
-            "password => '" + orderpw + "'" +
-            ");" +
-            "END;";
 
     String CREATE_DBLINK_INVENTORYTOORDER_SQL = "BEGIN " +
             "DBMS_CLOUD_ADMIN.CREATE_DATABASE_LINK(" +

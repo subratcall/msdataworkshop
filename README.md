@@ -132,7 +132,7 @@ Task 9 (Demonstrate Converged database (relational, JSON, spatial, etc.), Event-
    - `cd $MSDATAWORKSHOP_LOCATION/inventory-helidon ; ./build.sh ; ./deploy.sh`
    - `cd $MSDATAWORKSHOP_LOCATION/supplier-helidon-se ; ./build.sh ; ./deploy.sh`
    - Open the frontend microservice home page
-   - Hit the `listenForMessages` button 
+   - Hit the `listenForMessages` button (fyi this will not be removed and not necessary in future version of the app)
    - Check inventory for a given item such as a cucumbers and insure (remove if necessary) no inventory exists
    - Place an order for that item and then select show order and notice failed order due to choreography saga compensation
    - Add inventory for the item and place and show the order again noticing the order was successful 
