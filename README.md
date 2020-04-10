@@ -1,5 +1,7 @@
 "Intelligent Event-driven Stateful Microservices with Helidon and Autonomous Database on OCI" 
 
+Please send any questions or comments to Paul Parkinson and/or Helidon Slack at https://helidon.slack.com/archives/CCS216A5A
+
 ![demo architecture](demo-arch.png) 
 ![demo ERD](demo-erd.png) 
 
@@ -113,6 +115,8 @@ Task 7 (Verify and understand ATP connectivity via Helidon microservice deployme
             - http://localhost:8080/test
             
 Task 8 (Setup DB links between ATP PDBs, AQ, and Queue propagation)...
+   - Estimated task time 8 minutes
+   - Video walk through: https://www.youtube.com/watch?v=Nb6i5XQgdqA
    - Download connection information zip for ATP instances from console.
    - Upload cwallet.sso to objectstore, obtain and note pre-authorized URL for cwallet.sso
         - (this is for convenience, alternatively a DBMS_CLOUD.CREATE_CREDENTIAL can be used to create a credential that is then used to execute GET_OBJECT in PropagationSetup.java)
@@ -128,6 +132,8 @@ Task 8 (Setup DB links between ATP PDBs, AQ, and Queue propagation)...
    - If any changes are made to src code or deployment, simply run `./build.sh ; ./redeploy.sh` to rebuild and redeploy
                 
 Task 9 (Demonstrate Converged database (relational, JSON, spatial, etc.), Event-driven Order/Inventory Saga, Event Sourcing, CQRS, etc. via Order/Inventory store application)
+   - Estimated task time 12 minutes
+   - Video walk through: https://www.youtube.com/watch?v=B-lof08Ip38
    - `cd $MSDATAWORKSHOP_LOCATION/order-helidon ; ./build.sh ; ./deploy.sh`
    - `cd $MSDATAWORKSHOP_LOCATION/inventory-helidon ; ./build.sh ; ./deploy.sh`
    - `cd $MSDATAWORKSHOP_LOCATION/supplier-helidon-se ; ./build.sh ; ./deploy.sh`
@@ -139,8 +145,12 @@ Task 9 (Demonstrate Converged database (relational, JSON, spatial, etc.), Event-
    - This demonstrates atomic exactly once event-driven communication over AQ, 
    - This also demonstrates CQRS as the command is executed on the database while the query is derived from events received.
    - If any changes are made to src code or deployment, simply run `./build.sh ; ./redeploy.sh` to rebuild and redeploy
-   - todo add doc links on JSON both in db (eg SODA), Helidon, and in general
-   
+   - Docs/references...
+        - JSON-P (Processing) https://javaee.github.io/jsonp/
+        - JSON-B (Binding) https://javaee.github.io/jsonb-spec/
+        - Helidon (MP/MicroProfile standard and SE) http://helidon.io
+        - Microservices on Helidon (blog including JSON examples) https://www.baeldung.com/microservices-oracle-helidon
+        - Oracle SODA (Simple Oracle Document Access) https://docs.oracle.com/en/database/oracle/simple-oracle-document-access/
    
 Task 9.5 tbd (Demonstrate spatial service running on Weblogic (operator) via order delivery routing service )
    - ...
@@ -168,6 +178,8 @@ Task 10 (OSS streaming service)
    - If any changes are made to src code or deployment, simply run `./build.sh ; ./redeploy.sh` to rebuild and redeploy
 
 Task 11 (Helidon/OKE health liveness/readiness) 
+   - Estimated task time 7 minutes
+   - Video walk through: https://www.youtube.com/watch?v=56Xk65qgP3U
    - eg order service is not ready until some data load (from view or eventsourcing or lazily) is done
    - show src and probes in deployment
    - documentaion references...
@@ -178,6 +190,8 @@ Task 11 (Helidon/OKE health liveness/readiness)
    - If any changes are made to src code or deployment, simply run `./build.sh ; ./redeploy.sh` to rebuild and redeploy
     
 Task 12 (Demonstrate OKE horizontal pod scaling)
+   - Estimated task time 5 minutes
+   - Video walk through: https://www.youtube.com/watch?v=pII2yS7C0r8
    - `cd $MSDATAWORKSHOP_LOCATION`
    - Run `./installMetricsServer.sh` 
    - `cd $MSDATAWORKSHOP_LOCATION/order-helidon`
