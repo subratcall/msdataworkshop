@@ -25,7 +25,10 @@ public class OrderDAO {
     public Order create(Connection conn, Order order) throws OracleException {
         OracleDatabase soda = new OracleRDBMSClient().getDatabase(conn);
         OracleCollection col = soda.openCollection(collectionName);
-        if (col==null) col = soda.admin().createCollection(collectionName);
+        if (col == null) {
+            OracleDocument metaDoc = new OracleRDBMSClient().createMetadataBuilder().mediaTypeColumnName("CONTENT_TYPE").keyColumnAssignmentMethod("CLIENT").build();
+            col = soda.admin().createCollection(collectionName, metaDoc);
+        }
         OracleDocument doc = soda.createDocumentFromString(order.getOrderid(), JsonUtils.writeValueAsString(order));
         col.insert(doc);
         System.out.println("Created order:" + order);
