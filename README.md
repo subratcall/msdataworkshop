@@ -220,30 +220,24 @@ Task 12 (Demonstrate OKE horizontal pod scaling)
 Task 13 (Tracing)
    - If any changes are made to src code or deployment, simply run `./build.sh ; ./redeploy.sh` to rebuild and redeploy
 
-Future here to end...
+todo list and futures here to end...
 
-(Demonstrate metrics prometheus and grafana (monitoring and alert)
-
-(tracing)
-   - install istio, demonstrate tracing (jaeger and kiali)
-   - @Traced annotation
-   
-(LRA)
-
-(security, vault, etc) 
-
-(sharding)
-
-(data flow) 
-    - fully managed Spark service that lets you Run Spark applications with almost no administrative overhead.
-    - for demo: fog computing of IoT
-    
-(data science)
-    - enables data scientists to easily build, train, and manage machine learning models on Oracle Cloud, using Python and open source machine learning libraries
-    - for demo: predictive analytics of orders to inventory/delivery locations
-
-(data catalog)
-    - enables data consumers to easily find, understand, govern, and track Oracle Cloud data assets across the enterprise using an organized inventory of data assets
-    - what data is available where in the organization and how trustworthy and fit-for-use they are
-    - for demo: analytics report of order info from streaming + atp 
-
+1. tighten a couple aspects of app such SODA/JSON best usage and supplier queries
+2. cleanup OSS streaming service and add video - add helidon kafka connector usage when ready
+3. metrics (and grafana to existing metrics) and add video
+4. tracing ( with or without istio) - and  more instructions and video
+5. terraform/resource manger support for initial setup of OKE, ATP and hopefully OSB and AQ with/from 
+6. frontend enhancement
+7. weblogic + spatial data for delivery service - to/from point addresses , schema for delivery service - dispatch veggie dasher
+8. okafka AQ sharding - streaming next week
+9. HA 
+10. ci/cd - jenkins - versioning, EDR(editions)
+11. LRA + Camunda
+12. JPA/JTA
+13. graph, social
+14. apex - data-driven, no code, analytics of orders etc. or where order is eg
+15. (security, vault, etc - story around relation of vault and OSB being discussed now)
+16. (sharded queued)
+17. (data flow) - Spark : IoT of drones
+18. (data science) - enables machine learning models on Oracle Cloud: predictive analytics of orders to inventory/delivery locations
+19. (data catalog) - enables data consumers to easily find data assets across the enterprise using an inventory of data assets: analytics report of order info from streaming + atp

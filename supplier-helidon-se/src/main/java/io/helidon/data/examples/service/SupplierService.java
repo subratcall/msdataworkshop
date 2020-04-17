@@ -14,8 +14,7 @@ import oracle.ucp.jdbc.PoolDataSourceFactory;
 
 public class SupplierService implements Service {
 
-    private PoolDataSource pool = null;
-    int inventorycount;
+    private PoolDataSource pool;
 
     public SupplierService(Config config) throws SQLException {
 
@@ -40,15 +39,13 @@ public class SupplierService implements Service {
 
 
     void addInventory(ServerRequest serverRequest, ServerResponse serverResponse) {
-        inventorycount =1;
         String response;
         String itemid = serverRequest.queryParams().first("itemid").get();
         System.out.println("SupplierService.addInventory itemid:" + itemid);
         try {
             Connection conn = pool.getConnection();
             conn.createStatement().execute(
-                    "UPDATE inventory SET inventorycount = 1");
-//                    "UPDATE inventory SET inventorycount = inventorycount + 1 where inventoryid = '" + itemid + "'");
+                    "UPDATE inventory SET inventorycount = inventorycount + 1 where inventoryid = '" + itemid + "'");
             response = getInventoryCount(itemid, conn);
         } catch (SQLException ex) {
             response = ex.getMessage();
@@ -57,14 +54,12 @@ public class SupplierService implements Service {
     }
 
     void removeInventory(ServerRequest serverRequest, ServerResponse serverResponse) {
-        inventorycount = 0;
         String response;
         String itemid = serverRequest.queryParams().first("itemid").get();
         System.out.println("SupplierService.removeInventory itemid:" + itemid);
         try (Connection conn = pool.getConnection()) {
             conn.createStatement().execute(
-                    "UPDATE inventory SET inventorycount = 0");
-//                    "UPDATE inventory SET inventorycount = inventorycount - 1 where inventoryid = '" + itemid + "'");
+                    "UPDATE inventory SET inventorycount = inventorycount - 1 where inventoryid = '" + itemid + "'");
             response = getInventoryCount(itemid, conn);
         } catch (SQLException ex) {
             response = ex.getMessage();
@@ -87,17 +82,14 @@ public class SupplierService implements Service {
     private String getInventoryCount(String itemid, Connection conn) throws SQLException {
         String response;
         ResultSet resultSet = conn.createStatement().executeQuery(
-                "select INVENTORYCOUNT from inventory");
-//                "select inventorycount from inventory  where inventoryid = '" + itemid + "'");
+                "select inventorycount from inventory  where inventoryid = '" + itemid + "'");
         int inventorycount;
         if (resultSet.next()) {
             inventorycount = resultSet.getInt("inventorycount");
             System.out.println("MessagingService.doIncomingOutgoing inventorycount:" + inventorycount);
         } else inventorycount = 0;
         conn.close();
-//        response = "inventorycount for " + itemid + " is now " + inventorycount;
-        response = "inventorycount for " + itemid + " is now " + this.inventorycount;
-        return response;
+        return "inventorycount for " + itemid + " is now " + inventorycount;
     }
 
 }
