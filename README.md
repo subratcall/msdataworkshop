@@ -232,7 +232,7 @@ todo list and futures here to end...
 8. okafka AQ sharding - streaming next week
 9. HA 
 10. ci/cd - jenkins - versioning, EDR(editions)
-11. LRA + Camunda
+11. LRA + Camunda (rest tutorial https://www.youtube.com/watch?v=ypX90aQScOQ  https://blog.camunda.com/post/2015/08/start-and-complete-process-with-rest-api/ )
 12. JPA/JTA
 13. graph, social
 14. apex - data-driven, no code, analytics of orders etc. or where order is eg

@@ -17,17 +17,17 @@ helm install catalog svc-cat/catalog
 # MODIFY "< >" VALUES IN clusterrolebinding and ocicredentials ARGUMENTS BELOW....
 ########################################################################################
 # Note that `--user=<USER_ID>` is id not ocid, for example, `--user=paul.parkinson`
-kubectl create clusterrolebinding cluster-admin-brokers --clusterrole=cluster-admin --user=paul.parkinson@gmail.com
+kubectl create clusterrolebinding cluster-admin-brokers --clusterrole=cluster-admin --user=<USER_ID>
 
 # If not already created, create user API Key with password in order to obtain fingerprint, etc.
 #    as described here: https://docs.cloud.oracle.com/en-us/iaas/Content/Functions/Tasks/functionssetupapikey.htm
 kubectl create secret generic ocicredentials \
---from-literal=tenancy=ocid1.tenancy.oc1..aaaaaaaab6vzaylctdrkxvr2pa6h6nkn3b5y32wg4e572lubuy33na6d3jja \
---from-literal=user=ocid1.user.oc1..aaaaaaaaftpjzj5zod4wmmi3a44d2w5wnjibnk5uupe52hrgv5hcjab4ah2q \
---from-literal=fingerprint=07:a7:74:03:33:a0:0f:34:18:6a:3b:06:f8:39:59:80 \
---from-literal=region=us-phoenix-1 \
---from-literal=passphrase=foobar \
---from-file=privatekey=/home/paul_parki/.oci/paul_parkinson_privkey.pem
+--from-literal=tenancy=<TENANCY_OCID> \
+--from-literal=user=<USER_OCID> \
+--from-literal=fingerprint=<USER_FINGERPRINT> \
+--from-literal=region=<REGION_CODE> \
+--from-literal=passphrase=<PRIVATEKEY_PASSPHRASE> \
+--from-file=privatekey=<PRIVATEKEY_FILE_LOCATION>
 
 ########################################################################################
 # END MODIFY VALUES IN clusterrolebinding and ocicredentials DO NOT ALTER FROM HERE TO END....
