@@ -77,7 +77,7 @@ public class OrderResource {
 //    @Metered(name = "placeOrder_metered") //invocation frequency
 //    @Timed(name = "placeOrder_timed") //length of time of an object
     public Response placeOrder(@QueryParam("orderid") String orderid, @QueryParam("itemid") String itemid,
-                               @QueryParam("deliverylocation") String deliverylocation) throws Exception {
+                               @QueryParam("deliverylocation") String deliverylocation) {
             System.out.println("--->placeOrder... orderid:" + orderid + " itemid:" + itemid);
         startEventConsumerIfNotStarted();
         OrderDetail orderDetail = new OrderDetail();
@@ -85,8 +85,15 @@ public class OrderResource {
         orderDetail.setOrderStatus("pending");
         orderDetail.setDeliveryLocation(deliverylocation);
         orders.put(orderid, orderDetail);
-        System.out.println("--->insertOrderAndSendEvent..." +
-                orderServiceEventProducer.updateDataAndSendEvent(atpOrderPdb, orderid, itemid, deliverylocation));
+        try {
+            System.out.println("--->insertOrderAndSendEvent..." +
+                    orderServiceEventProducer.updateDataAndSendEvent(atpOrderPdb, orderid, itemid, deliverylocation));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Response.serverError()
+                    .entity("orderid = " + orderid + " failed with exception:" + e.toString())
+                    .build();
+        }
         return Response.ok()
                 .entity("orderid = " + orderid + " orderstatus = " + orderDetail.getOrderStatus() + " order placed")
                 .build();
