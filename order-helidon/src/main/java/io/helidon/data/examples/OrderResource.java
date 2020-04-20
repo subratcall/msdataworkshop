@@ -38,16 +38,14 @@ public class OrderResource {
     @Named("orderpdb")
     PoolDataSource atpOrderPdb;
 
-    private OrderServiceEventConsumer orderServiceEventConsumer;
     private boolean isOrderEventConsumerStarted = false;
     private OrderServiceEventProducer orderServiceEventProducer = new OrderServiceEventProducer();
-    // todo get from env
     static final String orderQueueOwner = "ORDERUSER";
     static final String orderQueueName = "orderqueue";
     static final String inventoryQueueName = "inventoryqueue";
     static boolean liveliness = true;
     private static String lastContainerStartTime;
-    OrderServiceCPUStress orderServiceCPUStress = new OrderServiceCPUStress();
+    private OrderServiceCPUStress orderServiceCPUStress = new OrderServiceCPUStress();
     Map<String, OrderDetail> orders = new HashMap<>();
 
     //Task 11 (Helidon/OKE health liveness/readiness)
@@ -62,12 +60,11 @@ public class OrderResource {
     @Path("/lastContainerStartTime")
     @GET
     @Produces(MediaType.TEXT_PLAIN)
-    public Response lastContainerStartTime() throws Exception {
+    public Response lastContainerStartTime()  {
         System.out.println("--->lastContainerStartTime...");
-        final Response returnValue = Response.ok()
+        return Response.ok()
                 .entity("lastContainerStartTime = " + lastContainerStartTime)
                 .build();
-        return returnValue;
     }
     //END Task 11 (Helidon/OKE health liveness/readiness)
 
@@ -90,16 +87,15 @@ public class OrderResource {
         orders.put(orderid, orderDetail);
         System.out.println("--->insertOrderAndSendEvent..." +
                 orderServiceEventProducer.updateDataAndSendEvent(atpOrderPdb, orderid, itemid, deliverylocation));
-        final Response returnValue = Response.ok()
+        return Response.ok()
                 .entity("orderid = " + orderid + " orderstatus = " + orderDetail.getOrderStatus() + " order placed")
                 .build();
-        return returnValue;
     }
 
     private void startEventConsumerIfNotStarted() {
         System.out.println("OrderResource.startEventConsumerIfNotStarted isOrderEventConsumerStarted:" + isOrderEventConsumerStarted);
         if (!isOrderEventConsumerStarted) {
-            orderServiceEventConsumer =  new OrderServiceEventConsumer(this);
+            OrderServiceEventConsumer orderServiceEventConsumer = new OrderServiceEventConsumer(this);
             new Thread(orderServiceEventConsumer).start();
             isOrderEventConsumerStarted = true;
         }
@@ -108,32 +104,45 @@ public class OrderResource {
     @Path("/showorder")
     @GET
     @Produces(MediaType.TEXT_PLAIN)
-    public Response showorder(@QueryParam("orderid") String orderId) throws Exception {
+    public Response showorder(@QueryParam("orderid") String orderId)  {
         System.out.println("--->showorder for orderId:" + orderId);
         OrderDetail orderDetail = orders.get(orderId); //we can also lookup orderId if is null and we do order population lazily
         String returnString = orderDetail == null ? "orderId not found:" + orderId :
                 "orderId = " + orderId + "<br>orderDetail = " + orderDetail;
-        final Response returnValue = Response.ok()
+        return Response.ok()
                 .entity(returnString)
                 .build();
-        return returnValue;
     }
 
     @Path("/showallorders")
     @GET
     @Produces(MediaType.TEXT_PLAIN)
-    public Response showallorders() throws Exception {
+    public Response showallorders()  {
         System.out.println("showallorders...");
-        String returnString = "orders in cache...\n";
+        StringBuilder returnString = new StringBuilder("orders in cache...\n");
         for (String order : orders.keySet()) {
-            returnString += orders.get(order);
+            returnString.append(orders.get(order));
         }
-        // todo - make this an option if we dont automatically reload returnString += "orders in db...\n";
-        final Response returnValue = Response.ok()
+        return Response.ok()
+                .entity(returnString.toString())
+                .build();
+    }
+
+
+    @Path("/deleteorder")
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response deleteorder(@QueryParam("orderid") String orderId) throws Exception {
+        System.out.println("--->deleteorder for orderId:" + orderId);
+        OrderDetail orderDetail = orders.get(orderId); //we can also lookup orderId if is null and we do order population lazily
+        String returnString = orderDetail == null ? "deleteorder not found:" + orderId :
+                "orderId = " + orderId + "<br>" +
+                        orderServiceEventProducer.deleteOrderViaSODA(atpOrderPdb, orderId);
+        return Response.ok()
                 .entity(returnString)
                 .build();
-        return returnValue;
     }
+
     //END Task 9 (Demonstrate Converged database, Event-driven Order/Inventory Saga, Event Sourcing, CQRS, etc. via Order/Inventory store application)
 
 
@@ -143,10 +152,9 @@ public class OrderResource {
     @Produces(MediaType.TEXT_PLAIN)
     public Response consumeStreamOrders() {
         new Thread(new OrderServiceOSSStreamProcessor(this)).start();
-        final Response returnValue = Response.ok()
+        return Response.ok()
                 .entity("now consuming orders streamed from OSS...")
                 .build();
-        return returnValue;
     }
     //END Task 10 (OSS streaming service)
 
@@ -156,10 +164,9 @@ public class OrderResource {
     @Produces(MediaType.TEXT_PLAIN)
     public Response ordersetlivenesstofalse() {
         liveliness = false;
-        final Response returnValue = Response.ok()
+        return Response.ok()
                 .entity("order liveness set to false - OKE should restart the pod due to liveness probe")
                 .build();
-        return returnValue;
     }
     //END Task 11 (Helidon/OKE health liveness/readiness)
 
@@ -167,25 +174,23 @@ public class OrderResource {
     @Path("/startCPUStress")
     @GET
     @Produces(MediaType.TEXT_PLAIN)
-    public Response startCPUStress() throws Exception {
+    public Response startCPUStress() {
         System.out.println("--->startCPUStress...");
         orderServiceCPUStress.start();
-        final Response returnValue = Response.ok()
+        return Response.ok()
                 .entity("CPU stress started")
                 .build();
-        return returnValue;
     }
 
     @Path("/stopCPUStress")
     @GET
     @Produces(MediaType.TEXT_PLAIN)
-    public Response stopCPUStress() throws Exception {
+    public Response stopCPUStress() {
         System.out.println("--->stopCPUStress...");
         orderServiceCPUStress.stop();
-        final Response returnValue = Response.ok()
+        return Response.ok()
                 .entity("CPU stress stopped")
                 .build();
-        return returnValue;
     }
     //END Task 12 (Demonstrate OKE horizontal pod scaling)
 

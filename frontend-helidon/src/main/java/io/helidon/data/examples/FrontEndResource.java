@@ -259,6 +259,7 @@ public class FrontEndResource {
                 "orderid : <input type=\"text\" name=\"orderid\"  size=\"6\" value=\"66\"> " +
                 " <br>   <input type=\"submit\" name =\"test\" value=\"showorder\">" +
                 "   <input type=\"submit\" name =\"test\" value=\"showallorders\">" +
+                "   <input type=\"submit\" name =\"test\" value=\"deleteorder\">" +
                 "</form>" +
               "<h4>Spatial data (map service on WebLogic)</h4>" +
                 " <label>From:</label>" +
