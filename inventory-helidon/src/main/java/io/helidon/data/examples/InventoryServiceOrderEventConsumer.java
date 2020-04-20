@@ -90,8 +90,7 @@ public class InventoryServiceOrderEventConsumer implements Runnable {
     //returns location if exists and "inventorydoesnotexist" otherwise
     private String evaluateInventory(AQjmsSession session, String itemid) throws JMSException, SQLException {
         Connection dbConnection = session.getDBConnection();
-        System.out.println("sendMessage dbConnection:" + dbConnection);
-        System.out.println("-------------->MessagingService.doIncomingOutgoing connection:" + dbConnection +
+        System.out.println("-------------->evaluateInventory connection:" + dbConnection +
                 "Session:" + session + " check inventory for inventoryid:" + itemid);
         int inventorycount;
         String inventoryLocation = "";
