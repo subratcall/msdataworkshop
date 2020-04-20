@@ -60,7 +60,7 @@ public class OrderResource {
     @Path("/lastContainerStartTime")
     @GET
     @Produces(MediaType.TEXT_PLAIN)
-    public Response lastContainerStartTime()  {
+    public Response lastContainerStartTime() {
         System.out.println("--->lastContainerStartTime...");
         return Response.ok()
                 .entity("lastContainerStartTime = " + lastContainerStartTime)
@@ -78,7 +78,7 @@ public class OrderResource {
 //    @Timed(name = "placeOrder_timed") //length of time of an object
     public Response placeOrder(@QueryParam("orderid") String orderid, @QueryParam("itemid") String itemid,
                                @QueryParam("deliverylocation") String deliverylocation) {
-            System.out.println("--->placeOrder... orderid:" + orderid + " itemid:" + itemid);
+        System.out.println("--->placeOrder... orderid:" + orderid + " itemid:" + itemid);
         startEventConsumerIfNotStarted();
         OrderDetail orderDetail = new OrderDetail();
         orderDetail.setOrderId(orderid);
@@ -111,7 +111,7 @@ public class OrderResource {
     @Path("/showorder")
     @GET
     @Produces(MediaType.TEXT_PLAIN)
-    public Response showorder(@QueryParam("orderid") String orderId)  {
+    public Response showorder(@QueryParam("orderid") String orderId) {
         System.out.println("--->showorder for orderId:" + orderId);
         OrderDetail orderDetail = orders.get(orderId); //we can also lookup orderId if is null and we do order population lazily
         String returnString = orderDetail == null ? "orderId not found:" + orderId :
@@ -124,7 +124,7 @@ public class OrderResource {
     @Path("/showallorders")
     @GET
     @Produces(MediaType.TEXT_HTML)
-    public Response showallorders()  {
+    public Response showallorders() {
         System.out.println("showallorders...");
         StringBuilder returnString = new StringBuilder("orders in cache...");
         for (String order : orders.keySet()) {
@@ -140,13 +140,20 @@ public class OrderResource {
     @Path("/deleteorder")
     @GET
     @Produces(MediaType.TEXT_PLAIN)
-    public Response deleteorder(@QueryParam("orderid") String orderId) throws Exception {
+    public Response deleteorder(@QueryParam("orderid") String orderId) {
         System.out.println("--->deleteorder for orderId:" + orderId);
-        String returnString = "orderId = " + orderId + "<br>" +
-                        orderServiceEventProducer.deleteOrderViaSODA(atpOrderPdb, orderId);
-        return Response.ok()
-                .entity(returnString)
-                .build();
+        String returnString = "orderId = " + orderId + "<br>";
+        try {
+            returnString += orderServiceEventProducer.deleteOrderViaSODA(atpOrderPdb, orderId);
+            return Response.ok()
+                    .entity(returnString)
+                    .build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Response.serverError()
+                    .entity("orderid = " + orderId + " failed with exception:" + e.toString())
+                    .build();
+        }
     }
 
     //END Task 9 (Demonstrate Converged database, Event-driven Order/Inventory Saga, Event Sourcing, CQRS, etc. via Order/Inventory store application)
