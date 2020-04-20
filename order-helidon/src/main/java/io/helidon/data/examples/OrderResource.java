@@ -123,11 +123,12 @@ public class OrderResource {
 
     @Path("/showallorders")
     @GET
-    @Produces(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.TEXT_HTML)
     public Response showallorders()  {
         System.out.println("showallorders...");
-        StringBuilder returnString = new StringBuilder("orders in cache...\n");
+        StringBuilder returnString = new StringBuilder("orders in cache...");
         for (String order : orders.keySet()) {
+            returnString.append("<br>");
             returnString.append(orders.get(order));
         }
         return Response.ok()
