@@ -134,9 +134,7 @@ public class OrderResource {
     @Produces(MediaType.TEXT_PLAIN)
     public Response deleteorder(@QueryParam("orderid") String orderId) throws Exception {
         System.out.println("--->deleteorder for orderId:" + orderId);
-        OrderDetail orderDetail = orders.get(orderId); //we can also lookup orderId if is null and we do order population lazily
-        String returnString = orderDetail == null ? "deleteorder not found:" + orderId :
-                "orderId = " + orderId + "<br>" +
+        String returnString = "orderId = " + orderId + "<br>" +
                         orderServiceEventProducer.deleteOrderViaSODA(atpOrderPdb, orderId);
         return Response.ok()
                 .entity(returnString)

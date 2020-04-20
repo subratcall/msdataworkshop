@@ -42,7 +42,7 @@ public class InventoryResource {
     static String inventorypw = "Welcome12345";
     static String inventoryQueueName = "inventoryqueue";
     static String orderQueueName = "orderqueue";
-    static boolean isDirectSupplierQuickTest = Boolean.valueOf(System.getProperty("isDirectSupplierQuickTest", "true"));
+    static boolean isDirectSupplierQuickTest = Boolean.valueOf(System.getProperty("isDirectSupplierQuickTest", "false"));
 
     static {
         System.setProperty("oracle.jdbc.fanEnabled", "false");

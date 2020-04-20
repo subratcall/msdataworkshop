@@ -187,7 +187,7 @@ public class FrontEndResource {
     @Produces(MediaType.TEXT_HTML)
     @Path("/supplierservicecall")
     public String supplierservicecall(@QueryParam("test") String test, @QueryParam("itemid") String itemid) {
-        try {
+        try { //http://localhost:8080/supplier/getInventory?itemid=cucumbers
             String urlString = "http://supplier.msdataworkshop:8080/supplier/" + test + "?itemid=" + itemid;
             System.out.println("FrontEndResource.supplierservicecall urlString:" + urlString);
             URL url = new URL(urlString);

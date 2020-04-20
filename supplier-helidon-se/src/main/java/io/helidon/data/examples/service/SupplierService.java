@@ -38,7 +38,7 @@ public class SupplierService implements Service {
     }
 
 
-    void addInventory(ServerRequest serverRequest, ServerResponse serverResponse) {
+    private void addInventory(ServerRequest serverRequest, ServerResponse serverResponse) {
         String response;
         String itemid = serverRequest.queryParams().first("itemid").get();
         System.out.println("SupplierService.addInventory itemid:" + itemid);
