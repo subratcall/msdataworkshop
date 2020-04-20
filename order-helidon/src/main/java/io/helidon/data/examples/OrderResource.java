@@ -90,7 +90,7 @@ public class OrderResource {
                     orderServiceEventProducer.updateDataAndSendEvent(atpOrderPdb, orderid, itemid, deliverylocation));
         } catch (Exception e) {
             e.printStackTrace();
-            return Response.serverError()
+            return Response.ok()
                     .entity("orderid = " + orderid + " failed with exception:" + e.toString())
                     .build();
         }
@@ -147,11 +147,6 @@ public class OrderResource {
             returnString += orderServiceEventProducer.deleteOrderViaSODA(atpOrderPdb, orderId);
             return Response.ok()
                     .entity(returnString)
-                    .build();
-        } catch (java.sql.SQLIntegrityConstraintViolationException e) {
-            e.printStackTrace();
-            return Response.ok()
-                    .entity("orderid = " + orderId + " failed with java.sql.SQLIntegrityConstraintViolationException:" + e.toString())
                     .build();
         } catch (Exception e) {
             e.printStackTrace();
