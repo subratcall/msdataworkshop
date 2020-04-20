@@ -33,7 +33,7 @@ import javax.ws.rs.core.MediaType;
 @Traced
 public class FrontEndResource {
 
-    static boolean isDirectSupplierQuickTest = Boolean.valueOf(System.getProperty("isDirectSupplierQuickTest", "true"));
+    static boolean isDirectSupplierQuickTest = Boolean.valueOf(System.getProperty("isDirectSupplierQuickTest", "false"));
 
     @Path("/")
     @GET

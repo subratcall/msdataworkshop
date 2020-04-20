@@ -80,13 +80,12 @@ public class SupplierService implements Service {
     }
 
     private String getInventoryCount(String itemid, Connection conn) throws SQLException {
-        String response;
         ResultSet resultSet = conn.createStatement().executeQuery(
                 "select inventorycount from inventory  where inventoryid = '" + itemid + "'");
         int inventorycount;
         if (resultSet.next()) {
             inventorycount = resultSet.getInt("inventorycount");
-            System.out.println("MessagingService.doIncomingOutgoing inventorycount:" + inventorycount);
+            System.out.println("SupplierService.getInventoryCount inventorycount:" + inventorycount);
         } else inventorycount = 0;
         conn.close();
         return "inventorycount for " + itemid + " is now " + inventorycount;
