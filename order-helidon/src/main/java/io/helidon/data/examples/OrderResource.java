@@ -148,9 +148,14 @@ public class OrderResource {
             return Response.ok()
                     .entity(returnString)
                     .build();
+        } catch (java.sql.SQLIntegrityConstraintViolationException e) {
+            e.printStackTrace();
+            return Response.ok()
+                    .entity("orderid = " + orderId + " failed with java.sql.SQLIntegrityConstraintViolationException:" + e.toString())
+                    .build();
         } catch (Exception e) {
             e.printStackTrace();
-            return Response.serverError()
+            return Response.ok()
                     .entity("orderid = " + orderId + " failed with exception:" + e.toString())
                     .build();
         }
