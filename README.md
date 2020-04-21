@@ -152,8 +152,10 @@ Task 9 (Demonstrate Converged database (relational, JSON, spatial, etc.), Event-
         - Microservices on Helidon (blog including JSON examples) https://www.baeldung.com/microservices-oracle-helidon
         - Oracle SODA (Simple Oracle Document Access) https://docs.oracle.com/en/database/oracle/simple-oracle-document-access/
    
-Task 9.5 tbd (Demonstrate spatial service running on Weblogic (operator) via order delivery routing service )
-   - ...
+Task 9.5 Demonstrate spatial service running on Weblogic (operator) via order delivery routing service )
+   - https://github.com/nagypeter/weblogic-operator-tutorial/blob/master/tutorials/domain.home.in.image_short.md
+   - https://blogs.oracle.com/weblogicserver/easily-create-an-oci-container-engine-for-kubernetes-cluster-with-terraform-installer-to-run-weblogic-server
+   - https://www.oracle.com/middleware/technologies/weblogic.html
    
 Task 10 (OSS streaming service)
    - Insure Task 4 is complete and refer to https://github.com/oracle/oci-service-broker and specifically...
