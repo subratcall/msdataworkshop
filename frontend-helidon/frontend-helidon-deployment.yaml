@@ -4,6 +4,9 @@ metadata:
   name: frontend-helidon
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      app: frontend
   template:
     metadata:
       labels:
