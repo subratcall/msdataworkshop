@@ -4,6 +4,9 @@ metadata:
   name: inventory-helidon
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      app: inventory
   template:
     metadata:
       labels:

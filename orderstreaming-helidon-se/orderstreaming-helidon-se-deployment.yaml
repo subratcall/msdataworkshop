@@ -4,6 +4,9 @@ metadata:
   name: orderstreaming-helidon
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      app: orderstreaming
   template:
     metadata:
       labels:

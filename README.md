@@ -236,10 +236,11 @@ todo list and futures here to end...
 10. ci/cd - jenkins - versioning, EDR(editions)
 11. LRA + Camunda (rest tutorial https://www.youtube.com/watch?v=ypX90aQScOQ  https://blog.camunda.com/post/2015/08/start-and-complete-process-with-rest-api/ )
 12. JPA/JTA
-13. graph, social
-14. apex - data-driven, no code, analytics of orders etc. or where order is eg
-15. (security, vault, etc - story around relation of vault and OSB being discussed now)
-16. (sharded queued)
-17. (data flow) - Spark : IoT of drones
-18. (data science) - enables machine learning models on Oracle Cloud: predictive analytics of orders to inventory/delivery locations
-19. (data catalog) - enables data consumers to easily find data assets across the enterprise using an inventory of data assets: analytics report of order info from streaming + atp
+13. OpenAPI/swagger
+14. graph, social
+15. apex - data-driven, no code, analytics of orders etc. or where order is eg
+16. (security, vault, etc - story around relation of vault and OSB being discussed now)
+17. (sharded queued)
+18. (data flow) - Spark : IoT of drones
+19. (data science) - enables machine learning models on Oracle Cloud: predictive analytics of orders to inventory/delivery locations
+20. (data catalog) - enables data consumers to easily find data assets across the enterprise using an inventory of data assets: analytics report of order info from streaming + atp
