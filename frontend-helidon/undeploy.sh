@@ -12,4 +12,4 @@ else
     kubectl delete -f <(istioctl kube-inject -f $SCRIPT_DIR/frontend-helidon-deployment.yaml) -n msdataworkshop
 fi
 
-kubectl delete -f $SCRIPT_DIR/frontend-helidon-service.yaml -n msdataworkshop
+kubectl delete -f $SCRIPT_DIR/frontend-service.yaml -n msdataworkshop

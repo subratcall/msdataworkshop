@@ -7,14 +7,6 @@ cd frontend-helidon
 ./build.sh
 cd ../
 
-echo ________________________________________
-echo building and pushing atpaqadmin...
-echo ________________________________________
-cd atpaqadmin
-./build.sh
-cd ../
-
-
 echo maven install aq and soda jars...
 cd lib
 mvn install:install-file -Dfile=aqapi-20.1.jar -DgroupId=com.oracle \
@@ -22,6 +14,13 @@ mvn install:install-file -Dfile=aqapi-20.1.jar -DgroupId=com.oracle \
 
 mvn install:install-file -Dfile=orajsoda-1.1.0.jar -DgroupId=com.oracle \
     -DartifactId=orajsoda -Dversion=1.1.0 -Dpackaging=jar
+cd ../
+
+echo ________________________________________
+echo building and pushing atpaqadmin...
+echo ________________________________________
+cd atpaqadmin
+./build.sh
 cd ../
 
 echo ________________________________________
