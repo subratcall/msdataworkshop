@@ -26,15 +26,15 @@ public class OrderDetail {
 
     public String toString() {
         String returnString = "";
-        returnString+="\n orderId =" + orderId;
+        returnString+="<br> orderId =" + orderId;
 //        returnString+=" suggestiveSaleItem = " + suggestiveSaleItem;
-        returnString+=" suggestiveSale = " + suggestiveSale;
+        returnString+="<br>  suggestiveSale = " + suggestiveSale;
 //        returnString+=" inventoryLocationItem = " + inventoryLocationItem;
-        returnString+="\n inventoryLocation = " + inventoryLocation;
+        returnString+="<br>  inventoryLocation = " + inventoryLocation;
 //        returnString+=" shippingEstimate = " + shippingEstimate;
 //        returnString+=" shippingEstimateItem = " + shippingEstimateItem;
-        returnString+="\n orderStatus = " + orderStatus;
-        returnString+="\n deliveryLocation = " + deliveryLocation;
+        returnString+="<br>  orderStatus = " + orderStatus;
+        returnString+="<br>  deliveryLocation = " + deliveryLocation;
         return returnString;
     }
 

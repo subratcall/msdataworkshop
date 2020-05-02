@@ -110,7 +110,7 @@ public class OrderResource {
 
     @Path("/showorder")
     @GET
-    @Produces(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.TEXT_HTML)
     public Response showorder(@QueryParam("orderid") String orderId) {
         System.out.println("--->showorder for orderId:" + orderId);
         OrderDetail orderDetail = orders.get(orderId); //we can also lookup orderId if is null and we do order population lazily
