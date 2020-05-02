@@ -176,11 +176,11 @@ Task 11 (Helidon/OKE health liveness/readiness)
        - https://dmitrykornilov.net/2019/08/08/helidon-brings-microprofile-2-2-support/
    - If any changes are made to src code or deployment, simply run `./build.sh ; ./redeploy.sh` to rebuild and redeploy
 
-Task 13 (Tracing)
+Task 12 (Tracing)
    - Notice io.helidon.tracing dependency in pom.xml and @Traced in [OrderResource.java](order-helidon/src/main/java/io/helidon/data/examples/OrderResource.java)
    - todo instructions for Jaeger or full Istio and Kiali
 
-Task 12 (Demonstrate OKE horizontal pod scaling)
+Task 13 (Demonstrate OKE horizontal pod scaling)
    - Estimated task time 5 minutes
    - Video walk through: https://www.youtube.com/watch?v=pII2yS7C0r8
    - `cd $MSDATAWORKSHOP_LOCATION`
