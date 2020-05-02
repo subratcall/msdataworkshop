@@ -145,6 +145,7 @@ Task 9 (Demonstrate Converged database (relational, JSON, spatial, etc.), Event-
    - This demonstrates atomic exactly once event-driven communication over AQ, 
    - This also demonstrates CQRS as the command is executed on the database while the query is derived from events received.
    - If any changes are made to src code or deployment, simply run `./build.sh ; ./redeploy.sh` to rebuild and redeploy
+   - Notice Order and Inventory service src demonstrating transactional AQ
    - Docs/references...
         - JSON-P (Processing) https://javaee.github.io/jsonp/
         - JSON-B (Binding) https://javaee.github.io/jsonb-spec/
@@ -156,41 +157,29 @@ Task 9.5 Demonstrate spatial service running on Weblogic (operator) via order de
    - https://github.com/nagypeter/weblogic-operator-tutorial/blob/master/tutorials/domain.home.in.image_short.md
    - https://blogs.oracle.com/weblogicserver/easily-create-an-oci-container-engine-for-kubernetes-cluster-with-terraform-installer-to-run-weblogic-server
    - https://www.oracle.com/middleware/technologies/weblogic.html
-   
-Task 10 (OSS streaming service)
-   - Insure Task 4 is complete and refer to https://github.com/oracle/oci-service-broker and specifically...
-        - https://github.com/oracle/oci-service-broker/blob/master/charts/oci-service-broker/docs/oss.md
-   - In Cloud Shell and streaming policy
-        - add a group for user if one does not exist
-        - add policy for that group to allow streaming (eg name `StreamingPolicy`, description `Allow to manage streams`)
-            - Policy statement `Allow group <SERVICE_BROKER_GROUP> to manage streams in compartment <COMPARTMENT_NAME>`
-            - eg `Allow group msdataworkshop-admins to manage streams in compartment msdataworkshop-sandbox)`' 
-   - todo... Currently hitting some issues with the following and resorting to manually setting 
-   - cd to `oci-service-broker` directory such as oci-service-broker-1.3.3
-   - `cp samples/oss/create-oss-instance.yaml create-oss-instance-order.yaml`
-   - Modify `create-oss-instance-order.yaml` 
-        - change name to `teststreamorder` provide compartmentID and specify `1` partition
-   - Run `kubectl create -f create-oss-instance-order.yaml -n msdataworkshop`
-   - `cp samples/oss/create-oss-binding.yaml create-oss-binding-order.yaml`
-   - Modify `create-oss-binding-order.yaml` 
-        - change name to `test-stream-binding-order` and change instanceRef name to `teststream-order'
-   - Run `kubectl create -f create-oss-binding-order.yaml -n msdataworkshop`
-   - Run `kubectl get secrets test-stream-binding-order -o yaml -n msdataworkshop`
-   - Demonstrate streaming orders in frontend app by hitting `producerstream` button
-   - If any changes are made to src code or deployment, simply run `./build.sh ; ./redeploy.sh` to rebuild and redeploy
+
+Task 10 (Metrics)
+   - Notice io.helidon.metrics dependency in pom.xml and @Counted in [OrderResource.java](order-helidon/src/main/java/io/helidon/data/examples/OrderResource.java)
+   - Hit the `metrics` button and notice the various metrics (in prometheus format)
+   - These metrics can then be viewed in Grafana
 
 Task 11 (Helidon/OKE health liveness/readiness) 
    - Estimated task time 7 minutes
    - Video walk through: https://www.youtube.com/watch?v=56Xk65qgP3U
    - eg order service is not ready until some data load (from view or eventsourcing or lazily) is done
-   - show src and probes in deployment
+   - Notice io.helidon.health dependency in pom.xml and [OrderLivenessHealthCheck.java](order-helidon/src/main/java/io/helidon/data/examples/OrderLivenessHealthCheck.java)
+   - Notice livenessProbe in helidon-order-deployment.yaml
    - documentaion references...
        - https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
        - https://github.com/oracle/helidon/blob/master/docs/src/main/docs/health/02_health_in_k8s.adoc
        - https://github.com/oracle/helidon/blob/master/docs/src/main/docs/guides/07_health_se_guide.adoc
        - https://dmitrykornilov.net/2019/08/08/helidon-brings-microprofile-2-2-support/
    - If any changes are made to src code or deployment, simply run `./build.sh ; ./redeploy.sh` to rebuild and redeploy
-    
+
+Task 13 (Tracing)
+   - Notice io.helidon.tracing dependency in pom.xml and @Traced in [OrderResource.java](order-helidon/src/main/java/io/helidon/data/examples/OrderResource.java)
+   - todo instructions for Jaeger or full Istio and Kiali
+
 Task 12 (Demonstrate OKE horizontal pod scaling)
    - Estimated task time 5 minutes
    - Video walk through: https://www.youtube.com/watch?v=pII2yS7C0r8
@@ -218,10 +207,29 @@ Task 12 (Demonstrate OKE horizontal pod scaling)
        - `k delete deployment oraclelinux77-hpa-demo -n msdataworkshop`
        - `k delete hpa oraclelinux77-hpa-demo -n msdataworkshop`
    - If any changes are made to src code or deployment, simply run `./build.sh ; ./redeploy.sh` to rebuild and redeploy
-
-Task 13 (Tracing)
+  
+Task 10 (OSS streaming service)
+   - Insure Task 4 is complete and refer to https://github.com/oracle/oci-service-broker and specifically...
+        - https://github.com/oracle/oci-service-broker/blob/master/charts/oci-service-broker/docs/oss.md
+   - In Cloud Shell and streaming policy
+        - add a group for user if one does not exist
+        - add policy for that group to allow streaming (eg name `StreamingPolicy`, description `Allow to manage streams`)
+            - Policy statement `Allow group <SERVICE_BROKER_GROUP> to manage streams in compartment <COMPARTMENT_NAME>`
+            - eg `Allow group msdataworkshop-admins to manage streams in compartment msdataworkshop-sandbox)`' 
+   - todo... Currently hitting some issues with the following and resorting to manually setting 
+   - cd to `oci-service-broker` directory such as oci-service-broker-1.3.3
+   - `cp samples/oss/create-oss-instance.yaml create-oss-instance-order.yaml`
+   - Modify `create-oss-instance-order.yaml` 
+        - change name to `teststreamorder` provide compartmentID and specify `1` partition
+   - Run `kubectl create -f create-oss-instance-order.yaml -n msdataworkshop`
+   - `cp samples/oss/create-oss-binding.yaml create-oss-binding-order.yaml`
+   - Modify `create-oss-binding-order.yaml` 
+        - change name to `test-stream-binding-order` and change instanceRef name to `teststream-order'
+   - Run `kubectl create -f create-oss-binding-order.yaml -n msdataworkshop`
+   - Run `kubectl get secrets test-stream-binding-order -o yaml -n msdataworkshop`
+   - Demonstrate streaming orders in frontend app by hitting `producerstream` button
    - If any changes are made to src code or deployment, simply run `./build.sh ; ./redeploy.sh` to rebuild and redeploy
-
+   
 todo list and futures here to end...
 
 1. tighten a couple aspects of app such SODA/JSON best usage and supplier queries
