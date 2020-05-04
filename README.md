@@ -138,10 +138,13 @@ Task 9 (Demonstrate Converged database (relational, JSON, spatial, etc.), Event-
    - `cd $MSDATAWORKSHOP_LOCATION/inventory-helidon ; ./build.sh ; ./deploy.sh`
    - `cd $MSDATAWORKSHOP_LOCATION/supplier-helidon-se ; ./build.sh ; ./deploy.sh`
    - Open the frontend microservice home page
-   - Hit the `listenForMessages` button (fyi this will not be removed and not necessary in future version of the app)
-   - Check inventory for a given item such as a cucumbers and insure (remove if necessary) no inventory exists
-   - Place an order for that item and then select show order and notice failed order due to choreography saga compensation
-   - Add inventory for the item and place and show the order again noticing the order was successful 
+   - Hit the `listenForMessages` button to allow inventory service to listen for events (fyi this will not be removed and not necessary in future version of the app)
+   - Check inventory for a given item such as a cucumbers by hitting the `getInventory` button and insure (`removeInventory` if necessary) no inventory exists
+   - Hit the `placeorder` button for that item (eg `veggie: cucumbers` `orderid: 66`) and notice the initial/pending state of the order
+   - Hit the `showorder` button and notice failed order due to choreography saga compensation
+   - Hit the `addInvetory` button for the item 
+   - Hit the `placeorder` button with a different orderid (or `deleteorder` the previous/failed orderid)
+   - Hit the `showorder` button and notice successful order due to choreography saga compensation. Also notice CQRS
    - This demonstrates atomic exactly once event-driven communication over AQ, 
    - This also demonstrates CQRS as the command is executed on the database while the query is derived from events received.
    - If any changes are made to src code or deployment, simply run `./build.sh ; ./redeploy.sh` to rebuild and redeploy
