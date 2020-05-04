@@ -7,6 +7,7 @@ import oracle.jms.AQjmsSession;
 import javax.jms.*;
 import javax.sql.DataSource;
 import java.sql.Connection;
+import java.sql.SQLException;
 
 import oracle.soda.OracleException;
 
@@ -54,6 +55,8 @@ class OrderServiceEventProducer {
                 } catch (JMSException e1) {
                     System.out.println("sendMessage session.rollback() failed:" + e1);
                     e1.printStackTrace();
+                } finally {
+                    throw e;
                 }
             }
             throw e;
