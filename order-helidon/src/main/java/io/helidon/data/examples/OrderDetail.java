@@ -26,7 +26,7 @@ public class OrderDetail {
 
     public String toString() {
         String returnString = "";
-        returnString+="<br> orderId =" + orderId;
+        returnString+="<br> orderId = " + orderId;
 //        returnString+=" suggestiveSaleItem = " + suggestiveSaleItem;
         returnString+="<br>  suggestiveSale = " + suggestiveSale;
 //        returnString+=" inventoryLocationItem = " + inventoryLocationItem;

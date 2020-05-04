@@ -28,6 +28,7 @@ import javax.ws.rs.core.Response;
 
 import oracle.ucp.jdbc.PoolDataSource;
 import org.eclipse.microprofile.metrics.annotation.Counted;
+import org.eclipse.microprofile.metrics.annotation.Timed;
 import org.eclipse.microprofile.opentracing.Traced;
 
 @Path("/")
@@ -75,8 +76,8 @@ public class OrderResource {
     @Produces(MediaType.TEXT_PLAIN)
     @Traced(operationName = "OrderResource.placeOrder")
     @Counted(name = "placeOrder_counted") //amount of invocations
+    @Timed(name = "placeOrder_timed") //length of time of an object
 //    @Metered(name = "placeOrder_metered") //invocation frequency
-//    @Timed(name = "placeOrder_timed") //length of time of an object
     public Response placeOrder(@QueryParam("orderid") String orderid, @QueryParam("itemid") String itemid,
                                @QueryParam("deliverylocation") String deliverylocation) {
         System.out.println("--->placeOrder... orderid:" + orderid + " itemid:" + itemid);
@@ -116,7 +117,7 @@ public class OrderResource {
         System.out.println("--->showorder for orderId:" + orderId);
         OrderDetail orderDetail = orders.get(orderId); //we can also lookup orderId if is null and we do order population lazily
         String returnString = orderDetail == null ? "orderId not found:" + orderId :
-                "orderId = " + orderId + "<br>orderDetail = " + orderDetail;
+                "orderId = " + orderId + "<br>orderDetail... " + orderDetail;
         return Response.ok()
                 .entity(returnString)
                 .build();
