@@ -43,6 +43,13 @@ public class OrderDAO {
         System.out.println("Updated order:" + order);
     }
 
+    public String drop(Connection conn) throws OracleException {
+        OracleDatabase soda = new OracleRDBMSClient().getDatabase(conn);
+        OracleCollection col = soda.openCollection(collectionName);
+        col.admin().drop();
+        return collectionName + " dropped";
+    }
+
     public int delete(Connection conn, String id) throws OracleException {
         OracleDatabase soda = new OracleRDBMSClient().getDatabase(conn);
         OracleCollection col = soda.openCollection(collectionName);

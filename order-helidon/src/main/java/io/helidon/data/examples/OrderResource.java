@@ -158,6 +158,24 @@ public class OrderResource {
         }
     }
 
+    @Path("/deleteallorders")
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response deleteallorders() {
+        System.out.println("--->deleteallorders");
+        try {
+            String returnString = "deleteallorders " + orderServiceEventProducer.dropOrderViaSODA(atpOrderPdb);
+            return Response.ok()
+                    .entity(returnString)
+                    .build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Response.ok()
+                    .entity("deleteallorders failed with exception:" + e.toString())
+                    .build();
+        }
+    }
+
     //END Task 9 (Demonstrate Converged database, Event-driven Order/Inventory Saga, Event Sourcing, CQRS, etc. via Order/Inventory store application)
 
 
