@@ -260,6 +260,7 @@ public class FrontEndResource {
                 " <br>   <input type=\"submit\" name =\"test\" value=\"showorder\">" +
                 "   <input type=\"submit\" name =\"test\" value=\"showallorders\">" +
                 "   <input type=\"submit\" name =\"test\" value=\"deleteorder\">" +
+                "   <input type=\"submit\" name =\"test\" value=\"deleteallorders\">" +
                 "</form>" +
               "<h4>Spatial data (map service on WebLogic)</h4>" +
                 " <label>From:</label>" +
