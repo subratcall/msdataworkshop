@@ -2,11 +2,13 @@
 
 Please send any questions or comments to Paul Parkinson and/or Helidon Slack at https://helidon.slack.com/archives/CCS216A5A
 
+The following architecture can all be created entirely free using OCI, ATP, and Helidon 
+However, in addition, the workshop is designed to be modular and dynamic such that it is possible to deploy only the aspects (ie infrastructure and services) of interest.
 ![demo architecture](images/demo-arch.png) 
 
 
 ##Task 1 (Create OCI account, OKE cluster, ATP databases) 
-![OCI-AOK-ATP-setup](images/OCI-AOK-ATP-setup.png) 
+![OCI-AOK-ATP-setup](images/OCI-OKE-ATP-setup.png) 
    - Estimated task time 20 minutes
    - Video walk through: https://www.youtube.com/watch?v=0LeyGPw2vAA
    - Get (free) OCI account and tenancy 
