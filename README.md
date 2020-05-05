@@ -191,8 +191,11 @@ The workshop is designed to be modular and dynamic such that it is possible to d
    - If any changes are made to src code or deployment, simply run `./build.sh ; ./redeploy.sh` to rebuild and redeploy
 
 ## Task 12 (Tracing) ##
+   - Install Jaeger in OKE using `kubectl create -f https://raw.githubusercontent.com/jaegertracing/jaeger-kubernetes/master/all-in-one/jaeger-all-in-one-template.yml -n msdataworkshop`
+   - Notice tracing properties (and modify them if defaults were not used during Jaeger install) in [microprofile-config.properties](order-helidon/src/main/resources/META-INF/microprofile-config.properties)
    - Notice io.helidon.tracing dependency in pom.xml and @Traced in [OrderResource.java](order-helidon/src/main/java/io/helidon/data/examples/OrderResource.java)
-   - todo instructions for Jaeger or full Istio and Kiali
+   - Open Jaeger console and observe trace
+   - todo provide example using Istio and sidecar pattern.
 
 ## Task 13 (Demonstrate OKE horizontal pod scaling) ##
    - Estimated task time 5 minutes
@@ -222,7 +225,7 @@ The workshop is designed to be modular and dynamic such that it is possible to d
        - `k delete hpa oraclelinux77-hpa-demo -n msdataworkshop`
    - If any changes are made to src code or deployment, simply run `./build.sh ; ./redeploy.sh` to rebuild and redeploy
   
-## Task 10 (OSS streaming service) ##
+## Task 14 (OSS streaming service) ##
    - Insure Task 4 is complete and refer to https://github.com/oracle/oci-service-broker and specifically...
         - https://github.com/oracle/oci-service-broker/blob/master/charts/oci-service-broker/docs/oss.md
    - In Cloud Shell and streaming policy
@@ -244,41 +247,41 @@ The workshop is designed to be modular and dynamic such that it is possible to d
    - Demonstrate streaming orders in frontend app by hitting `producerstream` button
    - If any changes are made to src code or deployment, simply run `./build.sh ; ./redeploy.sh` to rebuild and redeploy
    
-## Task 11 (LRA) ##
+## Task 15 (LRA) ##
    - https://medium.com/oracledevs/long-running-actions-for-microprofile-on-helidon-data-integrity-for-microservices-2bd4d14fe955
    - LRA + Camunda 
    - FA
    
-## Task 11.5 (JPA) ##
+## Task 16 (JPA) ##
    - JPA/JTA, though not directly related potentially OpenAPI/swagger, etc. as well
    - (security, vault, etc - story around relation of vault and OSB being discussed now)
    
-## Task 12 (Polyglot) ##
+## Task 17 (Polyglot) ##
     - Python, node.js, and dotnet impls of order/inventory app
     - blue green deployment
     
-## Task 13 (HA) ##
+## Task 18 (HA) ##
     - Outage 
     - chaos test
    
-## Task 14 (graph) ##
+## Task 19 (graph) ##
     - social
 
-## Task 15 (sharded queues) ##
+## Task 20 (sharded queues) ##
     - 
 
-## Task 16 (migration from SOA) ##
+## Task 21 (migration from SOA) ##
     -
     - OWSM policy to service mesh side-car pattern, istio/linkerd
 
-## Task 17 (apex)  ##
+## Task 22 (apex)  ##
     - data-driven, no code, analytics of orders etc. or where order is eg
 
-## Task 18 (data flow)  ##
+## Task 23 (data flow)  ##
     - Spark : IoT of drones
 
-## Task 19 (data science)  ##
+## Task 24 (data science)  ##
     - enables machine learning models on Oracle Cloud: predictive analytics of orders to inventory/delivery locations
 
-## Task 20 (data catalog)  ##
+## Task 25 (data catalog)  ##
     - enables data consumers to easily find data assets across the enterprise using an inventory of data assets: analytics report of order info from streaming + atp
