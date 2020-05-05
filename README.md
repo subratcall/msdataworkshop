@@ -2,12 +2,11 @@
 
 Please send any questions or comments to Paul Parkinson and/or Helidon Slack at https://helidon.slack.com/archives/CCS216A5A
 
-![demo architecture](demo-arch.png) 
-![demo ERD](demo-erd.png) 
+![demo architecture](images/demo-arch.png) 
 
 
 ##Task 1 (Create OCI account, OKE cluster, ATP databases) 
-![OCI-AOK-ATP-setup](OCI-AOK-ATP-setup.png) 
+![OCI-AOK-ATP-setup](images/OCI-AOK-ATP-setup.png) 
    - Estimated task time 20 minutes
    - Video walk through: https://www.youtube.com/watch?v=0LeyGPw2vAA
    - Get (free) OCI account and tenancy 
@@ -33,7 +32,7 @@ Please send any questions or comments to Paul Parkinson and/or Helidon Slack at 
         - Download the regional wallet (connection info) and note the wallet password (this is optional depending on setup - todo elaborate)
 
 ##Task 2 (Use Cloud Shell to access OKE cluster and create `msdataworkshop` namespace)
-![OCI-OKE-ATP-setup](OCI-AOK-ATP-setup.png) 
+![OCI-OKE-ATP-setup](images/OCI-AOK-ATP-setup.png) 
    - Estimated task time 2 minutes
    - Video walk through: https://www.youtube.com/watch?v=vYD1s6c3a8w
    - Enter Cloud Shell and issue command to export kubeconfig for the OKE cluster created
@@ -42,7 +41,7 @@ Please send any questions or comments to Paul Parkinson and/or Helidon Slack at 
    - Create `msdataworkshop` namespace using command `kubectl create ns msdataworkshop`
     
 ##Task 3 (Create github account and build microservice image)
-![cloudshell](cloudshell.png) 
+![cloudshell](images/cloudshell.png) 
    - Estimated task time 2 minutes
    - Video walk through: https://www.youtube.com/watch?v=6g4c2yjbTPg
    - Optionally (if planning to make modifications, for example) 
@@ -55,7 +54,7 @@ Please send any questions or comments to Paul Parkinson and/or Helidon Slack at 
    - Run `mvn clean install`
 
 ##Task 4 (Push image, deploy, and access microservice)
-![first-microservice-deployed-static](first-microservice-deployed-static.png) 
+![first-microservice-deployed-static](images/first-microservice-deployed-static.png) 
    - Estimated task time 8 minutes
    - Video walk through: https://www.youtube.com/watch?v=I10NLrAYjIM
    - From Cloud Shell...
@@ -82,7 +81,7 @@ Please send any questions or comments to Paul Parkinson and/or Helidon Slack at 
         - or, if the service has been modified to use NodePort instead of LoadBalancer...
             - `kubectl port-forward [frontend pod] -n msdataworkshop 8080:8080`
             - and access http://localhost:8080
-![appfrontend](appfrontend.png)             
+![appfrontend](images/appfrontend.png)             
    - Run `cd $MSDATAWORKSHOP_LOCATION ; ./build.sh ` to build and push all of the rest of the microservices
    - Mark all of the images as public in OCIR via Cloud Shell as done with the frontend image
 
@@ -121,7 +120,7 @@ Please send any questions or comments to Paul Parkinson and/or Helidon Slack at 
             - http://localhost:8080/test
               
 ##Task 8 (Setup DB links between ATP PDBs, AQ, and Queue propagation)...
-![dbadminservice](dbadminservice.png)           
+![dbadminservice](images/dbadminservice.png)           
    - Estimated task time 8 minutes
    - Video walk through: https://www.youtube.com/watch?v=Nb6i5XQgdqA
    - Download connection information zip for ATP instances from console.
@@ -139,7 +138,8 @@ Please send any questions or comments to Paul Parkinson and/or Helidon Slack at 
    - If any changes are made to src code or deployment, simply run `./build.sh ; ./redeploy.sh` to rebuild and redeploy
                                     
 ##Task 9 (Demonstrate Converged database (relational, JSON, spatial, etc.), Event-driven Order/Inventory Saga, Event Sourcing, CQRS, etc. via Order/Inventory store application)
-![orderinventoryapp-microservices](orderinventoryapp-microservices.png)  
+![orderinventoryapp-microservices](images/orderinventoryapp-microservices.png)  
+![demo ERD](images/demo-erd.png) 
    - Estimated task time 12 minutes
    - Video walk through: https://www.youtube.com/watch?v=B-lof08Ip38
    - `cd $MSDATAWORKSHOP_LOCATION/order-helidon ; ./build.sh ; ./deploy.sh`
