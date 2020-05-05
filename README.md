@@ -242,32 +242,40 @@ Task 10 (OSS streaming service)
    - If any changes are made to src code or deployment, simply run `./build.sh ; ./redeploy.sh` to rebuild and redeploy
    
 Task 11 (LRA)
+   - https://medium.com/oracledevs/long-running-actions-for-microprofile-on-helidon-data-integrity-for-microservices-2bd4d14fe955
    - LRA + Camunda 
+   - FA
    
 Task 11.5 (JPA)
    - JPA/JTA, though not directly related potentially OpenAPI/swagger, etc. as well
    - (security, vault, etc - story around relation of vault and OSB being discussed now)
    
-Task 11 (Polyglot)
+Task 12 (Polyglot)
     - Python, node.js, and dotnet impls of order/inventory app
     - blue green deployment
     
-Task 12 (HA)
-    - Python, node.js, and dotnet impls of order/inventory app
-    - blue green deployment
+Task 13 (HA)
+    - Outage 
+    - chaos test
    
-Task 13 (graph, social)
+Task 14 (graph)
+    - social
 
-Task 14 (sharded queues)
+Task 15 (sharded queues)
+    - 
 
-Task 15 (apex) 
+Task 16 (migration from SOA)
+    -
+    - OWSM policy to service mesh side-car pattern, istio/linkerd
+
+Task 17 (apex) 
     - data-driven, no code, analytics of orders etc. or where order is eg
 
-Task 16 (data flow) 
+Task 18 (data flow) 
     - Spark : IoT of drones
 
-Task 17 (data science) 
+Task 19 (data science) 
     - enables machine learning models on Oracle Cloud: predictive analytics of orders to inventory/delivery locations
 
-Task 18 (data catalog) 
+Task 20 (data catalog) 
     - enables data consumers to easily find data assets across the enterprise using an inventory of data assets: analytics report of order info from streaming + atp
