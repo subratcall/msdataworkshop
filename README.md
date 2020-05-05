@@ -2,12 +2,14 @@
 
 Please send any questions or comments to Paul Parkinson and/or Helidon Slack at https://helidon.slack.com/archives/CCS216A5A
 
-The following architecture can all be created entirely free using OCI, ATP, and Helidon 
+The following architecture can all be created entirely free using OCI, ATP, and Helidon. 
+
 However, in addition, the workshop is designed to be modular and dynamic such that it is possible to deploy only the aspects (ie infrastructure and services) of interest.
+
 ![demo architecture](images/demo-arch.png) 
 
 
-##Task 1 (Create OCI account, OKE cluster, ATP databases) 
+##Task 1 (Create OCI account, OKE cluster, ATP databases) ##
 ![OCI-AOK-ATP-setup](images/OCI-OKE-ATP-setup.png) 
    - Estimated task time 20 minutes
    - Video walk through: https://www.youtube.com/watch?v=0LeyGPw2vAA
@@ -33,7 +35,7 @@ However, in addition, the workshop is designed to be modular and dynamic such th
         - Note the ocid, compartmentId, name, and admin pw of the databases
         - Download the regional wallet (connection info) and note the wallet password (this is optional depending on setup - todo elaborate)
 
-##Task 2 (Use Cloud Shell to access OKE cluster and create `msdataworkshop` namespace)
+##Task 2 (Use Cloud Shell to access OKE cluster and create `msdataworkshop` namespace) ##
 ![OCI-OKE-ATP-setup](images/OCI-AOK-ATP-setup.png) 
    - Estimated task time 2 minutes
    - Video walk through: https://www.youtube.com/watch?v=vYD1s6c3a8w
@@ -42,7 +44,7 @@ However, in addition, the workshop is designed to be modular and dynamic such th
    - Verify OKE access using command such as `kubectl get pods --all-namespaces`
    - Create `msdataworkshop` namespace using command `kubectl create ns msdataworkshop`
     
-##Task 3 (Create github account and build microservice image)
+##Task 3 (Create github account and build microservice image) ##
 ![cloudshell](images/cloudshell.png) 
    - Estimated task time 2 minutes
    - Video walk through: https://www.youtube.com/watch?v=6g4c2yjbTPg
@@ -55,7 +57,7 @@ However, in addition, the workshop is designed to be modular and dynamic such th
    - `cd msdataworkshop/frontend-helidon`
    - Run `mvn clean install`
 
-##Task 4 (Push image, deploy, and access microservice)
+##Task 4 (Push image, deploy, and access microservice) ##
 ![first-microservice-deployed-static](images/first-microservice-deployed-static.png) 
    - Estimated task time 8 minutes
    - Video walk through: https://www.youtube.com/watch?v=I10NLrAYjIM
@@ -87,7 +89,7 @@ However, in addition, the workshop is designed to be modular and dynamic such th
    - Run `cd $MSDATAWORKSHOP_LOCATION ; ./build.sh ` to build and push all of the rest of the microservices
    - Mark all of the images as public in OCIR via Cloud Shell as done with the frontend image
 
-##Task 5 (Setup OCI Open Service Broker)
+##Task 5 (Setup OCI Open Service Broker) ##
    - Estimated task time 5 minutes
    - Video walk through: https://www.youtube.com/watch?v=cb8N1TzNgsk
    - `cd $MSDATAWORKSHOP_LOCATION/osb-atp-and-oss`
@@ -96,7 +98,7 @@ However, in addition, the workshop is designed to be modular and dynamic such th
         - https://github.com/oracle/oci-service-broker/blob/master/charts/oci-service-broker/docs/installation.md
         - https://www.youtube.com/watch?v=qW_pw6Nd5hM
    
-##Task 6 (Using OCI service broker, create binding to 2 existing ATP instances)
+##Task 6 (Using OCI service broker, create binding to 2 existing ATP instances) ##
    - Estimated task time 5 minutes
    - Video walk through: https://www.youtube.com/watch?v=EGO-bLHrhv0
    - `cd $MSDATAWORKSHOP_LOCATION/osb-atp-and-oss`
@@ -105,7 +107,7 @@ However, in addition, the workshop is designed to be modular and dynamic such th
         - https://github.com/oracle/oci-service-broker/blob/master/charts/oci-service-broker/docs/atp.md
         - https://www.youtube.com/watch?v=qW_pw6Nd5hM
   
-##Task 7 (Verify and understand ATP connectivity via Helidon microservice deployment in OKE)
+##Task 7 (Verify and understand ATP connectivity via Helidon microservice deployment in OKE) ##
    - Estimated task time 5 minutes
    - Video walk through: https://www.youtube.com/watch?v=k44qrpdohTM
    - Notice [atpaqadmin-deployment.yaml](atpaqadmin/atpaqadmin-deployment.yaml) wallet, secret, decode initcontainer, etc. 
@@ -121,7 +123,7 @@ However, in addition, the workshop is designed to be modular and dynamic such th
             - `kubectl port-forward [atpadmin pod] -n msdataworkshop 8080:8080`
             - http://localhost:8080/test
               
-##Task 8 (Setup DB links between ATP PDBs, AQ, and Queue propagation)...
+##Task 8 (Setup DB links between ATP PDBs, AQ, and Queue propagation) ##
 ![dbadminservice](images/dbadminservice.png)           
    - Estimated task time 8 minutes
    - Video walk through: https://www.youtube.com/watch?v=Nb6i5XQgdqA
@@ -139,7 +141,7 @@ However, in addition, the workshop is designed to be modular and dynamic such th
         - it may be necessary to run `deletepod admin` first as there may be open connections that need to be be released.
    - If any changes are made to src code or deployment, simply run `./build.sh ; ./redeploy.sh` to rebuild and redeploy
                                     
-##Task 9 (Demonstrate Converged database (relational, JSON, spatial, etc.), Event-driven Order/Inventory Saga, Event Sourcing, CQRS, etc. via Order/Inventory store application)
+##Task 9 (Demonstrate Converged database (relational, JSON, spatial, etc.), Event-driven Order/Inventory Saga, Event Sourcing, CQRS, etc. via Order/Inventory store application) ##
 ![orderinventoryapp-microservices](images/orderinventoryapp-microservices.png)  
 ![demo ERD](images/demo-erd.png) 
    - Estimated task time 12 minutes
@@ -166,17 +168,17 @@ However, in addition, the workshop is designed to be modular and dynamic such th
         - Microservices on Helidon (blog including JSON examples) https://www.baeldung.com/microservices-oracle-helidon
         - Oracle SODA (Simple Oracle Document Access) https://docs.oracle.com/en/database/oracle/simple-oracle-document-access/
    
-##Task 9.5 Demonstrate spatial service running on Weblogic (operator) via order delivery routing service )
+##Task 9.5 Demonstrate spatial service running on Weblogic (operator) via order delivery routing service) ##
    - https://github.com/nagypeter/weblogic-operator-tutorial/blob/master/tutorials/domain.home.in.image_short.md
    - https://blogs.oracle.com/weblogicserver/easily-create-an-oci-container-engine-for-kubernetes-cluster-with-terraform-installer-to-run-weblogic-server
    - https://www.oracle.com/middleware/technologies/weblogic.html
    
-##Task 10 (Metrics)
+##Task 10 (Metrics) ##
    - Notice io.helidon.metrics dependency in pom.xml and @Counted in [OrderResource.java](order-helidon/src/main/java/io/helidon/data/examples/OrderResource.java)
    - Hit the `metrics` button and notice the various metrics (in prometheus format)
    - These metrics can then be viewed in Grafana
 
-##Task 11 (Helidon/OKE health liveness/readiness) 
+##Task 11 (Helidon/OKE health liveness/readiness)  ##
    - Estimated task time 7 minutes
    - Video walk through: https://www.youtube.com/watch?v=56Xk65qgP3U
    - eg order service is not ready until some data load (from view or eventsourcing or lazily) is done
@@ -189,11 +191,11 @@ However, in addition, the workshop is designed to be modular and dynamic such th
        - https://dmitrykornilov.net/2019/08/08/helidon-brings-microprofile-2-2-support/
    - If any changes are made to src code or deployment, simply run `./build.sh ; ./redeploy.sh` to rebuild and redeploy
 
-##Task 12 (Tracing)
+##Task 12 (Tracing) ##
    - Notice io.helidon.tracing dependency in pom.xml and @Traced in [OrderResource.java](order-helidon/src/main/java/io/helidon/data/examples/OrderResource.java)
    - todo instructions for Jaeger or full Istio and Kiali
 
-##Task 13 (Demonstrate OKE horizontal pod scaling)
+##Task 13 (Demonstrate OKE horizontal pod scaling) ##
    - Estimated task time 5 minutes
    - Video walk through: https://www.youtube.com/watch?v=pII2yS7C0r8
    - `cd $MSDATAWORKSHOP_LOCATION`
@@ -221,7 +223,7 @@ However, in addition, the workshop is designed to be modular and dynamic such th
        - `k delete hpa oraclelinux77-hpa-demo -n msdataworkshop`
    - If any changes are made to src code or deployment, simply run `./build.sh ; ./redeploy.sh` to rebuild and redeploy
   
-##Task 10 (OSS streaming service)
+##Task 10 (OSS streaming service) ##
    - Insure Task 4 is complete and refer to https://github.com/oracle/oci-service-broker and specifically...
         - https://github.com/oracle/oci-service-broker/blob/master/charts/oci-service-broker/docs/oss.md
    - In Cloud Shell and streaming policy
@@ -243,41 +245,41 @@ However, in addition, the workshop is designed to be modular and dynamic such th
    - Demonstrate streaming orders in frontend app by hitting `producerstream` button
    - If any changes are made to src code or deployment, simply run `./build.sh ; ./redeploy.sh` to rebuild and redeploy
    
-##Task 11 (LRA)
+##Task 11 (LRA) ##
    - https://medium.com/oracledevs/long-running-actions-for-microprofile-on-helidon-data-integrity-for-microservices-2bd4d14fe955
    - LRA + Camunda 
    - FA
    
-##Task 11.5 (JPA)
+##Task 11.5 (JPA) ##
    - JPA/JTA, though not directly related potentially OpenAPI/swagger, etc. as well
    - (security, vault, etc - story around relation of vault and OSB being discussed now)
    
-##Task 12 (Polyglot)
+##Task 12 (Polyglot) ##
     - Python, node.js, and dotnet impls of order/inventory app
     - blue green deployment
     
-##Task 13 (HA)
+##Task 13 (HA) ##
     - Outage 
     - chaos test
    
-##Task 14 (graph)
+##Task 14 (graph) ##
     - social
 
-##Task 15 (sharded queues)
+##Task 15 (sharded queues) ##
     - 
 
-##Task 16 (migration from SOA)
+##Task 16 (migration from SOA) ##
     -
     - OWSM policy to service mesh side-car pattern, istio/linkerd
 
-##Task 17 (apex) 
+##Task 17 (apex)  ##
     - data-driven, no code, analytics of orders etc. or where order is eg
 
-##Task 18 (data flow) 
+##Task 18 (data flow)  ##
     - Spark : IoT of drones
 
-##Task 19 (data science) 
+##Task 19 (data science)  ##
     - enables machine learning models on Oracle Cloud: predictive analytics of orders to inventory/delivery locations
 
-##Task 20 (data catalog) 
+##Task 20 (data catalog)  ##
     - enables data consumers to easily find data assets across the enterprise using an inventory of data assets: analytics report of order info from streaming + atp
