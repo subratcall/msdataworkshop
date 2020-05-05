@@ -94,7 +94,6 @@ public class InventoryServiceOrderEventConsumer implements Runnable {
                 "Session:" + session + " check inventory for inventoryid:" + itemid);
         int inventorycount;
         String inventoryLocation = "";
-        // todo this should be increment decrement and handle violation rather than select update...
         ResultSet resultSet = dbConnection.createStatement().executeQuery(
                 "select * from inventory  where inventoryid = '" + itemid + "'");
         if (resultSet.next()) {

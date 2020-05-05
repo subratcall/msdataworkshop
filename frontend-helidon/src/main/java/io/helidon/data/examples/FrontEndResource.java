@@ -223,7 +223,6 @@ public class FrontEndResource {
                 "   <input type=\"submit\" name =\"test\" value=\"createInventoryTable\">" +
                 "   <input type=\"submit\" name =\"test\" value=\"createDBLinks\">" +
                 "   <input type=\"submit\" name =\"test\" value=\"setupTablesQueuesAndPropagation\">" +
-//                "   <input type=\"submit\" name =\"test\" value=\"enablePropagationInventoryToOrder\">" +
                 "</form>" +
                 /**         "<h4>Cleanup (drain queues and streams, delete tables and JSON/docs, etc.)...</h4>" +
                  "<form action=\"executeonorderpdb\" id=\"executeonorderpdb\">" +
@@ -263,11 +262,11 @@ public class FrontEndResource {
                 "   <input type=\"submit\" name =\"test\" value=\"deleteallorders\">" +
                 "</form>" +
               "<h4>Spatial data (map service on WebLogic)</h4>" +
-//                " <label>From:</label>" +
-//                               "        <input type=\"hidden\" size=\"35\" id=\"start_address\" name=\"start_address\" value=\"1469 WEBSTER ST,San Francisco,CA\">" +
-//                "        <label>To:</label>" +
-//                "        <input type=\"hidden\" size=\"35\" id=\"end_address\" name=\"end_address\" value=\"780 PANORAMA DR,San Francisco,CA\">" +
-//                "        <button type=\"button\" onclick=\"find_path_address_render()\">deliveryDetail</button>" +
+                " <label>From:</label>" +
+                               "        <input type=\"hidden\" size=\"35\" id=\"start_address\" name=\"start_address\" value=\"1469 WEBSTER ST,San Francisco,CA\">" +
+                "        <label>To:</label>" +
+                "        <input type=\"hidden\" size=\"35\" id=\"end_address\" name=\"end_address\" value=\"780 PANORAMA DR,San Francisco,CA\">" +
+                "        <button type=\"button\" onclick=\"find_path_address_render()\">deliveryDetail</button>" +
                 "<form action=\"https://150.136.177.253:7002/chrest/Visualize.jsp\" method=\"POST\" id=\"renderForm\">" +
                 "<input type=\"hidden\" id = \"geojson\" name=\"geojson\" value=\"" +
               "{&quot;type&quot;:&quot;LineString&quot;,&quot;coordinates&quot;:[[-74.00501,40.70583],[-74.00457,40.70549],[-74.00447,40.70541],[-74.00418,40.70559],[-74.00386,40.70579],[-74.00361,40.70595],[-74.00346,40.70605]," +
@@ -281,13 +280,16 @@ public class FrontEndResource {
                 "\"/>"  +
 
                 "<input type=\"submit\" value=\"deliveryDetail\"></form>" +
+//                "<h3>Task 10...</h3>" +
+//                "<h4>OCI Streaming Service via Kafka API (orderstreaming service and order service)</h4>" +
+//                "<form action=\"orderservicecall\">" +
+//                "# of orders to stream : <input type=\"text\" name=\"numberoforderstostream\"  size=\"5\" value=\"5\"> " +
+//                "<input type=\"submit\" name =\"test\" value=\"produceStreamOrders\">" +
+//                "</th>" +
+//                "    <th width=\"50%\" align=\"left\" valign=\"top\">" +
                 "<h3>Task 10...</h3>" +
-                "<h4>OCI Streaming Service via Kafka API (orderstreaming service and order service)</h4>" +
-                "<form action=\"orderservicecall\">" +
-                "# of orders to stream : <input type=\"text\" name=\"numberoforderstostream\"  size=\"5\" value=\"5\"> " +
-                "<input type=\"submit\" name =\"test\" value=\"produceStreamOrders\">" +
-                "</th>" +
-                "    <th width=\"50%\" align=\"left\" valign=\"top\">" +
+                "<h4>Helidon Metrics</h4>" +
+                "<form action=\"orderservicecall\"><input type=\"submit\" name =\"test\" value=\"metrics\"></form>" +
                 "<h3>Task 11...</h3>" +
                 "<h4>Helidon Health Checks and OKE Health Probes (order service)</h4>" +
                 "<form action=\"orderservicecall\"><input type=\"submit\" name =\"test\" value=\"health\">" +
@@ -297,14 +299,18 @@ public class FrontEndResource {
                 "   <input type=\"submit\" name =\"test\" value=\"ordersetdelayforreadiness\"></form>" +
                 "<form action=\"orderservicecall\"><input type=\"submit\" name =\"test\" value=\"lastContainerStartTime\"></form>" +
                 "<h3>Task 12...</h3>" +
-                "<h4>Helidon Metrics and OKE horizontal-autoscaling (order service)</h4>" +
-                "<form action=\"orderservicecall\"><input type=\"submit\" name =\"test\" value=\"metrics\"></form>" +
+                "<h4>Helidon OpenTracing</h4>" +
+                "<br><a href=\"https://raw.githubusercontent.com/paulparkinson/msdataworkshop/master/jaegercollapsed.png\">Jaeger (collapsed view)</a>" +
+                "<br><a href=\"https://raw.githubusercontent.com/paulparkinson/msdataworkshop/master/jaegerexpanded.png\">Jaeger (expanded view)</a>" +
+                "<h3>Task 13...</h3>" +
+                "<h4>OKE horizontal-autoscaling</h4>" +
                 "<form action=\"orderservicecall\"><input type=\"submit\" name =\"test\" value=\"startCPUStress\">" +
                 "   <input type=\"submit\" name =\"test\" value=\"stopCPUStress\"></form> " +
-                "   <h3>Cleanup...</h3> " +
+                "   <h3>Cleanup etc....</h3> " +
                 "<form action=\"adminservicetest\">" +
                 "   <input type=\"submit\" name =\"test\" value=\"unschedulePropagation\">" +
                 "   <input type=\"submit\" name =\"test\" value=\"deleteUsers\">" +
+                "   <input type=\"submit\" name =\"test\" value=\"enablePropagation\">" +
                 "</form>" +
       "<br>__________________________________________________________________" +
                 "<br>Results......." +
