@@ -263,14 +263,21 @@ public class FrontEndResource {
                 "   <input type=\"submit\" name =\"test\" value=\"deleteallorders\">" +
                 "</form>" +
               "<h4>Spatial data (map service on WebLogic)</h4>" +
-                " <label>From:</label>" +
-                               "        <input type=\"text\" size=\"35\" id=\"start_address\" name=\"start_address\" value=\"1469 WEBSTER ST,San Francisco,CA\">" +
-                "        <label>To:</label>" +
-                "        <input type=\"text\" size=\"35\" id=\"end_address\" name=\"end_address\" value=\"780 PANORAMA DR,San Francisco,CA\">" +
-                "        <button type=\"button\" onclick=\"find_path_address_render()\">deliveryDetail</button>" +
+//                " <label>From:</label>" +
+//                               "        <input type=\"hidden\" size=\"35\" id=\"start_address\" name=\"start_address\" value=\"1469 WEBSTER ST,San Francisco,CA\">" +
+//                "        <label>To:</label>" +
+//                "        <input type=\"hidden\" size=\"35\" id=\"end_address\" name=\"end_address\" value=\"780 PANORAMA DR,San Francisco,CA\">" +
+//                "        <button type=\"button\" onclick=\"find_path_address_render()\">deliveryDetail</button>" +
                 "<form action=\"https://150.136.177.253:7002/chrest/Visualize.jsp\" method=\"POST\" id=\"renderForm\">" +
                 "<input type=\"hidden\" id = \"geojson\" name=\"geojson\" value=\"" +
-              "{&quot;type&quot;:&quot;LineString&quot;,&quot;coordinates&quot;:[[-74.00501,40.70583],[-74.00457,40.70549],[-74.00447,40.70541],[-74.00418,40.70559],[-74.00386,40.70579],[-74.00361,40.70595],[-74.00346,40.70605],[-74.00335,40.70611],[-74.00318,40.70621],[-74.00231,40.7067],[-74.00274,40.70722],[-74.00311,40.70767],[-74.00336,40.708],[-74.00345,40.70808],[-74.00407,40.70745],[-74.00412,40.70757],[-74.00433,40.70783],[-74.00477,40.70841],[-74.00505,40.70876],[-74.00513,40.70885],[-74.00524,40.70893],[-74.00532,40.70899],[-74.00547,40.70909],[-74.00643,40.70956],[-74.00705,40.70987],[-74.00774,40.71022],[-74.00906,40.71089],[-74.01046,40.71153],[-74.01013,40.71209],[-74.00967,40.71274],[-74.00927,40.71326],[-74.00902,40.71359],[-74.00885,40.71381],[-74.0084,40.71437],[-74.00795,40.71494],[-74.00755,40.71544],[-74.00882,40.71602],[-74.0092,40.71619],[-74.00911,40.71692],[-74.00906,40.71726],[-74.009,40.7176],[-74.00894,40.71793],[-74.00888,40.71827],[-74.00882,40.71864],[-74.00875,40.71903],[-74.0087,40.7193],[-74.00858,40.71996],[-74.00847,40.72065],[-74.00842,40.72089],[-74.00837,40.7212],[-74.00834,40.72133],[-74.00823,40.72198],[-74.00812,40.72264],[-74.00801,40.72328],[-74.00795,40.72365],[-74.00793,40.72376],[-74.00786,40.72382],[-74.00777,40.72388],[-74.00773,40.72392],[-74.00771,40.72393],[-74.00745,40.72412],[-74.00736,40.72417],[-74.00728,40.72424],[-74.00723,40.72429],[-74.0071,40.72441],[-74.00703,40.7245]]}" +
+              "{&quot;type&quot;:&quot;LineString&quot;,&quot;coordinates&quot;:[[-74.00501,40.70583],[-74.00457,40.70549],[-74.00447,40.70541],[-74.00418,40.70559],[-74.00386,40.70579],[-74.00361,40.70595],[-74.00346,40.70605]," +
+                "[-74.00335,40.70611],[-74.00318,40.70621],[-74.00231,40.7067],[-74.00274,40.70722],[-74.00311,40.70767],[-74.00336,40.708],[-74.00345,40.70808],[-74.00407,40.70745],[-74.00412,40.70757],[-74.00433,40.70783]," +
+                "[-74.00477,40.70841],[-74.00505,40.70876],[-74.00513,40.70885],[-74.00524,40.70893],[-74.00532,40.70899],[-74.00547,40.70909],[-74.00643,40.70956],[-74.00705,40.70987],[-74.00774,40.71022]," +
+                "[-74.00906,40.71089],[-74.01046,40.71153],[-74.01013,40.71209],[-74.00967,40.71274],[-74.00927,40.71326],[-74.00902,40.71359],[-74.00885,40.71381],[-74.0084,40.71437],[-74.00795,40.71494]," +
+                "[-74.00755,40.71544],[-74.00882,40.71602],[-74.0092,40.71619],[-74.00911,40.71692],[-74.00906,40.71726],[-74.009,40.7176],[-74.00894,40.71793],[-74.00888,40.71827],[-74.00882,40.71864],[-74.00875,40.71903]," +
+                "[-74.0087,40.7193],[-74.00858,40.71996],[-74.00847,40.72065],[-74.00842,40.72089],[-74.00837,40.7212],[-74.00834,40.72133],[-74.00823,40.72198],[-74.00812,40.72264],[-74.00801,40.72328],[-74.00795,40.72365]," +
+                "[-74.00793,40.72376],[-74.00786,40.72382],[-74.00777,40.72388],[-74.00773,40.72392],[-74.00771,40.72393],[-74.00745,40.72412],[-74.00736,40.72417],[-74.00728,40.72424],[-74.00723,40.72429],[-74.0071,40.72441]," +
+                "[-74.00703,40.7245]]}" +
                 "\"/>"  +
 
                 "<input type=\"submit\" value=\"deliveryDetail\"></form>" +
@@ -317,7 +324,118 @@ public class FrontEndResource {
                 "body {background-color: powderblue;}" +
                 "h4   {color: gray;}" +
                 "</style></head>" +
-                "  <body>" + "<h1 color=\"#BDB76B;\" align=\"left\">" +
+                "  <body>" +
+                "<script>" +
+                "" +
+                "            const elocationURL = 'https://elocation.oracle.com/routeserver/servlet/RouteServerServlet'" +
+                "" +
+                "            function createLonLatReqeuest() {" +
+                "                var start = document.getElementById(\"start_lonlat\").value;" +
+                "                var end = document.getElementById(\"end_lonlat\").value;" +
+                "                var start_lonlat = start.split(\",\")" +
+                "                var end_lonlat = end.split(\",\")" +
+                "" +
+                "                var postData = 'xml_request=<route_request route_preference=\"shortest\" road_preference=\"highway\" return_driving_directions=\"true\" return_locations=\"true\" distance_unit=\"mile\" time_unit=\"minute\" return_route_geometry=\"true\" return_subroute_geometry=\"false\" return_segment_geometry=\"false\"><start_location><input_location id=\"1\" longitude=\"' + start_lonlat[0] + '\" latitude=\"' + start_lonlat[1] + '\" /></start_location><end_location><input_location id=\"2\" longitude=\"' + end_lonlat[0] + '\" latitude=\"' + end_lonlat[1] + '\" /></end_location></route_request>';" +
+                "" +
+                "                return postData" +
+                "            }" +
+                "" +
+                "            function createAddressReqeuest() {" +
+                "                var start = document.getElementById(\"start_address\").value;" +
+                "                var end = document.getElementById(\"end_address\").value;" +
+                "                var start_address = start.split(\",\")" +
+                "                var end_address = end.split(\",\")" +
+                "" +
+                "                var postData = 'xml_request=<route_request route_preference=\"shortest\" road_preference=\"highway\" return_driving_directions=\"true\" language=\"French\" distance_unit=\"km\" time_unit=\"minute\" return_route_geometry=\"true\"><start_location> <input_location id=\"1\"> <input_address> <us_form1 street=\"' + start_address[0] + '\" lastline=\"' + start_address.slice(1,3) + '\" /> </input_address> </input_location></start_location><end_location> <input_location id=\"2\"> <input_address> <us_form1 street=\"' + end_address[0] + '\" lastline=\"' + end_address.slice(1,3) + '\" /> </input_address> </input_location></end_location></route_request>';" +
+                "" +
+                "                return postData" +
+                "            }" +
+                "" +
+                "            function find_path_address() {" +
+                "                var postData = createAddressReqeuest()" +
+                "                $.ajax({" +
+                "                    url: elocationURL," +
+                "                    type: 'POST'," +
+                "                    data: postData," +
+                "                    dataType: \"xml\"," +
+                "                    success: function (data) {" +
+                "                        var res = (new XMLSerializer()).serializeToString(data)" +
+                "                        alert(res)" +
+                "                    }" +
+                "                });" +
+                "            }" +
+                "" +
+                "            function find_path_address_render() {" +
+                "                var postData = createAddressReqeuest()" +
+                "                $.ajax({" +
+                "                    url: elocationURL," +
+                "                    type: 'POST'," +
+                "                    data: postData," +
+                "                    success: function (data) {" +
+                "                        var res = (new XMLSerializer()).serializeToString(data)" +
+                "                        render(res)" +
+                "                    }" +
+                "                });" +
+                "            }" +
+                "" +
+                "            function find_path_lonlat() {" +
+                "                var postData = createLonLatReqeuest()" +
+                "                $.ajax({" +
+                "                    url: elocationURL," +
+                "                    type: 'POST'," +
+                "                    data: postData," +
+                "                    dataType: \"xml\"," +
+                "                    success: function (data) {" +
+                "                        var res = (new XMLSerializer()).serializeToString(data)" +
+                "                        alert(res)" +
+                "                    }" +
+                "                });" +
+                "            }" +
+                "" +
+                "            function find_path_lonlat_render() {" +
+                "                var postData = createLonLatReqeuest()" +
+                "                $.ajax({" +
+                "                    url: elocationURL," +
+                "                    type: 'POST'," +
+                "                    data: postData," +
+                "                    dataType: \"xml\"," +
+                "                    success: function (data) {" +
+                "                        var res = (new XMLSerializer()).serializeToString(data)" +
+                "                        render(res)" +
+                "                    }" +
+                "                });" +
+                "            }" +
+                "" +
+                "            function createRenderRequest(coordinates) {" +
+                "                coors = coordinates.trim().split(' ')" +
+                "                // console.log(coors)" +
+                "                cStr = '['" +
+                "                for (i = 0; i < coors.length; i++) {" +
+                "                    cStr += '[' + coors[i] + ']'" +
+                "                    if (i < coors.length - 1) {" +
+                "                        cStr += ','" +
+                "                    }" +
+                "                }" +
+                "                cStr += ']'" +
+                "                var postData = '{\"type\":\"LineString\",\"coordinates\":' + cStr + '}'" +
+                "                // console.log(cStr)" +
+                "                return postData;" +
+                "            }" +
+                "" +
+                "            function render(xmlStr) {" +
+                "                var oParser = new DOMParser();" +
+                "                var xmlDoc = oParser.parseFromString(xmlStr, \"application/xml\");" +
+                "                coordinates = xmlDoc.getElementsByTagName(\"coordinates\")[0].childNodes[0].nodeValue;   " +
+                "" +
+                "                var postData = createRenderRequest(coordinates);" +
+                "                document.getElementById(\"geojson\").value = postData;" +
+                "                var renderForm = document.getElementById(\"renderForm\");" +
+                "                renderForm.submit();" +
+                "            }" +
+                "" +
+                "        </script>        " +
+                
+                "<h1 color=\"#BDB76B;\" align=\"left\">" +
                 "Event-driven Stateful Microservices with Helidon and Autonomous Database on OCI</h1>" +
                 "<h2>\"VeggieDash\"</h2>" +
                 "</table>";

@@ -75,10 +75,10 @@ class PropagationSetup {
             connection.createStatement().execute(
                     "create table inventory (inventoryid varchar(16), inventorylocation varchar(32), inventorycount integer)");
             returnValue += " table created, ";
-            connection.createStatement().execute("insert into inventory values ('carrots', '1st Street', 0)");
-            connection.createStatement().execute("insert into inventory values ('cucumbers', '2nd Street', 0)");
-            connection.createStatement().execute("insert into inventory values ('tomatoes', '3rd Street', 0)");
-            connection.createStatement().execute("insert into inventory values ('onions', '4th Street', 0)");
+            connection.createStatement().execute("insert into inventory values ('carrots', '1468 WEBSTER ST,San Francisco,CA', 0)");
+            connection.createStatement().execute("insert into inventory values ('cucumbers', '1469 WEBSTER ST,San Francisco,CA', 0)");
+            connection.createStatement().execute("insert into inventory values ('tomatoes', '1470 WEBSTER ST,San Francisco,CA', 0)");
+            connection.createStatement().execute("insert into inventory values ('onions', '1471 WEBSTER ST,San Francisco,CA', 0)");
             returnValue += " table populated with veggie types, ";
             returnValue += "success";
         } catch (SQLException ex) {

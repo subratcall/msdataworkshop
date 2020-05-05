@@ -160,7 +160,7 @@ Task 9.5 Demonstrate spatial service running on Weblogic (operator) via order de
    - https://github.com/nagypeter/weblogic-operator-tutorial/blob/master/tutorials/domain.home.in.image_short.md
    - https://blogs.oracle.com/weblogicserver/easily-create-an-oci-container-engine-for-kubernetes-cluster-with-terraform-installer-to-run-weblogic-server
    - https://www.oracle.com/middleware/technologies/weblogic.html
-
+   
 Task 10 (Metrics)
    - Notice io.helidon.metrics dependency in pom.xml and @Counted in [OrderResource.java](order-helidon/src/main/java/io/helidon/data/examples/OrderResource.java)
    - Hit the `metrics` button and notice the various metrics (in prometheus format)
@@ -233,25 +233,33 @@ Task 10 (OSS streaming service)
    - Demonstrate streaming orders in frontend app by hitting `producerstream` button
    - If any changes are made to src code or deployment, simply run `./build.sh ; ./redeploy.sh` to rebuild and redeploy
    
-todo list and futures here to end...
+Task 11 (LRA)
+   - LRA + Camunda 
+   
+Task 11.5 (JPA)
+   - JPA/JTA, though not directly related potentially OpenAPI/swagger, etc. as well
+   - (security, vault, etc - story around relation of vault and OSB being discussed now)
+   
+Task 11 (Polyglot)
+    - Python, node.js, and dotnet impls of order/inventory app
+    - blue green deployment
+    
+Task 12 (HA)
+    - Python, node.js, and dotnet impls of order/inventory app
+    - blue green deployment
+   
+Task 13 (graph, social)
 
-1. tighten a couple aspects of app such SODA/JSON best usage and supplier queries
-2. cleanup OSS streaming service and add video - add helidon kafka connector usage when ready
-3. metrics (and grafana to existing metrics) and add video
-4. tracing ( with or without istio) - and  more instructions and video
-5. terraform/resource manger support for initial setup of OKE, ATP and hopefully OSB and AQ with/from 
-6. frontend enhancement
-7. weblogic + spatial data for delivery service - to/from point addresses , schema for delivery service - dispatch veggie dasher
-8. okafka AQ sharding - streaming next week
-9. HA 
-10. ci/cd - jenkins - versioning, EDR(editions)
-11. LRA + Camunda (rest tutorial https://www.youtube.com/watch?v=ypX90aQScOQ  https://blog.camunda.com/post/2015/08/start-and-complete-process-with-rest-api/ )
-12. JPA/JTA
-13. OpenAPI/swagger
-14. graph, social
-15. apex - data-driven, no code, analytics of orders etc. or where order is eg
-16. (security, vault, etc - story around relation of vault and OSB being discussed now)
-17. (sharded queued)
-18. (data flow) - Spark : IoT of drones
-19. (data science) - enables machine learning models on Oracle Cloud: predictive analytics of orders to inventory/delivery locations
-20. (data catalog) - enables data consumers to easily find data assets across the enterprise using an inventory of data assets: analytics report of order info from streaming + atp
+Task 14 (sharded queues)
+
+Task 15 (apex) 
+    - data-driven, no code, analytics of orders etc. or where order is eg
+
+Task 16 (data flow) 
+    - Spark : IoT of drones
+
+Task 17 (data science) 
+    - enables machine learning models on Oracle Cloud: predictive analytics of orders to inventory/delivery locations
+
+Task 18 (data catalog) 
+    - enables data consumers to easily find data assets across the enterprise using an inventory of data assets: analytics report of order info from streaming + atp
