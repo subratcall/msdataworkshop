@@ -75,8 +75,8 @@ public class OrderResource {
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     @Traced(operationName = "OrderResource.placeOrder")
-    @Counted(name = "placeOrder_counted") //amount of invocations
     @Timed(name = "placeOrder_timed") //length of time of an object
+//    @Counted(name = "placeOrder_counted") //amount of invocations
 //    @Metered(name = "placeOrder_metered") //invocation frequency
     public Response placeOrder(@QueryParam("orderid") String orderid, @QueryParam("itemid") String itemid,
                                @QueryParam("deliverylocation") String deliverylocation) {
