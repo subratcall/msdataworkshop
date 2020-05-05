@@ -300,8 +300,8 @@ public class FrontEndResource {
                 "<form action=\"orderservicecall\"><input type=\"submit\" name =\"test\" value=\"lastContainerStartTime\"></form>" +
                 "<h3>Task 12...</h3>" +
                 "<h4>Helidon OpenTracing</h4>" +
-                "<a href=\"https://raw.githubusercontent.com/paulparkinson/msdataworkshop/master/jaegercollapsed.png\">Jaeger (collapsed view)</a>" +
-                "<br><a href=\"https://raw.githubusercontent.com/paulparkinson/msdataworkshop/master/jaegerexpanded.png\">Jaeger (expanded view)</a>" +
+                "<a href=\"https://raw.githubusercontent.com/paulparkinson/msdataworkshop/master/images/jaegercollapsed.png\">Jaeger (collapsed view)</a>" +
+                "<br><a href=\"https://raw.githubusercontent.com/paulparkinson/msdataworkshop/master/images/jaegerexpanded.png\">Jaeger (expanded view)</a>" +
                 "<h3>Task 13...</h3>" +
                 "<h4>OKE horizontal-autoscaling</h4>" +
                 "<form action=\"orderservicecall\"><input type=\"submit\" name =\"test\" value=\"startCPUStress\">" +
