@@ -5,6 +5,8 @@ Please send any questions or comments to Paul Parkinson and/or Helidon Slack at 
 ![demo architecture](demo-arch.png) 
 ![demo ERD](demo-erd.png) 
 
+
+![OCI-AOK-ATP-setup](OCI-AOK-ATP-setup.png) 
 Task 1 (Create OCI account, OKE cluster, ATP databases) 
    - Estimated task time 20 minutes
    - Video walk through: https://www.youtube.com/watch?v=0LeyGPw2vAA
@@ -30,6 +32,7 @@ Task 1 (Create OCI account, OKE cluster, ATP databases)
         - Note the ocid, compartmentId, name, and admin pw of the databases
         - Download the regional wallet (connection info) and note the wallet password (this is optional depending on setup - todo elaborate)
 
+![OCI-AOK-ATP-setup](OCI-AOK-ATP-setup.png) 
 Task 2 (Use Cloud Shell to access OKE cluster and create `msdataworkshop` namespace)
    - Estimated task time 2 minutes
    - Video walk through: https://www.youtube.com/watch?v=vYD1s6c3a8w
@@ -38,6 +41,7 @@ Task 2 (Use Cloud Shell to access OKE cluster and create `msdataworkshop` namesp
    - Verify OKE access using command such as `kubectl get pods --all-namespaces`
    - Create `msdataworkshop` namespace using command `kubectl create ns msdataworkshop`
     
+![cloudshell](cloudshell.png) 
 Task 3 (Create github account and build microservice image)
    - Estimated task time 2 minutes
    - Video walk through: https://www.youtube.com/watch?v=6g4c2yjbTPg
@@ -50,6 +54,7 @@ Task 3 (Create github account and build microservice image)
    - `cd msdataworkshop/frontend-helidon`
    - Run `mvn clean install`
 
+![first-microservice-deployed-static](first-microservice-deployed-static.png) 
 Task 4 (Push image, deploy, and access microservice)
    - Estimated task time 8 minutes
    - Video walk through: https://www.youtube.com/watch?v=I10NLrAYjIM
@@ -77,6 +82,7 @@ Task 4 (Push image, deploy, and access microservice)
         - or, if the service has been modified to use NodePort instead of LoadBalancer...
             - `kubectl port-forward [frontend pod] -n msdataworkshop 8080:8080`
             - and access http://localhost:8080
+![appfrontend](appfrontend.png)             
    - Run `cd $MSDATAWORKSHOP_LOCATION ; ./build.sh ` to build and push all of the rest of the microservices
    - Mark all of the images as public in OCIR via Cloud Shell as done with the frontend image
 
@@ -114,6 +120,7 @@ Task 7 (Verify and understand ATP connectivity via Helidon microservice deployme
             - `kubectl port-forward [atpadmin pod] -n msdataworkshop 8080:8080`
             - http://localhost:8080/test
             
+![dbadminservice](dbadminservice.png)             
 Task 8 (Setup DB links between ATP PDBs, AQ, and Queue propagation)...
    - Estimated task time 8 minutes
    - Video walk through: https://www.youtube.com/watch?v=Nb6i5XQgdqA
@@ -131,6 +138,7 @@ Task 8 (Setup DB links between ATP PDBs, AQ, and Queue propagation)...
         - it may be necessary to run `deletepod admin` first as there may be open connections that need to be be released.
    - If any changes are made to src code or deployment, simply run `./build.sh ; ./redeploy.sh` to rebuild and redeploy
                 
+![orderinventoryapp-microservices](orderinventoryapp-microservices.png)                      
 Task 9 (Demonstrate Converged database (relational, JSON, spatial, etc.), Event-driven Order/Inventory Saga, Event Sourcing, CQRS, etc. via Order/Inventory store application)
    - Estimated task time 12 minutes
    - Video walk through: https://www.youtube.com/watch?v=B-lof08Ip38
