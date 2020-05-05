@@ -46,7 +46,7 @@ public class OrderDAO {
     public String drop(Connection conn) throws OracleException {
         OracleDatabase soda = new OracleRDBMSClient().getDatabase(conn);
         OracleCollection col = soda.openCollection(collectionName);
-        col.admin().drop();
+        if (col != null && col.admin() !=null) col.admin().drop();
         return collectionName + " dropped";
     }
 

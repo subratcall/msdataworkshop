@@ -261,10 +261,10 @@ public class FrontEndResource {
                 "   <input type=\"submit\" name =\"test\" value=\"deleteorder\">" +
                 "   <input type=\"submit\" name =\"test\" value=\"deleteallorders\">" +
                 "</form>" +
-              "<h4>Spatial data (map service on WebLogic)</h4>" +
-                " <label>From:</label>" +
+              "<h4>Spatial data (map service running on WebLogic)</h4>" +
+//                " <label>From:</label>" +
                                "        <input type=\"hidden\" size=\"35\" id=\"start_address\" name=\"start_address\" value=\"1469 WEBSTER ST,San Francisco,CA\">" +
-                "        <label>To:</label>" +
+//                "        <label>To:</label>" +
                 "        <input type=\"hidden\" size=\"35\" id=\"end_address\" name=\"end_address\" value=\"780 PANORAMA DR,San Francisco,CA\">" +
                 "        <button type=\"button\" onclick=\"find_path_address_render()\">deliveryDetail</button>" +
                 "<form action=\"https://150.136.177.253:7002/chrest/Visualize.jsp\" method=\"POST\" id=\"renderForm\">" +
@@ -300,7 +300,7 @@ public class FrontEndResource {
                 "<form action=\"orderservicecall\"><input type=\"submit\" name =\"test\" value=\"lastContainerStartTime\"></form>" +
                 "<h3>Task 12...</h3>" +
                 "<h4>Helidon OpenTracing</h4>" +
-                "<br><a href=\"https://raw.githubusercontent.com/paulparkinson/msdataworkshop/master/jaegercollapsed.png\">Jaeger (collapsed view)</a>" +
+                "<a href=\"https://raw.githubusercontent.com/paulparkinson/msdataworkshop/master/jaegercollapsed.png\">Jaeger (collapsed view)</a>" +
                 "<br><a href=\"https://raw.githubusercontent.com/paulparkinson/msdataworkshop/master/jaegerexpanded.png\">Jaeger (expanded view)</a>" +
                 "<h3>Task 13...</h3>" +
                 "<h4>OKE horizontal-autoscaling</h4>" +
