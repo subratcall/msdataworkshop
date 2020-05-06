@@ -7,6 +7,7 @@ The following architecture can all be created entirely free using OCI, ATP, and 
 The workshop is designed to be modular and dynamic such that it is possible to deploy only the aspects (ie infrastructure and services) of interest.
 
 ![demo architecture](images/demo-arch.png) 
+![helidon](images/helidon.png) 
 
 
 ## Task 1 (Create OCI account, OKE cluster, ATP databases) ##
@@ -107,6 +108,7 @@ The workshop is designed to be modular and dynamic such that it is possible to d
         - https://www.youtube.com/watch?v=qW_pw6Nd5hM
   
 ## Task 7 (Verify and understand ATP connectivity via Helidon microservice deployment in OKE) ##
+![helidon](images/atpfromhelidonsteps.png) 
    - Estimated task time 5 minutes
    - Video walk through: https://www.youtube.com/watch?v=k44qrpdohTM
    - Notice [atpaqadmin-deployment.yaml](atpaqadmin/atpaqadmin-deployment.yaml) wallet, secret, decode initcontainer, etc. 
