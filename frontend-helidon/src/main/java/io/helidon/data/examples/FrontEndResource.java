@@ -266,7 +266,7 @@ public class FrontEndResource {
                                "        <input type=\"hidden\" size=\"35\" id=\"start_address\" name=\"start_address\" value=\"1469 WEBSTER ST,San Francisco,CA\">" +
 //                "        <label>To:</label>" +
                 "        <input type=\"hidden\" size=\"35\" id=\"end_address\" name=\"end_address\" value=\"780 PANORAMA DR,San Francisco,CA\">" +
-                "        <button type=\"button\" onclick=\"find_path_address_render()\">deliveryDetail</button>" +
+//                "        <button type=\"button\" onclick=\"find_path_address_render()\">deliveryDetail</button>" +
                 "<form action=\"https://150.136.177.253:7002/chrest/Visualize.jsp\" method=\"POST\" id=\"renderForm\">" +
                 "<input type=\"hidden\" id = \"geojson\" name=\"geojson\" value=\"" +
               "{&quot;type&quot;:&quot;LineString&quot;,&quot;coordinates&quot;:[[-74.00501,40.70583],[-74.00457,40.70549],[-74.00447,40.70541],[-74.00418,40.70559],[-74.00386,40.70579],[-74.00361,40.70595],[-74.00346,40.70605]," +

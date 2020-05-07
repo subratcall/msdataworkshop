@@ -49,44 +49,12 @@ spec:
             secretKeyRef:
               name: atp-user-cred-orderuser
               key: walletPassword
-# Task 12 (Demonstrate OKE horizontal pod scaling)
-#        resources:
-#          requests:
-#            cpu: "200m"
-#          limits:
-#            cpu: "500m"
-# Task 10 (OSS streaming service)
-#        - name: tenancyName
-#          valueFrom:
-#            secretKeyRef:
-#              name: orderstream-cred
-#              key: tenancyName
-#        - name: username
-#          valueFrom:
-#            secretKeyRef:
-#              name: orderstream-cred
-#              key: username
-#        - name: streamPoolId
-#          valueFrom:
-#            secretKeyRef:
-#              name: orderstream-cred
-#              key: streamPoolId
-#        - name: authToken
-#          valueFrom:
-#            secretKeyRef:
-#              name: orderstream-cred
-#              key: authToken
-#        - name: topicName
-#          valueFrom:
-#            secretKeyRef:
-#              name: orderstream-cred
-#              key: topicName
         volumeMounts:
         - name: creds
           mountPath: /msdataworkshop/creds
         ports:
         - containerPort: 8080
-# Task 11 (Helidon/OKE health liveness/readiness)
+# Helidon/OKE health liveness/readiness
         livenessProbe:
           httpGet: #alternatives include exec with command, etc.
             path: /health/live
