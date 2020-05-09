@@ -109,7 +109,7 @@ class PropagationSetup {
         String outputString = "createAQUser queueOwner = [" + queueOwner + "]";
         System.out.println(outputString + "queueOwnerPW = [" + queueOwnerPW + "]");
         Connection connection = ds.getConnection();
-        connection.createStatement().execute("grant pdb_dba to " + queueOwner + " identified by " + queueOwnerPW);
+        connection.createStatement().execute("grant pdb_dba to " + queueOwner + " identified by \"" + queueOwnerPW + "\"");
         connection.createStatement().execute("GRANT EXECUTE ON DBMS_CLOUD_ADMIN TO " + queueOwner);
         connection.createStatement().execute("GRANT EXECUTE ON DBMS_CLOUD TO " + queueOwner);
         connection.createStatement().execute("GRANT CREATE DATABASE LINK TO " + queueOwner);
