@@ -32,9 +32,9 @@ import javax.ws.rs.core.Response;
 public class ATPAQAdminResource {
   PropagationSetup propagationSetup = new PropagationSetup();
   static String orderuser = "ORDERUSER";
-  static String orderpw =   System.getenv("orderuser.password");
+  static String orderpw = "\"" +  System.getenv("orderuser.password") + "\"";
   static String inventoryuser = "INVENTORYUSER";
-  static String inventorypw =  System.getenv("inventoryuser.password");
+  static String inventorypw =  "\"" + System.getenv("inventoryuser.password") + "\"";
   static String orderQueueName = "ORDERQUEUE";
   static String orderQueueTableName = "ORDERQUEUETABLE";
   static String inventoryQueueName = "INVENTORYQUEUE";
