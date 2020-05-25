@@ -30,7 +30,7 @@ The workshop is designed to be modular and dynamic such that it is possible to d
         - https://docs.cloud.oracle.com/en-us/iaas/Content/ContEng/Tasks/contengaccessingclusterkubectl.htm
         - https://docs.cloud.oracle.com/en-us/iaas/Content/ContEng/Tasks/contengdownloadkubeconfigfile.htm
    - Create 2 ATP-S pdbs named `orderdb` and `inventorydb` (for order and all other services)
-        - If the pdbs are not named `orderdb` and `inventorydb` the deployment yamls in the examples will need to be modified to use the names given.
+        - If the pdbs are not named `orderdb` and `inventorydb` the atpaqadmin/atpaqadmin-deployment.yaml file will need to be modified to use the names given in the database url (changing `orderdb_high` and `inventorydb_high` to specified db).
         - Select the license included option for license.
         - https://docs.oracle.com/en/cloud/paas/autonomous-data-warehouse-cloud/tutorial-getting-started-autonomous-db/index.html 
         - Note the ocid, compartmentId, name, and admin pw of the databases
