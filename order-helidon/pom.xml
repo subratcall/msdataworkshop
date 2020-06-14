@@ -214,16 +214,16 @@
             <artifactId>kafka-clients</artifactId>
             <version>2.3.0</version>
         </dependency>
-        <!--the following two will change soon when available in public maven repos-->
+        <dependency>
+            <groupId>com.oracle.database.messaging</groupId>
+            <artifactId>aqapi</artifactId>
+            <version>19.3.0.0</version>
+        </dependency>
+        <!--the following two will change when orajsoda is available in public maven repos-->
         <dependency>
             <groupId>com.oracle</groupId>
             <artifactId>orajsoda</artifactId>
             <version>1.1.0</version>
-        </dependency>
-        <dependency>
-            <groupId>com.oracle</groupId>
-            <artifactId>aqapi</artifactId>
-            <version>20.1</version>
         </dependency>
         <dependency>
             <groupId>javax.json.bind</groupId>
