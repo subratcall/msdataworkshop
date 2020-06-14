@@ -155,6 +155,7 @@ The workshop is designed to be modular and dynamic such that it is possible to d
         - Look at logs... `kubectl logs [podname] -n msdataworkshop`
         - If `ORA-12529: TNS:connect request rejected based on current filtering rules` is shown in logs, re-create the pdb wallets. 
             - Insure they are regional such that tnsnames.ora contains entries for both pdbs and the cwallet.sso applies to both pdbs and not just one.
+        - If messages sent by order service are not received by inventory service (or vice-versa) hit the `enablePropagation` button on the frontend. This may occur if a pdb has had maintenace performed on it and/or moved.
                                     
 ## Task 9 (Demonstrate Converged database (relational, JSON, spatial, etc.), Event-driven Order/Inventory Saga, Event Sourcing, CQRS, etc. via Order/Inventory store application) ##
 ![orderinventoryapp-microservices](images/orderinventoryapp-microservices.png)  
