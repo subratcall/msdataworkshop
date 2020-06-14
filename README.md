@@ -129,7 +129,7 @@ The workshop is designed to be modular and dynamic such that it is possible to d
         - If any of the pods' status is not Running...
             - check the pod's logs using `logpod admin` (or `order`, `inventory`, `supplier`, ...) and 
             - use `describepod admin` (or `order`, `inventory`, `supplier`, ...) utility to get more details.
-            - If you see the errors similar to the ones below, re-run `osb-atp-and-oss/setupATP.sh` and run `./redeploy.sh` for the deployment:
+            - If you see the errors similar to the ones below, re-run `osb-atp-and-oss/setupATP.sh` and run `deletepod` for each deployment (eg `deletepod admin ; deletepod order ; deletepod inventory; deletepod supplier`) in order to restart the pods and pick up the secrets/bindings:
               •	Warning  FailedMount  8s (x8 over 72s)  kubelet, 10.0.10.3  MountVolume.SetUp failed for volume "creds-raw-inventory" : secret "atp-demo-binding-inventory" not found
               •	Warning  FailedMount  8s (x8 over 72s)  kubelet, 10.0.10.3  MountVolume.SetUp failed for volume "creds-raw-order" : secret "atp-demo-binding-order" not found
 
