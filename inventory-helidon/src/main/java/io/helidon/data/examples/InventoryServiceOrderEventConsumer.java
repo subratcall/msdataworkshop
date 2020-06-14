@@ -39,19 +39,18 @@ public class InventoryServiceOrderEventConsumer implements Runnable {
         boolean done = false;
         while (!done) {
             try {
-                TextMessage robjmsg = (TextMessage) (sub.receiveNoWait());
-                if (robjmsg != null) {
-                    String txt = robjmsg.getText();
+                TextMessage orderMessage = (TextMessage) (sub.receiveNoWait());
+                if (orderMessage != null) {
+                    String txt = orderMessage.getText();
                     System.out.println("txt " + txt);
-                    System.out.print(" Pri: " + robjmsg.getJMSPriority());
-                    System.out.print(" Message: " + robjmsg.getIntProperty("Id"));
-                    String orderid = robjmsg.getStringProperty("orderid");
-                    System.out.print(" orderid:" + orderid);
-                    String itemid = robjmsg.getStringProperty("itemid");
-                    System.out.print(" itemid:" + itemid);
-                    System.out.println(" " + robjmsg.getIntProperty("Priority"));
+                    System.out.print("JMSPriority: " + orderMessage.getJMSPriority());
+                    System.out.println("Priority: " + orderMessage.getIntProperty("Priority"));
+                    System.out.print(" Message: " + orderMessage.getIntProperty("Id"));
+                    Order order = JsonUtils.read(txt, Order.class);
+                    System.out.print(" orderid:" + order.getOrderid());
+                    System.out.print(" itemid:" + order.getItemid());
                     System.out.println("((AQjmsSession) qsess).getDBConnection(): " + ((AQjmsSession) qsess).getDBConnection());
-                    updateDataAndSendEventOnInventory((AQjmsSession) qsess, orderid, itemid);
+                    updateDataAndSendEventOnInventory((AQjmsSession) qsess, order.getOrderid(), order.getItemid());
                 } else {
                   //  done = true;
                 }
@@ -67,22 +66,18 @@ public class InventoryServiceOrderEventConsumer implements Runnable {
     private void updateDataAndSendEventOnInventory(AQjmsSession session, String orderid, String itemid) throws Exception {
         String inventorylocation = InventoryResource.isDirectSupplierQuickTest ?
                 (InventoryResource.inventorycount > 0 ?"Philadelphia": "noinventoryforitem") : evaluateInventory(session, itemid);
-        String jsonString = "{ \"orderid\" : \"" + orderid + "\", \"item\" : " + itemid +
-                "\", \"inventoryLocation\" : " + inventorylocation + " }";
-        Topic topic =  session.getTopic(InventoryResource.inventoryuser, InventoryResource.inventoryQueueName);
-        System.out.println("send inventory status message... \njsonString:" + jsonString + " topic:" + topic) ;
+        Inventory inventory = new Inventory(orderid,itemid,inventorylocation,"lettuce"); //static suggestiveSale - represents an additional service/event
+        String jsonString = JsonUtils.writeValueAsString(inventory);
+        Topic inventoryTopic =  session.getTopic(InventoryResource.inventoryuser, InventoryResource.inventoryQueueName);
+        System.out.println("send inventory status message... jsonString:" + jsonString + " inventoryTopic:" + inventoryTopic) ;
         TextMessage objmsg = session.createTextMessage();
-        TopicPublisher publisher = session.createPublisher(topic);
+        TopicPublisher publisher = session.createPublisher(inventoryTopic);
         objmsg.setIntProperty("Id", 1);
-        objmsg.setStringProperty("orderid", orderid);
-        objmsg.setStringProperty("itemid", itemid);
-        objmsg.setStringProperty("inventorylocation", inventorylocation);
-        objmsg.setStringProperty("suggestiveSale", "lettuce"); //static suggestiveSale
         objmsg.setIntProperty("Priority", 2);
         objmsg.setText(jsonString);
         objmsg.setJMSCorrelationID("" + 2);
         objmsg.setJMSPriority(2);
-        publisher.publish(topic, objmsg, DeliveryMode.PERSISTENT,2, AQjmsConstants.EXPIRATION_NEVER);
+        publisher.publish(inventoryTopic, objmsg, DeliveryMode.PERSISTENT,2, AQjmsConstants.EXPIRATION_NEVER);
         session.commit();
         System.out.println("message sent");
     }

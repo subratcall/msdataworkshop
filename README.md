@@ -30,7 +30,7 @@ The workshop is designed to be modular and dynamic such that it is possible to d
         - https://docs.cloud.oracle.com/en-us/iaas/Content/ContEng/Tasks/contengaccessingclusterkubectl.htm
         - https://docs.cloud.oracle.com/en-us/iaas/Content/ContEng/Tasks/contengdownloadkubeconfigfile.htm
    - Create 2 ATP-S pdbs named `orderdb` and `inventorydb` (for order and all other services)
-        - If the pdbs are not named `orderdb` and `inventorydb` the atpaqadmin/atpaqadmin-deployment.yaml file will need to be modified to use the names given in the database url (changing `orderdb_high` and `inventorydb_high` to specified db).
+        - If the pdbs are not named `orderdb` and `inventorydb`, insure all deployments yaml files are modified to use the names given in the database url (ie changing `orderdb_high` and `inventorydb_high` to specified db names).
         - Select the license included option for license.
         - https://docs.oracle.com/en/cloud/paas/autonomous-data-warehouse-cloud/tutorial-getting-started-autonomous-db/index.html 
         - Note the ocid, compartmentId, name, and admin pw of the databases
@@ -97,6 +97,8 @@ The workshop is designed to be modular and dynamic such that it is possible to d
    - Refererences... 
         - https://github.com/oracle/oci-service-broker/blob/master/charts/oci-service-broker/docs/installation.md
         - https://www.youtube.com/watch?v=qW_pw6Nd5hM
+   - Troubleshooting... 
+        - If oci-service-broker status continues to be "ErrorFetchingCatalog”, see OSB Troubleshooting document for details on debugging common and known issues: https://github.com/oracle/oci-service-broker/blob/master/README.md
    
 ## Task 6 (Using OCI service broker, create binding to 2 existing ATP instances) ##
    - Estimated task time 5 minutes
@@ -123,6 +125,14 @@ The workshop is designed to be modular and dynamic such that it is possible to d
         - If no request is shown in logs, try accessing the pod directly using port-forward
             - `kubectl port-forward [atpadmin pod] -n msdataworkshop 8080:8080`
             - http://localhost:8080/test
+   - Troubleshooting... 
+        - If any of the pods' status is not Running...
+            - check the pod's logs using `logpod admin` (or `order`, `inventory`, `supplier`, ...) and 
+            - use `describepod admin` (or `order`, `inventory`, `supplier`, ...) utility to get more details.
+            - If you see the errors similar to the ones below, re-run `osb-atp-and-oss/setupATP.sh` and run `./redeploy.sh` for the deployment:
+              •	Warning  FailedMount  8s (x8 over 72s)  kubelet, 10.0.10.3  MountVolume.SetUp failed for volume "creds-raw-inventory" : secret "atp-demo-binding-inventory" not found
+              •	Warning  FailedMount  8s (x8 over 72s)  kubelet, 10.0.10.3  MountVolume.SetUp failed for volume "creds-raw-order" : secret "atp-demo-binding-order" not found
+
               
 ## Task 8 (Setup DB links between ATP PDBs, AQ, and Queue propagation) ##
 ![dbadminservice](images/dbadminservice.png)           
@@ -141,6 +151,10 @@ The workshop is designed to be modular and dynamic such that it is possible to d
         - hit the `unschedulePropagation` button only if `setupTablesQueuesAndPropagation` was run and then hti the `deleteUsers` button
         - it may be necessary to run `deletepod admin` first as there may be open connections that need to be be released.
    - If any changes are made to src code or deployment, simply run `./build.sh ; ./redeploy.sh` to rebuild and redeploy
+   - Troubleshooting... 
+        - Look at logs... `kubectl logs [podname] -n msdataworkshop`
+        - If `ORA-12529: TNS:connect request rejected based on current filtering rules` is shown in logs, re-create the pdb wallets. 
+            - Insure they are regional such that tnsnames.ora contains entries for both pdbs and the cwallet.sso applies to both pdbs and not just one.
                                     
 ## Task 9 (Demonstrate Converged database (relational, JSON, spatial, etc.), Event-driven Order/Inventory Saga, Event Sourcing, CQRS, etc. via Order/Inventory store application) ##
 ![orderinventoryapp-microservices](images/orderinventoryapp-microservices.png)  

@@ -48,18 +48,19 @@ public class OrderServiceEventConsumer implements Runnable {
             try {
                 TextMessage textMessage = (TextMessage) (sub.receiveNoWait());
                 if (textMessage != null) {
-                    String txt = textMessage.getText();
-                    System.out.println("txt " + txt);
+                    String messageText = textMessage.getText();
+                    System.out.println("messageText " + messageText);
+                    System.out.println("Priority: " + textMessage.getIntProperty("Priority"));
                     System.out.print(" Pri: " + textMessage.getJMSPriority());
                     System.out.print(" Message: " + textMessage.getIntProperty("Id"));
-                    String orderid = textMessage.getStringProperty("orderid");
+                    Inventory inventory = JsonUtils.read(messageText, Inventory.class);
+                    String orderid = inventory.orderid;
                     OrderDetail orderDetail = orderResource.orders.get(orderid);
                     System.out.println("Lookup orderid:" + orderid + " orderDetail:" + orderDetail);
-                    String itemid = textMessage.getStringProperty("itemid");
+                    String itemid = inventory.itemid;
                     System.out.print(" itemid:" + itemid + " orderDetail:" + orderDetail);
-                    String inventorylocation = textMessage.getStringProperty("inventorylocation");
+                    String inventorylocation = inventory.inventorylocation;
                     System.out.print(" inventorylocation:" + inventorylocation);
-                    System.out.println(" " + textMessage.getIntProperty("Priority"));
                     if(orderDetail != null) {
                         boolean isSuccessfulInventoryCheck = !(inventorylocation == null || inventorylocation.equals("")
                                 || inventorylocation.equals("inventorydoesnotexist")

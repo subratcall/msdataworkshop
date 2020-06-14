@@ -7,10 +7,7 @@ cd frontend-helidon
 ./build.sh
 cd ../
 
-echo maven install aq and soda jars...
-cd lib
-mvn install:install-file -Dfile=aqapi-20.1.jar -DgroupId=com.oracle \
-    -DartifactId=aqapi -Dversion=20.1 -Dpackaging=jar
+echo maven install soda jar...
 
 mvn install:install-file -Dfile=orajsoda-1.1.0.jar -DgroupId=com.oracle \
     -DartifactId=orajsoda -Dversion=1.1.0 -Dpackaging=jar

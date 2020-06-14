@@ -32,12 +32,9 @@ class OrderServiceEventProducer {
             TextMessage objmsg = session.createTextMessage();
             TopicPublisher publisher = session.createPublisher(topic);
             objmsg.setIntProperty("Id", 1);
-            objmsg.setStringProperty("orderid", orderid);
-            objmsg.setStringProperty("itemid", itemid);
-            objmsg.setStringProperty("deliverylocation", deliverylocation);
             objmsg.setIntProperty("Priority", 2);
-            String jsonString = "{ \"orderid\" : \"" + orderid + "\", \"item\" : " + itemid +
-                    "\", \"deliverylocation\" : " + deliverylocation + " }";
+            Order order = new Order(orderid, itemid, deliverylocation);
+            String jsonString = JsonUtils.writeValueAsString(order);
             objmsg.setText(jsonString);
             objmsg.setJMSCorrelationID("" + 1);
             objmsg.setJMSPriority(2);
