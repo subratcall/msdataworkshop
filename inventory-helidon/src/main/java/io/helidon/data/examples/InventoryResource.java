@@ -39,7 +39,7 @@ public class InventoryResource {
     private InventoryServiceOrderEventConsumer oracleAQEventListener;
     // todo get these from env
     static String inventoryuser = "INVENTORYUSER";
-    static String inventorypw = "Welcome12345";
+    static String inventorypw = System.getenv("oracle.ucp.jdbc.PoolDataSource.inventorypdb.password");
     static String inventoryQueueName = "inventoryqueue";
     static String orderQueueName = "orderqueue";
     static boolean isDirectSupplierQuickTest = Boolean.valueOf(System.getProperty("isDirectSupplierQuickTest", "false"));
