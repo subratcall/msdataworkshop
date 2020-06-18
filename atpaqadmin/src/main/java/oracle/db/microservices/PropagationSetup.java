@@ -27,7 +27,7 @@ class PropagationSetup {
             "             DBMS_CLOUD.CREATE_CREDENTIAL(" +
             "             credential_name => 'INVENTORYPDB_CRED'," +
             "             username => '" + inventoryuser + "'," +
-            "             password => '" + "\"" + inventorypw.trim() + "\"" + "'" +
+            "             password => '" + inventorypw.trim() +  "'" +
             "             );" +
             "            END;";
 
@@ -52,7 +52,7 @@ class PropagationSetup {
             "             DBMS_CLOUD.CREATE_CREDENTIAL(" +
             "             credential_name => 'ORDERPDB_CRED'," +
             "             username => '" + orderuser + "'," +
-            "             password => '" + "\"" + orderpw.trim() + "\"" + "'" +
+            "             password => '" + orderpw.trim() + "'" +
             "             );" +
             "            END;";
 

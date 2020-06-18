@@ -59,6 +59,11 @@ public class InventoryResource {
         return returnValue;
     }
 
+    public static void main(String args[]) {
+        new Thread(new InventoryServiceOrderEventConsumer(new InventoryResource())).start();
+        System.out.println("InventoryResource.main now listening for messages...");
+    }
+
     // for quick test, bypassing supplier...
     static int inventorycount;
 

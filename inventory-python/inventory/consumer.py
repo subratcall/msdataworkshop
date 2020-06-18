@@ -1,0 +1,75 @@
+import traceback
+import logging
+import time
+import cx_Oracle
+import simplejson
+import threading
+import dbmgr
+from os import environ as env
+
+logger = logging.getLogger('python_inventory.consumer')
+
+aq_consumer_threads = int(env.get("AQ_CONSUMER_THREADS", "1"))
+queue_owner =         env.get("QUEUE_OWNER","PYTHON_AQ")
+
+def start():
+    for x in range(aq_consumer_threads):
+        t = threading.Thread(None, run)
+        t.daemon = True
+        t.start()
+
+def run():
+    sql = """update inventory set inventorycount = inventorycount - 1
+             where inventoryid = :inventoryid and inventorycount > 0
+             returning inventorylocation into :inventorylocation"""
+
+    conn = None
+    while True: # retry if it fails
+        try:
+            conn = dbmgr.acquireConn()
+
+            # Get the two queues
+#            orderQueue = conn.queue(queue_owner + ".orderqueue")
+#            inventoryQueue = conn.queue(queue_owner + ".inventoryqueue")
+            orderQueue = conn.queue(queue_owner + ".orderqueue", conn.gettype("SYS.AQ$_JMS_TEXT_MESSAGE"))
+            inventoryQueue = conn.queue(queue_owner + ".inventoryqueue", conn.gettype("SYS.AQ$_JMS_TEXT_MESSAGE"))
+            cursor = conn.cursor()
+
+            # Loop requesting inventory requests from the order queue
+            while True:
+                # Dequeue the next event from the order queue
+                payload =orderQueue.deqOne().payload
+                logger.debug(payload.TEXT_VC)
+                orderInfo = simplejson.loads(payload.TEXT_VC)
+
+                # Update the inventory for this order.  If no row is updated there is no inventory.
+                ilvar = cursor.var(str)
+                ilvar.setvalue(0,"")
+                cursor.execute(sql, [orderInfo["itemid"], ilvar])
+                inventorylocation = ilvar.getvalue(0)
+
+                # Enqueue the response on the inventory queue
+                payload = conn.gettype("SYS.AQ$_JMS_TEXT_MESSAGE").newobject()
+                payload.TEXT_VC = simplejson.dumps(
+                    {'orderid': orderInfo["orderid"],
+                     'itemid': orderInfo["itemid"],
+                     'inventorylocation': inventorylocation if cursor.rowcount == 1 else "inventorydoesnotexist",
+                     'suggestiveSale': "lettuce"})
+                payload.TEXT_LEN = len(payload.TEXT_VC)
+                inventoryQueue.enqOne(conn.msgproperties(payload = payload))
+
+                # Commit
+                conn.commit()
+
+        except dbmgr.DatabaseDown as e:
+            time.sleep(1)
+            continue  # Retry after waiting a while
+
+        except:
+            logger.debug(traceback.format_exc())
+            continue  # Retry immediately
+
+        finally:
+            if conn:
+                dbmgr.releaseConn(conn)
+

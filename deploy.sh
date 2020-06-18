@@ -29,6 +29,13 @@ cd inventory-helidon
 cd ../
 
 echo ________________________________________
+echo deploying inventory-python...
+echo ________________________________________
+cd inventory-python
+./deploy.sh
+cd ../
+
+echo ________________________________________
 echo deploying supplier-helidon-se...
 echo ________________________________________
 cd supplier-helidon-se

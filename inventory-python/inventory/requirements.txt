@@ -1,0 +1,5 @@
+Flask_restful
+gunicorn
+cx_Oracle
+simplejson
+
