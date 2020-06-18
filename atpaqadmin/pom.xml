@@ -160,9 +160,9 @@
             <version>19.3.0.0</version>
         </dependency>
         <dependency>
-            <groupId>com.oracle</groupId>
+            <groupId>com.oracle.database.messaging</groupId>
             <artifactId>aqapi</artifactId>
-            <version>20.1</version>
+            <version>19.3.0.0</version>
         </dependency>
         <dependency>
             <groupId>javax.jms</groupId>
