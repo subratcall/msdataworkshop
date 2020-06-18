@@ -99,7 +99,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>${dependenciesDirectory}</classpathPrefix>
-                            <mainClass>io.helidon.data.examples.InventoryResource</mainClass>
+                            <mainClass>io.helidon.microprofile.server.Main</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
