@@ -64,8 +64,7 @@ public class InventoryServiceOrderEventConsumer implements Runnable {
     }
 
     private void updateDataAndSendEventOnInventory(AQjmsSession session, String orderid, String itemid) throws Exception {
-        String inventorylocation = InventoryResource.isDirectSupplierQuickTest ?
-                (InventoryResource.inventorycount > 0 ?"Philadelphia": "noinventoryforitem") : evaluateInventory(session, itemid);
+        String inventorylocation = evaluateInventory(session, itemid);
         Inventory inventory = new Inventory(orderid, itemid, inventorylocation,"lettuce"); //static suggestiveSale - represents an additional service/event
         String jsonString = JsonUtils.writeValueAsString(inventory);
         Topic inventoryTopic =  session.getTopic(InventoryResource.inventoryuser, InventoryResource.inventoryQueueName);

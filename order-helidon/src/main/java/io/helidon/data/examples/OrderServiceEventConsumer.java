@@ -68,8 +68,7 @@ public class OrderServiceEventConsumer implements Runnable {
                         if (isSuccessfulInventoryCheck) {
                             orderDetail.setOrderStatus("success inventory exists");
                                     orderDetail.setInventoryLocation(inventorylocation);
-                                    orderDetail.setSuggestiveSale("lettuce");
-//                                    orderDetail.setSuggestiveSale(inventory.getSuggestiveSale());
+                                    orderDetail.setSuggestiveSale(inventory.getSuggestiveSale());
                         } else {
                             orderDetail.setOrderStatus("failed inventory does not exist");
                         }
