@@ -75,10 +75,9 @@ public class OrderServiceEventConsumer implements Runnable {
                     }
                     System.out.println("((AQjmsSession) qsess).getDBConnection(): " + ((AQjmsSession) qsess).getDBConnection());
                 } else {
-                    //  done = true;
+                    Thread.sleep(500);
                 }
                 qsess.commit();
-                Thread.sleep(500);
             } catch (Exception e) {
                 System.out.println("Error in performJmsOperations: " + e);
                 done = true;

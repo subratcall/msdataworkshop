@@ -55,6 +55,8 @@ class OrderServiceEventProducer {
                 }
             }
             throw e;
+        } finally {
+            if (session != null) session.close();
         }
     }
 
