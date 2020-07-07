@@ -31,7 +31,7 @@ export SCRIPT_DIR=$(dirname $0)
 
 echo "inventory yaml file replacements..."
 eval "cat <<EOF
-$(<$SCRIPT_DIR/atp-existing-instance-inventory.yaml)
+$(<$SCRIPT_DIR/atp-binding-inventory.yaml)
 EOF" > $SCRIPT_DIR/atp-binding-inventory.yaml
 
 echo "..."
