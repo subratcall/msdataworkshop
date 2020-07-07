@@ -209,10 +209,11 @@ The workshop is designed to be modular and dynamic such that it is possible to d
 
 ## Task 12 (Tracing) ##
    - Install Jaeger in OKE using `kubectl create -f https://raw.githubusercontent.com/jaegertracing/jaeger-kubernetes/master/all-in-one/jaeger-all-in-one-template.yml -n msdataworkshop`
-   - Notice tracing properties (and modify them if defaults were not used during Jaeger install) in [microprofile-config.properties](order-helidon/src/main/resources/META-INF/microprofile-config.properties)
+   - Notice tracing properties such as `tracing.host=jaeger-collector.msdataworkshop` (and modify them if defaults were not used during Jaeger install) in [microprofile-config.properties](order-helidon/src/main/resources/META-INF/microprofile-config.properties)
    - Notice io.helidon.tracing dependency in pom.xml and @Traced in [OrderResource.java](order-helidon/src/main/java/io/helidon/data/examples/OrderResource.java)
-   - Open Jaeger console and observe trace
-   - todo provide example using Istio and sidecar pattern.
+   - Place an order using the application if not already done.
+   - By default the Jaeger install will create a load balancer and the address can be found by issuing `kubectl get services -n msdataworkshop | grep jaeger-query`
+   - Open Jaeger console (eg http://[loadbalancer-address]:80 ) and observe traces. Select the Helidon MP order service under the `services` dropdown
 
 ## Task 13 (Demonstrate OKE horizontal pod scaling) ##
    - Estimated task time 5 minutes
