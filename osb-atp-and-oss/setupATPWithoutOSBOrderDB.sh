@@ -4,14 +4,14 @@
 # MODIFY "< >" VALUES IN EXPORTS BELOW....
 ########################################################################################
 
-echo "inventory exports..."
-echo "get wallet for inventory db..."
-mkdir inventorydbwallet
-cd inventorydbwallet
-#oci db autonomous-database generate-wallet --autonomous-database-id <INVENTORYPDB_OCID> --file inventorydbwallet/inventorydbwallet.zip --password <INVENTORYPDB_WALLET_PW>
-oci db autonomous-database generate-wallet --autonomous-database-id ocid1.autonomousdatabase.oc1.phx.abyhqljsykgg4c5ou2yllx6pkt76nxppmt3wbmx2hwztkxkgmpjatz6fsxqq --file inventorydbwallet.zip --password Welcome_123
-unzip inventorydbwallet.zip
-echo "for inventory admin and inventoryuser secrets..."
+echo "order exports..."
+echo "get wallet for order db..."
+mkdir orderdbwallet
+cd orderdbwallet
+#oci db autonomous-database generate-wallet --autonomous-database-id <orderPDB_OCID> --file orderdbwallet/orderdbwallet.zip --password <orderPDB_WALLET_PW>
+oci db autonomous-database generate-wallet --autonomous-database-id ocid1.autonomousdatabase.oc1.phx.abyhqljsal723ppfyoyd62esbe745hlkmwidrpz3eop57yyqc4q5t7tyw6ia --file orderdbwallet.zip --password Welcome_123
+unzip orderdbwallet.zip
+echo "for order admin and orderuser secrets..."
 export cwallet_sso=$(cat cwallet.sso | base64 -w 0)
 export ewallet_p12=$(cat ewallet.p12 | base64 -w 0)
 export keystore_jks=$(cat keystore.jks | base64 -w 0)
@@ -21,7 +21,7 @@ export sqlnet_ora=$(cat sqlnet.ora | base64 -w 0)
 #export tnsnames_ora=$(cat tnsnames.ora | base64 -w 0)
 export tnsnames_ora=$(cat tnsnames.ora | base64 | tr -d '\n\r')
 export truststore_jks=$(cat truststore.jks | base64 -w 0)
-rm inventorydbwallet.zip
+rm orderdbwallet.zip
 cd ../
 
 ########################################################################################
@@ -30,14 +30,14 @@ cd ../
 
 export SCRIPT_DIR=$(dirname $0)
 
-echo "atp-binding-inventory.yaml file replacements..."
+echo "atp-binding-order.yaml file replacements..."
 eval "cat <<EOF
-$(<$SCRIPT_DIR/atp-binding-inventory.yaml)
-EOF" > $SCRIPT_DIR/atp-binding-inventory.yaml
+$(<$SCRIPT_DIR/atp-binding-order.yaml)
+EOF" > $SCRIPT_DIR/atp-binding-order.yaml
 
-echo "..."
-echo "creating atp-binding-inventory.yaml..."
-kubectl create -f atp-binding-inventory.yaml -n msdataworkshop
+#echo "..."
+#echo "creating atp-binding-order.yaml..."
+#kubectl create -f atp-binding-order.yaml -n msdataworkshop
 
-echo "..."
-kubectl get secrets -n msdataworkshop |grep atp
+#echo "..."
+#kubectl get secrets -n msdataworkshop |grep atp
