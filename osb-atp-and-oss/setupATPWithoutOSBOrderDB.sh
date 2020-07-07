@@ -24,6 +24,7 @@ export truststore_jks=$(cat truststore.jks | base64 -w 0)
 rm orderdbwallet.zip
 cd ../
 
+
 ########################################################################################
 # END MODIFY VALUES IN EXPORTS DO NOT ALTER FROM HERE TO END....
 ########################################################################################
