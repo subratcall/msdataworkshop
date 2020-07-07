@@ -29,13 +29,13 @@ cd ../
 
 export SCRIPT_DIR=$(dirname $0)
 
-echo "inventory yaml file replacements..."
+echo "atp-binding-inventory.yaml file replacements..."
 eval "cat <<EOF
 $(<$SCRIPT_DIR/atp-binding-inventory.yaml)
 EOF" > $SCRIPT_DIR/atp-binding-inventory.yaml
 
 echo "..."
-echo "creating inventory binding and secrets..."
+echo "creating atp-binding-inventory.yaml..."
 kubectl create -f atp-binding-inventory.yaml -n msdataworkshop
 
 echo "..."
