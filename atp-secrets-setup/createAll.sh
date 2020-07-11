@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# either the following command or console can be used to find the DB ocids...
+# oci db autonomous-database list --compartment-id <COMPARTMENT_OCID>
+# oci db autonomous-database list --compartment-id ocid1.compartment.oc1..aaaaaaaatvh4oetwxoay4u6lj64mg7n6bvbc63wmesbwyfsvjlpp5zqhi3sa
+
 export SCRIPT_DIR=$(dirname $0)
 echo "ORDER DB ......"
 ########################################################################################
