@@ -11,4 +11,4 @@ data:
   user_name: QURNSU4=
 kind: Secret
 metadata:
-  name: atp-demo-order-inventory
+  name: atp-demo-binding-order

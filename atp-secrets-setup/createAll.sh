@@ -16,7 +16,7 @@ echo "get wallet for order db..."
 mkdir orderdbwallet
 cd orderdbwallet
 oci db autonomous-database generate-wallet --autonomous-database-id <ORDERPDB_OCID> --file orderdbwallet.zip --password <ORDERPDB_WALLET_PW>
-#example... oci db autonomous-database generate-wallet --autonomous-database-id ocid1.autonomousdatabase.oc1.phx.abyhqljsykgg4c5ou2yllx6pkt76nxppmt3wbmx2hwztkxkgmpjatz6fsxqq --file orderdbwallet.zip --password Welcome_123
+#example... oci db autonomous-database generate-wallet --autonomous-database-id ocid1.autonomousdatabase.oc1.phx.abyhqljsal723ppfyoyd62esbe745hlkmwidrpz3eop57yyqc4q5t7tyw6ia --file orderdbwallet.zip --password Welcome_123
 ########################################################################################
 # END MODIFY "< >" VALUES for ORDER DB....
 ########################################################################################
@@ -35,7 +35,7 @@ rm -rf orderdbwallet
 
 echo "order yaml file replacements..."
 eval "cat <<EOF
-$(<$SCRIPT_DIR/atp-binding-ordeer.yaml)
+$(<$SCRIPT_DIR/atp-binding-order.yaml)
 EOF" > $SCRIPT_DIR/atp-binding-order.yaml
 eval "cat <<EOF
 $(<$SCRIPT_DIR/atp-secret-order-admin.yaml)
