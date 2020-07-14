@@ -26,8 +26,11 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import oracle.ucp.jdbc.PoolDataSource;
+import org.eclipse.microprofile.metrics.annotation.Counted;
 import org.eclipse.microprofile.metrics.annotation.Timed;
 import org.eclipse.microprofile.opentracing.Traced;
+import io.opentracing.Tracer;
+import io.opentracing.Span;
 
 @Path("/")
 @ApplicationScoped
@@ -37,6 +40,10 @@ public class OrderResource {
     @Inject
     @Named("orderpdb")
     PoolDataSource atpOrderPdb;
+
+
+    @Inject
+    private Tracer tracer;
 
     private boolean isOrderEventConsumerStarted = false;
     private OrderServiceEventProducer orderServiceEventProducer = new OrderServiceEventProducer();
@@ -74,7 +81,7 @@ public class OrderResource {
     @Produces(MediaType.TEXT_PLAIN)
     @Traced(operationName = "OrderResource.placeOrder")
     @Timed(name = "placeOrder_timed") //length of time of an object
-//    @Counted(name = "placeOrder_counted") //amount of invocations
+    @Counted(name = "placeOrder_counted") //amount of invocations
 //    @Metered(name = "placeOrder_metered") //invocation frequency
     public Response placeOrder(@QueryParam("orderid") String orderid, @QueryParam("itemid") String itemid,
                                @QueryParam("deliverylocation") String deliverylocation) {
@@ -85,6 +92,15 @@ public class OrderResource {
         orderDetail.setOrderStatus("pending");
         orderDetail.setDeliveryLocation(deliverylocation);
         orders.put(orderid, orderDetail);
+
+        Span activeSpan = tracer.buildSpan("orderDetail").asChildOf(tracer.activeSpan()).start();
+        activeSpan.log("begin placing order"); // logs are for a specific moment or event within the span (in contrast to tags which should apply to the span regardless of time).
+        activeSpan.setTag("orderid", orderid); //tags are annotations of spans in order to query, filter, and comprehend trace data
+        activeSpan.setTag("itemid", itemid);
+        activeSpan.setTag("db.user", atpOrderPdb.getUser()); // https://github.com/opentracing/specification/blob/master/semantic_conventions.md
+        activeSpan.setBaggageItem("sagaid", "testsagaid" + orderid); //baggage is part of SpanContext and carries data across process boundaries for access throughout the trace
+        activeSpan.setBaggageItem("orderid", orderid);
+
         try {
             System.out.println("--->insertOrderAndSendEvent..." +
                     orderServiceEventProducer.updateDataAndSendEvent(atpOrderPdb, orderid, itemid, deliverylocation));
@@ -94,6 +110,9 @@ public class OrderResource {
                     .entity("orderid = " + orderid + " failed with exception:" + e.toString())
                     .build();
         }
+
+        activeSpan.log("end placing order");
+
         return Response.ok()
                 .entity("orderid = " + orderid + " orderstatus = " + orderDetail.getOrderStatus() + " order placed")
                 .build();
