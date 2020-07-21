@@ -48,7 +48,10 @@ public class InventoryResource {
         System.setProperty("oracle.jdbc.fanEnabled", "false");
     }
 
-    @Path("/listenForMessages")
+    public void init(@Observes @Initialized(ApplicationScoped.class) Object init) {
+        System.out.println("InventoryResource.init init:" + init);
+    }
+        @Path("/listenForMessages")
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     public Response listenForMessages()  {
