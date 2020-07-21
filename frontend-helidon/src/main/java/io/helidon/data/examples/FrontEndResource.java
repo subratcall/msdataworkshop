@@ -144,19 +144,6 @@ public class FrontEndResource {
 
     @GET
     @Produces(MediaType.TEXT_HTML)
-    @Path("/inventoryservicetest")
-    public String inventoryservicetest(@QueryParam("test") String test) {
-        try {
-            URL url = new URL("http://inventory.msdataworkshop:8080/" + test);
-            return getFullPage(makeRequest(url));
-        } catch (IOException e) {
-            e.printStackTrace();
-            return home();
-        }
-    }
-
-    @GET
-    @Produces(MediaType.TEXT_HTML)
     @Path("/inventoryservicetestwithitem")
     public String inventoryservicetestwithitem(@QueryParam("test") String test, @QueryParam("itemid") String itemid) {
         try {
@@ -239,7 +226,6 @@ public class FrontEndResource {
                  */
                 "<h3>Task 9...</h3>" +
                "<h4>JSON data, AQ transactional event-driven communication, and choreography saga (order and inventory service)</h4>" +
-                "<form action=\"inventoryservicetest\"><input type=\"submit\" name =\"test\" value=\"listenForMessages\"></form>" +
                 "<form action=\"placeorder\">" +
                 "veggie : <input type=\"text\" name=\"itemid\" size=\"12\" value=\"cucumbers\"> <br> " +
                 "deliver to : <input type=\"text\" name=\"deliverylocation\" size=\"35\" value=\"780 PANORAMA DR,San Francisco,CA\"><br>  " +
