@@ -1,11 +1,16 @@
 package io.helidon.data.examples;
 
+import javax.json.bind.annotation.JsonbProperty;
+
 public class Order {
     private String orderid;
     private String itemid;
     private String deliverylocation;
+    @JsonbProperty(nillable = true)
     private String status;
+    @JsonbProperty(nillable = true)
     private String inventoryLocation;
+    @JsonbProperty(nillable = true)
     private String suggestiveSale;
 
     public Order() {
