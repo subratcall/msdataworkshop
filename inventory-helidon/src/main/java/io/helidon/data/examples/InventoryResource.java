@@ -18,6 +18,8 @@ package io.helidon.data.examples;
 import java.sql.Connection;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.Initialized;
+import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.ws.rs.*;
