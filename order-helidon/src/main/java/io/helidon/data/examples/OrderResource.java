@@ -123,7 +123,7 @@ public class OrderResource {
         }
     }
 
-    @Path("/showorder")
+    @Path("/showorder2")
     @GET
     @Produces(MediaType.TEXT_HTML)
     public Response showorder(@QueryParam("orderid") String orderId) {
@@ -138,11 +138,11 @@ public class OrderResource {
                 .build();
     }
 
-    @Path("/showorderDBCall")
+    @Path("/showorder")
     @GET
     @Produces(MediaType.TEXT_HTML)
     public Response showorderDBCall(@QueryParam("orderid") String orderId) {
-        System.out.println("--->showorder for orderId:" + orderId);
+        System.out.println("--->showorder (via JSON/SODA query) for orderId:" + orderId);
         try {
             Order order = orderServiceEventProducer.getOrderViaSODA(atpOrderPdb, orderId);
             String returnString = order == null ? "orderId not found:" + orderId :
