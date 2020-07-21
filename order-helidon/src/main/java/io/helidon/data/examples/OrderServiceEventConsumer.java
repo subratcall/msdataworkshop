@@ -55,13 +55,16 @@ public class OrderServiceEventConsumer implements Runnable {
                     System.out.print(" Message: " + textMessage.getIntProperty("Id"));
                     Inventory inventory = JsonUtils.read(messageText, Inventory.class);
                     String orderid = inventory.getOrderid();
-                    OrderDetail orderDetail = orderResource.orders.get(orderid);
-                    System.out.println("Lookup orderid:" + orderid + " orderDetail:" + orderDetail);
                     String itemid = inventory.getItemid();
-                    System.out.print(" itemid:" + itemid + " orderDetail:" + orderDetail);
                     String inventorylocation = inventory.getInventorylocation();
-                    System.out.print(" inventorylocation:" + inventorylocation);
-                    if(orderDetail != null) {
+                    OrderDetail orderDetail = orderResource.cachedOrders.get(orderid);
+                    System.out.println("Lookup orderid:" + orderid + " orderDetail:" + orderDetail + " itemid:" + itemid + " inventorylocation:" + inventorylocation);
+                    if(orderDetail == null){
+                        throw new JMSException("Rollingback message as no orderDetail found for orderid:" + orderid +
+                                ". It may have been started by another server (eg if horizontally scaling) or " +
+                                " this server started the order but crashed. "); //todo add "hydration"/caching of orders during init of service to avoid this
+                    }
+                    else{
                         boolean isSuccessfulInventoryCheck = !(inventorylocation == null || inventorylocation.equals("")
                                 || inventorylocation.equals("inventorydoesnotexist")
                                 || inventorylocation.equals("none"));
@@ -72,6 +75,10 @@ public class OrderServiceEventConsumer implements Runnable {
                         } else {
                             orderDetail.setOrderStatus("failed inventory does not exist");
                         }
+                        // orderdetail is the cache object and order is the JSON message and DB object so we have this mapping at least for now...
+                        Order updatedOrder = new Order(orderDetail.getOrderId(), orderDetail.getItemId(), orderDetail.getDeliveryLocation(),
+                                orderDetail.getOrderStatus(), orderDetail.getInventoryLocation(), orderDetail.getSuggestiveSale());
+                        orderResource.orderServiceEventProducer.updateOrderViaSODA(orderid, updatedOrder, ((AQjmsSession) qsess).getDBConnection());
                     }
                     System.out.println("((AQjmsSession) qsess).getDBConnection(): " + ((AQjmsSession) qsess).getDBConnection());
                 } else {
@@ -81,6 +88,7 @@ public class OrderServiceEventConsumer implements Runnable {
             } catch (Exception e) {
                 System.out.println("Error in performJmsOperations: " + e);
                 done = true;
+                qsess.rollback();
             }
         }
     }

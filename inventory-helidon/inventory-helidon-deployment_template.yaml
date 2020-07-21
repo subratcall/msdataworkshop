@@ -39,7 +39,7 @@ spec:
               name: atp-user-cred-inventoryuser
               key: password
         - name: oracle.ucp.jdbc.PoolDataSource.inventorypdb.URL
-          value: "jdbc:oracle:thin:@inventorydb_high?TNS_ADMIN=/msdataworkshop/creds"
+          value: "jdbc:oracle:thin:@%INVENTORY_PDB_NAME%_tp?TNS_ADMIN=/msdataworkshop/creds"
         - name: inventoryqueuename
           value: "inventoryqueue"
         - name: WALLET_PWD

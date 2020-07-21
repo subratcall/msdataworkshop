@@ -6,6 +6,8 @@ public class OrderDetail {
 
     @JsonbProperty("orderId")
     private String orderId;
+    @JsonbProperty(nillable = true) // todo nillable is not necessary
+    private String itemId;
     @JsonbProperty(nillable = true)
     private String suggestiveSaleItem = "";
     @JsonbProperty(nillable = true)
@@ -27,12 +29,8 @@ public class OrderDetail {
     public String toString() {
         String returnString = "";
         returnString+="<br> orderId = " + orderId;
-//        returnString+=" suggestiveSaleItem = " + suggestiveSaleItem;
         returnString+="<br>  suggestiveSale = " + suggestiveSale;
-//        returnString+=" inventoryLocationItem = " + inventoryLocationItem;
         returnString+="<br>  inventoryLocation = " + inventoryLocation;
-//        returnString+=" shippingEstimate = " + shippingEstimate;
-//        returnString+=" shippingEstimateItem = " + shippingEstimateItem;
         returnString+="<br>  orderStatus = " + orderStatus;
         returnString+="<br>  deliveryLocation = " + deliveryLocation;
         return returnString;
@@ -44,6 +42,14 @@ public class OrderDetail {
 
     public void setOrderId(String orderId) {
         this.orderId = orderId;
+    }
+
+    public String getItemId() {
+        return itemId;
+    }
+
+    public void setItemId(String itemId) {
+        this.itemId = itemId;
     }
 
     public String getSuggestiveSaleItem() {

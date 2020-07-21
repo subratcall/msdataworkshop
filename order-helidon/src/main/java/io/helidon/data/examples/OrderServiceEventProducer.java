@@ -67,6 +67,11 @@ class OrderServiceEventProducer {
         new OrderDAO().create(jdbcConnection, order);
     }
 
+    void updateOrderViaSODA(String orderid, Order order,   Connection jdbcConnection)
+            throws OracleException {
+        new OrderDAO().update(jdbcConnection, order);
+    }
+
 
     String deleteOrderViaSODA( DataSource dataSource, String orderid) throws Exception {
         new OrderDAO().delete(dataSource.getConnection(), orderid);
@@ -76,6 +81,10 @@ class OrderServiceEventProducer {
 
     String dropOrderViaSODA( DataSource dataSource) throws Exception {
         return new OrderDAO().drop(dataSource.getConnection());
+    }
+
+    Order getOrderViaSODA( DataSource dataSource, String orderid) throws Exception {
+        return new OrderDAO().get(dataSource.getConnection(), orderid);
     }
 
 }

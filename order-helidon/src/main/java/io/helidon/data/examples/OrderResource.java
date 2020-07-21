@@ -46,16 +46,15 @@ public class OrderResource {
     private Tracer tracer;
 
     private boolean isOrderEventConsumerStarted = false;
-    private OrderServiceEventProducer orderServiceEventProducer = new OrderServiceEventProducer();
+    OrderServiceEventProducer orderServiceEventProducer = new OrderServiceEventProducer();
     static final String orderQueueOwner = "ORDERUSER";
     static final String orderQueueName = "orderqueue";
     static final String inventoryQueueName = "inventoryqueue";
     static boolean liveliness = true;
-    private static String lastContainerStartTime;
+    private static final String lastContainerStartTime;
     private OrderServiceCPUStress orderServiceCPUStress = new OrderServiceCPUStress();
-    Map<String, OrderDetail> orders = new HashMap<>();
+    Map<String, OrderDetail> cachedOrders = new HashMap<>();
 
-    //Task 11 (Helidon/OKE health liveness/readiness)
     static {
         lastContainerStartTime = new java.util.Date().toString();
         System.out.println("____________________________________________________");
@@ -73,16 +72,13 @@ public class OrderResource {
                 .entity("lastContainerStartTime = " + lastContainerStartTime)
                 .build();
     }
-    //END Task 11 (Helidon/OKE health liveness/readiness)
 
-    //Task 9 (Demonstrate Converged database, Event-driven Order/Inventory Saga, Event Sourcing, CQRS, etc. via Order/Inventory store application)
     @Path("/placeOrder")
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     @Traced(operationName = "OrderResource.placeOrder")
     @Timed(name = "placeOrder_timed") //length of time of an object
     @Counted(name = "placeOrder_counted") //amount of invocations
-//    @Metered(name = "placeOrder_metered") //invocation frequency
     public Response placeOrder(@QueryParam("orderid") String orderid, @QueryParam("itemid") String itemid,
                                @QueryParam("deliverylocation") String deliverylocation) {
         System.out.println("--->placeOrder... orderid:" + orderid + " itemid:" + itemid);
@@ -91,7 +87,7 @@ public class OrderResource {
         orderDetail.setOrderId(orderid);
         orderDetail.setOrderStatus("pending");
         orderDetail.setDeliveryLocation(deliverylocation);
-        orders.put(orderid, orderDetail);
+        cachedOrders.put(orderid, orderDetail);
 
         Span activeSpan = tracer.buildSpan("orderDetail").asChildOf(tracer.activeSpan()).start();
         activeSpan.log("begin placing order"); // logs are for a specific moment or event within the span (in contrast to tags which should apply to the span regardless of time).
@@ -132,12 +128,35 @@ public class OrderResource {
     @Produces(MediaType.TEXT_HTML)
     public Response showorder(@QueryParam("orderid") String orderId) {
         System.out.println("--->showorder for orderId:" + orderId);
-        OrderDetail orderDetail = orders.get(orderId); //we can also lookup orderId if is null and we do order population lazily
-        String returnString = orderDetail == null ? "orderId not found:" + orderId :
-                "orderId = " + orderId + "<br>orderDetail... " + orderDetail;
+        OrderDetail orderDetail = cachedOrders.get(orderId);
+        if (orderDetail == null || orderDetail.getOrderStatus().equals("pending")) {
+            System.out.println("--->showorder for orderId:" + orderId + " orderDetail:" + orderDetail + " querying DB...");
+            return showorderDBCall(orderId);
+        }
         return Response.ok()
-                .entity(returnString)
+                .entity( "orderId = " + orderId + "<br>orderDetail... " + orderDetail)
                 .build();
+    }
+
+    @Path("/showorderDBCall")
+    @GET
+    @Produces(MediaType.TEXT_HTML)
+    public Response showorderDBCall(@QueryParam("orderid") String orderId) {
+        System.out.println("--->showorder for orderId:" + orderId);
+        try {
+            Order order = orderServiceEventProducer.getOrderViaSODA(atpOrderPdb, orderId);
+            String returnString = order == null ? "orderId not found:" + orderId :
+                    "order = " + order;
+            return Response.ok()
+                    .entity(returnString)
+                    .build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Response.ok()
+                    .entity("showorder orderid = " + orderId + " failed with exception:" + e.toString())
+                    .build();
+        }
+
     }
 
     @Path("/showallorders")
@@ -146,9 +165,9 @@ public class OrderResource {
     public Response showallorders() {
         System.out.println("showallorders...");
         StringBuilder returnString = new StringBuilder("orders in cache...");
-        for (String order : orders.keySet()) {
+        for (String order : cachedOrders.keySet()) {
             returnString.append("<br>");
-            returnString.append(orders.get(order));
+            returnString.append(cachedOrders.get(order));
         }
         return Response.ok()
                 .entity(returnString.toString())
@@ -193,10 +212,6 @@ public class OrderResource {
         }
     }
 
-    //END Task 9 (Demonstrate Converged database, Event-driven Order/Inventory Saga, Event Sourcing, CQRS, etc. via Order/Inventory store application)
-
-
-    //Task 10 (OSS streaming service)
     @Path("/consumeStreamOrders")
     @GET
     @Produces(MediaType.TEXT_PLAIN)
@@ -206,9 +221,7 @@ public class OrderResource {
                 .entity("now consuming orders streamed from OSS...")
                 .build();
     }
-    //END Task 10 (OSS streaming service)
 
-    //Task 11 (Helidon/OKE health liveness/readiness)
     @Path("/ordersetlivenesstofalse")
     @GET
     @Produces(MediaType.TEXT_PLAIN)
@@ -218,9 +231,7 @@ public class OrderResource {
                 .entity("order liveness set to false - OKE should restart the pod due to liveness probe")
                 .build();
     }
-    //END Task 11 (Helidon/OKE health liveness/readiness)
 
-    //Task 12 (Demonstrate OKE horizontal pod scaling)
     @Path("/startCPUStress")
     @GET
     @Produces(MediaType.TEXT_PLAIN)
@@ -242,6 +253,5 @@ public class OrderResource {
                 .entity("CPU stress stopped")
                 .build();
     }
-    //END Task 12 (Demonstrate OKE horizontal pod scaling)
 
 }

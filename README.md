@@ -30,7 +30,7 @@ The workshop is designed to be modular and dynamic such that it is possible to d
         - https://docs.cloud.oracle.com/en-us/iaas/Content/ContEng/Tasks/contengaccessingclusterkubectl.htm
         - https://docs.cloud.oracle.com/en-us/iaas/Content/ContEng/Tasks/contengdownloadkubeconfigfile.htm
    - Create 2 ATP-S pdbs named `orderdb` and `inventorydb` (for order and all other services)
-        - If the pdbs are not named `orderdb` and `inventorydb`, insure all deployments yaml files are modified to use the names given in the database url (ie changing `orderdb_high` and `inventorydb_high` to specified db names).
+        - If the pdbs are not named `orderdb` and `inventorydb`, insure the default exported values for ORDER_PDB_NAME and ORDER_PDB_NAME are changed (this is covered in later step)
         - Select the license included option for license.
         - https://docs.oracle.com/en/cloud/paas/autonomous-data-warehouse-cloud/tutorial-getting-started-autonomous-db/index.html 
         - Note the ocid, compartmentId, name, and admin pw of the databases
@@ -68,12 +68,17 @@ The workshop is designed to be modular and dynamic such that it is possible to d
             - `<tenancy-namespace>` is the Object Storage Namespace found under tenancy information
             - example `docker login us-phoenix-1.ocir.io -u ax2mkasdfkkx/msdataworkshopuser -p Q:4qXo:7ADFaf9KZddZQ`
         - Verify with `docker image` command
-   - For convenience, vi ~/.bashrc, append the following lines (substituting DOCKER_REGISTRY and MSDATAWORKSHOP_LOCATION values), and `source ~/.bashrc`
+   - For convenience, vi ~/.bashrc, append the following lines 
+        (substituting MSDATAWORKSHOP_NAMESPACE, MSDATAWORKSHOP_LOCATION, DOCKER_REGISTRY, and *PDB_NAME values as appropriate) 
 
+         export MSDATAWORKSHOP_NAMESPACE=msdataworkshop
          export MSDATAWORKSHOP_LOCATION=~/msdataworkshop
          source $MSDATAWORKSHOP_LOCATION/shortcutaliases
          export PATH=$PATH:$MSDATAWORKSHOP_LOCATION/utils/
          export DOCKER_REGISTRY="<region-key>.ocir.io/<tenancy-namespace>/<repo-name>"
+         export ORDER_PDB_NAME=orderdb
+         export INVENTORY_PDB_NAME=inventorydb
+   - `source ~/.bashrc`
    - `cd $MSDATAWORKSHOP_LOCATION/frontend-helidon`
    - Run `./build.sh` to build the frontend-helidon image and push it to OCIR
    - Mark the image as public in OCIR via Cloud Shell (this avoids the need to do `docker login` in the deployment yaml or git CI/CD)

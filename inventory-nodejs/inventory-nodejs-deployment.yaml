@@ -36,7 +36,7 @@ spec:
           - name: TNS_ADMIN
             value: "/msdataworkshop/creds"
           - name: DB_CONNECT_STRING
-            value: "inventorydb_high"
+            value: "%INVENTORY_PDB_NAME%_tp"
           - name: DB_USER
             value: "inventoryuser"
           - name: DB_PASSWORD
