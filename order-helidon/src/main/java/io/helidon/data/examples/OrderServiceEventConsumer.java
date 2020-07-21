@@ -78,7 +78,7 @@ public class OrderServiceEventConsumer implements Runnable {
                         // orderdetail is the cache object and order is the JSON message and DB object so we have this mapping at least for now...
                         Order updatedOrder = new Order(orderDetail.getOrderId(), orderDetail.getItemId(), orderDetail.getDeliveryLocation(),
                                 orderDetail.getOrderStatus(), orderDetail.getInventoryLocation(), orderDetail.getSuggestiveSale());
-                        orderResource.orderServiceEventProducer.updateOrderViaSODA(orderid, updatedOrder, ((AQjmsSession) qsess).getDBConnection());
+                        orderResource.orderServiceEventProducer.updateOrderViaSODA(updatedOrder, ((AQjmsSession) qsess).getDBConnection());
                     }
                     System.out.println("((AQjmsSession) qsess).getDBConnection(): " + ((AQjmsSession) qsess).getDBConnection());
                 } else {

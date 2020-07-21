@@ -16,12 +16,6 @@ public class Order {
     public Order() {
     }
 
-    public Order(String orderId, String itemId, String deliverylocation) {
-        this.orderid = orderId;
-        this.itemid = itemId;
-        this.deliverylocation = deliverylocation;
-    }
-
     public Order(String orderId, String itemId, String deliverylocation,
                  String status, String inventoryLocation, String suggestiveSale) {
         this.orderid = orderId;

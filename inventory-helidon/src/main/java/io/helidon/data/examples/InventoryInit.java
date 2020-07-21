@@ -15,8 +15,5 @@ public class InventoryInit {
         System.out.println("InventoryInit.init " + init);
     }
 
-    public void destroy(@Observes @Destroyed(ApplicationScoped.class) Object init) {
-        System.out.println("InventoryInit.destroy " + init);
-    }
 }
 

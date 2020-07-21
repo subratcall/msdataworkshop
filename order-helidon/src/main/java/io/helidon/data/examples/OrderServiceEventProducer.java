@@ -25,7 +25,7 @@ class OrderServiceEventProducer {
             session = q_conn.createTopicSession(true, Session.CLIENT_ACKNOWLEDGE);
             Connection jdbcConnection = ((AQjmsSession) session).getDBConnection();
             System.out.println("updateDataAndSendEvent jdbcConnection:" + jdbcConnection + " about to insertOrderViaSODA...");
-            insertOrderViaSODA(orderid, itemid, deliverylocation, jdbcConnection);
+            Order insertedOrder = insertOrderViaSODA(orderid, itemid, deliverylocation, jdbcConnection);
             System.out.println("updateDataAndSendEvent insertOrderViaSODA complete about to send order message...");
             Topic topic = ((AQjmsSession) session).getTopic(OrderResource.orderQueueOwner, OrderResource.orderQueueName);
             System.out.println("updateDataAndSendEvent topic:" + topic);
@@ -33,8 +33,7 @@ class OrderServiceEventProducer {
             TopicPublisher publisher = session.createPublisher(topic);
             objmsg.setIntProperty("Id", 1);
             objmsg.setIntProperty("Priority", 2);
-            Order order = new Order(orderid, itemid, deliverylocation);
-            String jsonString = JsonUtils.writeValueAsString(order);
+            String jsonString = JsonUtils.writeValueAsString(insertedOrder);
             objmsg.setText(jsonString);
             objmsg.setJMSCorrelationID("" + 1);
             objmsg.setJMSPriority(2);
@@ -60,14 +59,15 @@ class OrderServiceEventProducer {
         }
     }
 
-    private void insertOrderViaSODA(String orderid, String itemid, String deliverylocation,
+    private Order insertOrderViaSODA(String orderid, String itemid, String deliverylocation,
                                     Connection jdbcConnection)
             throws OracleException {
-        Order order = new Order(orderid, itemid, deliverylocation);
+        Order order = new Order(orderid, itemid, deliverylocation, "pending", "", "");
         new OrderDAO().create(jdbcConnection, order);
+        return order;
     }
 
-    void updateOrderViaSODA(String orderid, Order order,   Connection jdbcConnection)
+    void updateOrderViaSODA(Order order, Connection jdbcConnection)
             throws OracleException {
         new OrderDAO().update(jdbcConnection, order);
     }
