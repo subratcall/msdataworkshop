@@ -282,4 +282,11 @@ public class FrontEndResource {
         }
     }
 
+    String getFullPage(String string) {
+          return "just returning string";
+    }
+    String home() {
+          return "just returning string";
+    }
+
 }
