@@ -123,7 +123,7 @@ public class OrderResource {
         }
     }
 
-    @Path("/showorder2")
+    @Path("/showorder")
     @GET
     @Produces(MediaType.TEXT_HTML)
     public Response showorder(@QueryParam("orderid") String orderId) {
@@ -138,7 +138,7 @@ public class OrderResource {
                 .build();
     }
 
-    @Path("/showorder")
+    @Path("/showordernocache")
     @GET
     @Produces(MediaType.TEXT_HTML)
     public Response showorderDBCall(@QueryParam("orderid") String orderId) {
