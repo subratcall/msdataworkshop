@@ -37,9 +37,6 @@ import io.helidon.common.configurable.Resource;
 @Traced
 public class FrontEndResource {
 
-    static boolean isDirectSupplierQuickTest = Boolean.valueOf(System.getProperty("isDirectSupplierQuickTest", "false"));
-
-
  /* -------------------------------------------------------
      * JET UI Entry point 
      * -------------------------------------------------------*/
@@ -94,7 +91,7 @@ public class FrontEndResource {
       @POST
       @Consumes(MediaType.APPLICATION_JSON)
       @Produces(MediaType.APPLICATION_JSON)
-      @Path("/placeorderJet")
+      @Path("/placeorder")
       public String placeorderJet(Order newOrder) {
           try {
               URL url = new URL("http://order.msdataworkshop:8080/placeOrder?orderid=" + newOrder.orderId +
@@ -113,10 +110,25 @@ public class FrontEndResource {
       }
 
 
+    @POST
+    @Produces(MediaType.TEXT_HTML)
+    @Path("/deleteallorders")
+    public String deleteallorders() {
+        System.out.println("-----> FrontEnd orderservicecall deleteallorders");
+        try {
+            URL url = new URL("http://order.msdataworkshop:8080/deleteallorders");
+            String requestString = makeRequest(url);
+            System.out.println("-----> FrontEnd deleteallorders requestString:" + requestString);
+            return "All orders deleted";
+        } catch (IOException e) {
+            e.printStackTrace();
+            return home();
+        }
+    }
 
     @GET
     @Produces(MediaType.TEXT_HTML)
-    @Path("/placeorder")
+    @Path("/placeorder0")
     public String placeorder(@QueryParam("orderid") String orderid,
                              @QueryParam("itemid") String itemid,
                              @QueryParam("deliverylocation") String deliverylocation) {
@@ -150,69 +162,7 @@ public class FrontEndResource {
         }
     }
 
-    @GET
-    @Produces(MediaType.TEXT_HTML)
-    @Path("/orderservicecall")
-    public String orderservicecall( @QueryParam("test") String test) {
-        System.out.println("-----> FrontEnd orderservicecall test:" + test);
-        try {
-            URL url = new URL("http://localhost:8080/" +test);
-            String requestString = makeRequest(url);
-            System.out.println("-----> FrontEnd orderservicecall requestString:" + requestString);
-            return getFullPage(requestString);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return home();
-        }
-    }
 
-
-    @GET
-    @Produces(MediaType.TEXT_HTML)
-    @Path("/streamingservicetest")
-    public String sendTestStreamOrders(@QueryParam("numberofitemstostream") int numberofitemstostream) {
-        try {
-            URL url = new URL("http://localhost:8080/sendTestStreamOrders?numberofitemstostream=" + numberofitemstostream);
-            return getFullPage(makeRequest(url));
-        } catch (IOException e) {
-            e.printStackTrace();
-            return home();
-        }
-    }
-
-    @GET
-    @Produces(MediaType.TEXT_HTML)
-    @Path("/executeonorderpdb")
-    public String orderadmin(@QueryParam("sql") String sql, @QueryParam("orderuser") String user, @QueryParam("orderpassword") String password) {
-        try {
-            System.out.println("-----> FrontEnd orderadmin sql = [" + sql + "], user = [" + user + "], password = [" + password + "]");
-            sql = URLEncoder.encode(sql, "UTF-8");
-            String urlString = "http://atpaqadmin.msdataworkshop:8080/execute?sql=" + sql + "&user=" + user + "&password=" + password;
-            System.out.println("FrontEndResource.orderadmin urlString:" + urlString);
-            URL url = new URL( urlString);
-            return getFullPage(makeRequest(url));
-        } catch (IOException e) {
-            e.printStackTrace();
-            return home();
-        }
-    }
-
-    @GET
-    @Produces(MediaType.TEXT_HTML)
-    @Path("/executeoninventorypdb")
-    public String helidonatpinventory(@QueryParam("sql") String sql, @QueryParam("inventoryuser") String user, @QueryParam("inventorypassword") String password) {
-        try {
-            System.out.println("-----> FrontEnd helidonatpinventory: [" + sql + "], user = [" + user + "], password = [" + password + "]");
-            sql = URLEncoder.encode(sql, "UTF-8");
-            String urlString = "http://atpaqadmin.msdataworkshop:8080/execute?sql=" + sql + "&user=" + user + "&password=" + password;
-            System.out.println("FrontEndResource.inventoryadmin urlString:" + urlString);
-            URL url = new URL( urlString);
-            return getFullPage(makeRequest(url));
-        } catch (IOException e) {
-            e.printStackTrace();
-            return home();
-        }
-    }
 
     @GET
     @Produces(MediaType.TEXT_HTML)

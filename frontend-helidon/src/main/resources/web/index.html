@@ -86,7 +86,8 @@
                     <oj-input-text label-hint="Deliver to" value="{{lab9DeliverTo}}"></oj-input-text>
                     <oj-input-text label-hint="Order ID" value="{{lab9OrderId}}"></oj-input-text>
                   </oj-form-layout>
-                  <oj-button on-oj-action="[[lab9Action1]]">Create Order</oj-button>
+                  <oj-button on-oj-action="[[lab9Action1]]">Place Order</oj-button>
+                  <oj-button on-oj-action="[[lab9DeleteAllOrdersAction]]">Delete All Orders</oj-button>
                 </div>
                 <!-- lab10 -->
                 <div slot="lab10">
@@ -246,14 +247,34 @@
               body: JSON.stringify(order)
             };
 
-            fetch('/placeorderJet', fetchOptions).then(fetchResult => {
+            fetch('/placeorder', fetchOptions).then(fetchResult => {
               vm.httpCode(fetchResult.status);
               fetchResult.json().then(payload => {
                 vm.labResult(JSON.stringify(payload, null, 2));
               });
             });
           }
-          
+
+          this.lab9DeleteAllOrdersAction = function (event, vm) {
+            // Create the payload ensuring that the types
+            // match the corresponding Java Object
+            var order = {
+              orderId: Number.parseInt(vm.lab9OrderId()),
+              orderItem: vm.lab9Veggie(),
+              deliverTo: vm.lab9DeliverTo()
+            };
+            var fetchOptions = {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' }
+            };
+
+            fetch('/deleteallorders', fetchOptions).then(fetchResult => {
+              vm.httpCode(fetchResult.status);
+              fetchResult.json().then(payload => {
+                vm.labResult(JSON.stringify(payload, null, 2));
+              });
+            });
+          }
 
           // Lab 10. ----------------------------------------------------------- //
           this.lab10Stuff = ko.observable('XX');
