@@ -92,7 +92,7 @@ public class FrontEndResource {
       @Consumes(MediaType.APPLICATION_JSON)
       @Produces(MediaType.APPLICATION_JSON)
       @Path("/placeorder")
-      public String placeorderJet(Order newOrder) {
+      public String placeorder(Order newOrder) {
           try {
               URL url = new URL("http://order.msdataworkshop:8080/placeOrder?orderid=" + newOrder.orderId +
                       "&itemid=" + newOrder.orderItem + "&deliverylocation=" + URLEncoder.encode(newOrder.deliverTo, "UTF-8"));
@@ -101,6 +101,7 @@ public class FrontEndResource {
               System.out.println("FrontEndResource.placeorder complete, now show order...");
               url = new URL("http://order.msdataworkshop:8080/showorder?orderid=" + newOrder.orderId );
               json = makeRequest(url);
+              System.out.println("FrontEndResource.placeorder showorder json:" + json);
               return json;
           } catch (IOException e) {
               e.printStackTrace();
@@ -129,7 +130,7 @@ public class FrontEndResource {
     @GET
     @Produces(MediaType.TEXT_HTML)
     @Path("/placeorder0")
-    public String placeorder(@QueryParam("orderid") String orderid,
+    public String placeorder0(@QueryParam("orderid") String orderid,
                              @QueryParam("itemid") String itemid,
                              @QueryParam("deliverylocation") String deliverylocation) {
         System.out.println("-----> FrontEnd placeorder orderid:" + orderid + " itemid:" + itemid+ " deliverylocation:" + deliverylocation);

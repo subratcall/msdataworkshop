@@ -75,9 +75,7 @@ public class OrderServiceEventConsumer implements Runnable {
                         } else {
                             orderDetail.setOrderStatus("failed inventory does not exist");
                         }
-                        // orderdetail is the cache object and order is the JSON message and DB object so we have this mapping at least for now...
-                        Order updatedOrder = new Order(orderDetail.getOrderId(), orderDetail.getItemId(), orderDetail.getDeliveryLocation(),
-                                orderDetail.getOrderStatus(), orderDetail.getInventoryLocation(), orderDetail.getSuggestiveSale());
+                        Order updatedOrder = new Order(orderDetail);
                         orderResource.orderServiceEventProducer.updateOrderViaSODA(updatedOrder, ((AQjmsSession) qsess).getDBConnection());
                     }
                     System.out.println("((AQjmsSession) qsess).getDBConnection(): " + ((AQjmsSession) qsess).getDBConnection());

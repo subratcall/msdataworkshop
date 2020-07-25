@@ -16,6 +16,12 @@ public class Order {
     public Order() {
     }
 
+    // orderdetail is the cache object and order is the JSON message and DB object so we have this mapping at least for now...
+    public Order(OrderDetail orderDetail) {
+        this(orderDetail.getOrderId(), orderDetail.getItemId(), orderDetail.getDeliveryLocation(),
+                orderDetail.getOrderStatus(), orderDetail.getInventoryLocation(), orderDetail.getSuggestiveSale());
+    }
+
     public Order(String orderId, String itemId, String deliverylocation,
                  String status, String inventoryLocation, String suggestiveSale) {
         this.orderid = orderId;

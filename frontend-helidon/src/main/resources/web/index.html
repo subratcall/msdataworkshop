@@ -256,13 +256,6 @@
           }
 
           this.lab9DeleteAllOrdersAction = function (event, vm) {
-            // Create the payload ensuring that the types
-            // match the corresponding Java Object
-            var order = {
-              orderId: Number.parseInt(vm.lab9OrderId()),
-              orderItem: vm.lab9Veggie(),
-              deliverTo: vm.lab9DeliverTo()
-            };
             var fetchOptions = {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' }

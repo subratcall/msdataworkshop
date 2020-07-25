@@ -75,7 +75,7 @@ public class OrderResource {
 
     @Path("/placeOrder")
     @GET
-    @Produces(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
     @Traced(operationName = "OrderResource.placeOrder")
     @Timed(name = "placeOrder_timed") //length of time of an object
     @Counted(name = "placeOrder_counted") //amount of invocations
@@ -125,30 +125,32 @@ public class OrderResource {
 
     @Path("/showorder")
     @GET
-    @Produces(MediaType.TEXT_HTML)
+    @Produces(MediaType.APPLICATION_JSON)
     public Response showorder(@QueryParam("orderid") String orderId) {
         System.out.println("--->showorder for orderId:" + orderId);
         OrderDetail orderDetail = cachedOrders.get(orderId);
         if (orderDetail == null || orderDetail.getOrderStatus().equals("pending")) {
-            System.out.println("--->showorder for orderId:" + orderId + " orderDetail:" + orderDetail + " querying DB...");
-            return showorderDBCall(orderId);
+            System.out.println("--->showorder not in cache for orderId:" + orderId + " orderDetail:" + orderDetail + " querying DB...");
+            return showordernocache(orderId);
         }
+        String returnJSON = JsonUtils.writeValueAsString(new Order(orderDetail));
+        System.out.println("OrderResource.showorder returnJSON:" + returnJSON);
         return Response.ok()
-                .entity( "orderId = " + orderId + "<br>orderDetail... " + orderDetail)
+                .entity(returnJSON)
                 .build();
     }
 
     @Path("/showordernocache")
     @GET
-    @Produces(MediaType.TEXT_HTML)
-    public Response showorderDBCall(@QueryParam("orderid") String orderId) {
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response showordernocache(@QueryParam("orderid") String orderId) {
         System.out.println("--->showorder (via JSON/SODA query) for orderId:" + orderId);
         try {
             Order order = orderServiceEventProducer.getOrderViaSODA(atpOrderPdb, orderId);
-            String returnString = order == null ? "orderId not found:" + orderId :
-                    "order = " + order;
+            String returnJSON = JsonUtils.writeValueAsString(order);
+            System.out.println("OrderResource.showordernocache returnJSON:" + returnJSON);
             return Response.ok()
-                    .entity(returnString)
+                    .entity(returnJSON)
                     .build();
         } catch (Exception e) {
             e.printStackTrace();
@@ -210,16 +212,6 @@ public class OrderResource {
                     .entity("deleteallorders failed with exception:" + e.toString())
                     .build();
         }
-    }
-
-    @Path("/consumeStreamOrders")
-    @GET
-    @Produces(MediaType.TEXT_PLAIN)
-    public Response consumeStreamOrders() {
-        new Thread(new OrderServiceOSSStreamProcessor(this)).start();
-        return Response.ok()
-                .entity("now consuming orders streamed from OSS...")
-                .build();
     }
 
     @Path("/ordersetlivenesstofalse")
