@@ -197,12 +197,12 @@ public class OrderResource {
     }
 
     @Path("/deleteallorders")
-    @GET
-    @Produces(MediaType.TEXT_PLAIN)
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
     public Response deleteallorders() {
         System.out.println("--->deleteallorders");
         try {
-            String returnString = "deleteallorders " + orderServiceEventProducer.dropOrderViaSODA(atpOrderPdb);
+            String returnString = "{message : \"" + orderServiceEventProducer.dropOrderViaSODA(atpOrderPdb) + "\"}";
             return Response.ok()
                     .entity(returnString)
                     .build();
