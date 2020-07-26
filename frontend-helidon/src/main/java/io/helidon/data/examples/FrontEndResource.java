@@ -132,15 +132,15 @@ public class FrontEndResource {
         }
     }
 
-    @GET
+    @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/command")
     public String command(Command command) {
-        System.out.println("FrontEndResource.command " + command.serviceName);
-        System.out.println("FrontEndResource.command " + command.commandName);
+        String urlString = "http://" + command.serviceName + ".msdataworkshop:8080/" + command.commandName + "?orderid=" + command.orderId;
+        System.out.println("FrontEndResource.command url:" + urlString);
         try {
-            URL url = new URL("http://" + command.serviceName + ".msdataworkshop:8080/" + command.commandName + "?orderid=" + command.orderId );
+            URL url = new URL(urlString);
             return makeRequest(url);
         } catch (IOException e) {
             e.printStackTrace();

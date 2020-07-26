@@ -202,14 +202,16 @@ public class OrderResource {
     public Response deleteallorders() {
         System.out.println("--->deleteallorders");
         try {
-            String returnString = "{message : \"" + orderServiceEventProducer.dropOrderViaSODA(atpOrderPdb) + "\"}";
+            String returnJSON = JsonUtils.writeValueAsString(new ResponseHolder(
+                    orderServiceEventProducer.dropOrderViaSODA(atpOrderPdb), ""));
             return Response.ok()
-                    .entity(returnString)
+                    .entity(returnJSON)
                     .build();
         } catch (Exception e) {
             e.printStackTrace();
             return Response.ok()
-                    .entity("deleteallorders failed with exception:" + e.toString())
+                    .entity(JsonUtils.writeValueAsString(new ResponseHolder(
+                            "deleteallorders failed with exception:" + e.toString(), "")))
                     .build();
         }
     }
