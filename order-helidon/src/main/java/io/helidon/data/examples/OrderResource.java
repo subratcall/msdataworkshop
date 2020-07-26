@@ -197,7 +197,7 @@ public class OrderResource {
     }
 
     @Path("/deleteallorders")
-    @POST
+    @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response deleteallorders() {
         System.out.println("--->deleteallorders");
