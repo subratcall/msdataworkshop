@@ -92,14 +92,16 @@ public class FrontEndResource {
       @Consumes(MediaType.APPLICATION_JSON)
       @Produces(MediaType.APPLICATION_JSON)
       @Path("/placeorder")
-      public String placeorder(Order newOrder) {
+      public String placeorder(Command command) {
           try {
-              URL url = new URL("http://order.msdataworkshop:8080/placeOrder?orderid=" + newOrder.orderId +
-                      "&itemid=" + newOrder.orderItem + "&deliverylocation=" + URLEncoder.encode(newOrder.deliverTo, "UTF-8"));
+              System.out.println("FrontEndResource.serviceName " + command.serviceName);
+              System.out.println("FrontEndResource.commandName " + command.commandName);
+              URL url = new URL("http://order.msdataworkshop:8080/placeOrder?orderid=" + command.orderId +
+                      "&itemid=" + command.orderItem + "&deliverylocation=" + URLEncoder.encode(command.deliverTo, "UTF-8"));
               String json = makeRequest(url);
               System.out.println("FrontEndResource.placeorder json:" + json);
               System.out.println("FrontEndResource.placeorder complete, now show order...");
-              url = new URL("http://order.msdataworkshop:8080/showorder?orderid=" + newOrder.orderId );
+              url = new URL("http://order.msdataworkshop:8080/showorder?orderid=" + command.orderId );
               json = makeRequest(url);
               System.out.println("FrontEndResource.placeorder showorder json:" + json);
               return json;
@@ -112,15 +114,18 @@ public class FrontEndResource {
 
 
     @POST
-    @Produces(MediaType.TEXT_HTML)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     @Path("/deleteallorders")
-    public String deleteallorders() {
+    public String deleteallorders(Command command) {
+        System.out.println("FrontEndResource.deleteallorders " + command.serviceName);
+        System.out.println("FrontEndResource.deleteallorders " + command.commandName);
         System.out.println("-----> FrontEnd orderservicecall deleteallorders");
         try {
             URL url = new URL("http://order.msdataworkshop:8080/deleteallorders");
-            String requestString = makeRequest(url);
-            System.out.println("-----> FrontEnd deleteallorders requestString:" + requestString);
-            return "All orders deleted";
+            String responseString = makeRequest(url);
+            System.out.println("-----> FrontEnd deleteallorders responseString:" + responseString);
+            return responseString;
         } catch (IOException e) {
             e.printStackTrace();
             return home();
@@ -151,11 +156,12 @@ public class FrontEndResource {
 
     @GET
     @Produces(MediaType.TEXT_HTML)
-    @Path("/showorderservicecall")
-    public String showorderservicecall(@QueryParam("orderid") String orderid, @QueryParam("test") String test) {
-        System.out.println("-----> FrontEnd " + test + " orderid:" + orderid);
+    @Path("/command")
+    public String command(Command command) {
+        System.out.println("FrontEndResource.command " + command.serviceName);
+        System.out.println("FrontEndResource.command " + command.commandName);
         try {
-            URL url = new URL("http://localhost:8080/" + test + "?orderid=" + orderid );
+            URL url = new URL("http://order.msdataworkshop:8080/" + command.commandName + "?orderid=" + command.orderId );
             return getFullPage(makeRequest(url));
         } catch (IOException e) {
             e.printStackTrace();

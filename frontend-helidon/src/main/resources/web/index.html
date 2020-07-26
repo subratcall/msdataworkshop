@@ -81,13 +81,14 @@
                 </div>
                 <!-- lab9 -->
                 <div slot="lab9">
+                  <oj-button on-oj-action="[[lab9DeleteAllOrdersAction]]">Delete All Orders</oj-button>
                   <oj-form-layout>
                     <oj-input-text label-hint="Veggie" value="{{lab9Veggie}}"></oj-input-text>
                     <oj-input-text label-hint="Deliver to" value="{{lab9DeliverTo}}"></oj-input-text>
                     <oj-input-text label-hint="Order ID" value="{{lab9OrderId}}"></oj-input-text>
                   </oj-form-layout>
                   <oj-button on-oj-action="[[lab9Action1]]">Place Order</oj-button>
-                  <oj-button on-oj-action="[[lab9DeleteAllOrdersAction]]">Delete All Orders</oj-button>
+                  <oj-button on-oj-action="[[lab9ShowOrderAction]]">Show Order</oj-button>
                 </div>
                 <!-- lab10 -->
                 <div slot="lab10">
@@ -237,6 +238,8 @@
             // Create the payload ensuring that the types
             // match the corresponding Java Object
             var order = {
+              serviceName: 'order',
+              commandName: 'placeOrder',
               orderId: Number.parseInt(vm.lab9OrderId()),
               orderItem: vm.lab9Veggie(),
               deliverTo: vm.lab9DeliverTo()
@@ -256,12 +259,42 @@
           }
 
           this.lab9DeleteAllOrdersAction = function (event, vm) {
+            var order = {
+              serviceName: 'order',
+              commandName: 'placeOrder',
+              orderId: 0,
+              orderItem: '',
+              deliverTo: ''
+            };
             var fetchOptions = {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' }
+              body: JSON.stringify(order)
             };
 
             fetch('/deleteallorders', fetchOptions).then(fetchResult => {
+              vm.httpCode(fetchResult.status);
+              fetchResult.json().then(payload => {
+                vm.labResult(JSON.stringify(payload, null, 2));
+              });
+            });
+          }
+
+          this.lab9ShowOrderAction = function (event, vm) {
+            var order = {
+              serviceName: 'order',
+              commandName: 'showorder',
+              orderId: Number.parseInt(vm.lab9OrderId()),
+              orderItem: vm.lab9Veggie(),
+              deliverTo: vm.lab9DeliverTo()
+            };
+            var fetchOptions = {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' }
+              body: JSON.stringify(order)
+            };
+
+            fetch('/command', fetchOptions).then(fetchResult => {
               vm.httpCode(fetchResult.status);
               fetchResult.json().then(payload => {
                 vm.labResult(JSON.stringify(payload, null, 2));
