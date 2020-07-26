@@ -44,7 +44,7 @@ public class FrontEndResource {
     @Path("/")
     @GET
     @Produces(MediaType.TEXT_HTML)
-    public String jethome() {
+    public String home() {
         String indexFile = Resource.create("web/index.html").string();
         return indexFile;
     }   
@@ -128,44 +128,23 @@ public class FrontEndResource {
             return responseString;
         } catch (IOException e) {
             e.printStackTrace();
-            return home();
+            return exceptionMessage(e);
         }
     }
 
     @GET
-    @Produces(MediaType.TEXT_HTML)
-    @Path("/placeorder0")
-    public String placeorder0(@QueryParam("orderid") String orderid,
-                             @QueryParam("itemid") String itemid,
-                             @QueryParam("deliverylocation") String deliverylocation) {
-        System.out.println("-----> FrontEnd placeorder orderid:" + orderid + " itemid:" + itemid+ " deliverylocation:" + deliverylocation);
-        try {
-            URL url = new URL("http://localhost:8080/placeOrder?orderid=" + orderid +
-                    "&itemid=" + itemid + "&deliverylocation=" + URLEncoder.encode(deliverylocation, "UTF-8"));
-            String json = makeRequest(url);
-            System.out.println("FrontEndResource.placeorder json:" + json);
-            System.out.println("FrontEndResource.placeorder complete, now show order...");
-            url = new URL("http://localhost:8080/showorder?orderid=" + orderid );
-            json = makeRequest(url);
-            return getFullPage(json);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return home();
-        }
-    }
-
-    @GET
-    @Produces(MediaType.TEXT_HTML)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     @Path("/command")
     public String command(Command command) {
         System.out.println("FrontEndResource.command " + command.serviceName);
         System.out.println("FrontEndResource.command " + command.commandName);
         try {
-            URL url = new URL("http://order.msdataworkshop:8080/" + command.commandName + "?orderid=" + command.orderId );
-            return getFullPage(makeRequest(url));
+            URL url = new URL("http://" + command.serviceName + ".msdataworkshop:8080/" + command.commandName + "?orderid=" + command.orderId );
+            return makeRequest(url);
         } catch (IOException e) {
             e.printStackTrace();
-            return home();
+            return exceptionMessage(e);
         }
     }
 
@@ -177,10 +156,10 @@ public class FrontEndResource {
     public String inventoryservicetest(@QueryParam("test") String test) {
         try {
             URL url = new URL("http://inventory.msdataworkshop:8080/" + test);
-            return getFullPage(makeRequest(url));
+            return makeRequest(url);
         } catch (IOException e) {
             e.printStackTrace();
-            return home();
+            return exceptionMessage(e);
         }
     }
 
@@ -190,10 +169,10 @@ public class FrontEndResource {
     public String inventoryservicetestwithitem(@QueryParam("test") String test, @QueryParam("itemid") String itemid) {
         try {
             URL url = new URL("http://inventory.msdataworkshop:8080/" + test + "?itemid=" + itemid);
-            return getFullPage(makeRequest(url));
+            return makeRequest(url);
         } catch (IOException e) {
             e.printStackTrace();
-            return home();
+            return exceptionMessage(e);
         }
     }
 
@@ -205,10 +184,10 @@ public class FrontEndResource {
             String urlString = "http://atpaqadmin.msdataworkshop:8080/" + test;
             System.out.println("FrontEndResource.adminservicetest calling");
             URL url = new URL(urlString);
-            return getFullPage(makeRequest(url));
+            return makeRequest(url);
         } catch (IOException e) {
             e.printStackTrace();
-            return home();
+            return exceptionMessage(e);
         }
     }
 
@@ -220,10 +199,10 @@ public class FrontEndResource {
             String urlString = "http://supplier.msdataworkshop:8080/supplier/" + test + "?itemid=" + itemid;
             System.out.println("FrontEndResource.supplierservicecall urlString:" + urlString);
             URL url = new URL(urlString);
-            return getFullPage(makeRequest(url));
+            return makeRequest(url);
         } catch (IOException e) {
             e.printStackTrace();
-            return home();
+            return exceptionMessage(e);
         }
     }
 
@@ -239,11 +218,8 @@ public class FrontEndResource {
         }
     }
 
-    String getFullPage(String string) {
-          return "just returning string";
-    }
-    String home() {
-          return "just returning string";
+    private String exceptionMessage( Exception e) {
+          return "{ message: " + "\"" + e + "\"}";
     }
 
 }
