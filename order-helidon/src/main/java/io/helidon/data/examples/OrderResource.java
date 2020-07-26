@@ -202,18 +202,21 @@ public class OrderResource {
     public Response deleteallorders() {
         System.out.println("--->deleteallorders");
         try {
-            String returnJSON = JsonUtils.writeValueAsString(new ResponseHolder(
-                    orderServiceEventProducer.dropOrderViaSODA(atpOrderPdb), ""));
             return Response.ok()
-                    .entity(returnJSON)
+                    .entity(getReturnJSON(orderServiceEventProducer.dropOrderViaSODA(atpOrderPdb)))
                     .build();
         } catch (Exception e) {
             e.printStackTrace();
             return Response.ok()
-                    .entity(JsonUtils.writeValueAsString(new ResponseHolder(
-                            "deleteallorders failed with exception:" + e.toString(), "")))
+                    .entity(getReturnJSON("deleteallorders failed with exception:" + e.toString()))
                     .build();
         }
+    }
+
+    String getReturnJSON (String message) {
+        String returnJSON = " {  \"message\": \"" + message + "\"}";
+        System.out.println("OrderResource.getReturnJSON returnJSON:" + returnJSON);
+        return returnJSON;
     }
 
     @Path("/ordersetlivenesstofalse")
