@@ -58,7 +58,7 @@ public class ATPAQAdminResource {
 
   @Inject
   @Named("orderpdb")
-  private DataSource orderpdbDataSource; // .setFastConnectionFailoverEnabled(false) to get rid of SEVERE yet benign message
+  private DataSource orderpdbDataSource;
 
   @Inject
   @Named("inventorypdb")

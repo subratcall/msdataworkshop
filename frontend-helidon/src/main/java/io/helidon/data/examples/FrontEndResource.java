@@ -116,16 +116,12 @@ public class FrontEndResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("/deleteallorders")
-    public String deleteallorders(Command command) {
-        System.out.println("FrontEndResource.deleteallorders " + command.serviceName);
-        System.out.println("FrontEndResource.deleteallorders " + command.commandName);
-        System.out.println("-----> FrontEnd orderservicecall deleteallorders");
+    @Path("/command")
+    public String command(Command command) {
+        String urlString = "http://" + command.serviceName + ".msdataworkshop:8080/" + command.commandName ;
+        System.out.println("FrontEndResource.command url:" + urlString);
         try {
-            URL url = new URL("http://order.msdataworkshop:8080/deleteallorders");
-            String responseString = makeRequest(url);
-            System.out.println("-----> FrontEnd deleteallorders responseString:" + responseString);
-            return responseString;
+            return makeRequest(new URL(urlString));
         } catch (IOException e) {
             e.printStackTrace();
             return exceptionMessage(e);
@@ -135,13 +131,12 @@ public class FrontEndResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("/command")
-    public String command(Command command) {
+    @Path("/commandWithOrder")
+    public String commandWithOrder(Command command) {
         String urlString = "http://" + command.serviceName + ".msdataworkshop:8080/" + command.commandName + "?orderid=" + command.orderId;
         System.out.println("FrontEndResource.command url:" + urlString);
         try {
-            URL url = new URL(urlString);
-            return makeRequest(url);
+            return makeRequest(new URL(urlString));
         } catch (IOException e) {
             e.printStackTrace();
             return exceptionMessage(e);

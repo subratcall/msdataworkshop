@@ -89,13 +89,21 @@
                   <oj-button on-oj-action="[[lab9DeleteAllOrdersAction]]">Delete All Orders</oj-button>
                   <oj-button on-oj-action="[[lab9Action1]]">Place Order</oj-button>
                   <oj-button on-oj-action="[[lab9ShowOrderAction]]">Show Order</oj-button>
+                  <oj-form-layout>
+                    <oj-input-text label-hint="Item" value="{{lab9Item}}"></oj-input-text>
+                  </oj-form-layout>
+                  <oj-button on-oj-action="[[lab9ShowOrderAction]]">Decrement Inventory</oj-button>
+                  <oj-button on-oj-action="[[lab9ShowOrderAction]]">Increment Inventory</oj-button>
+                  <oj-button on-oj-action="[[lab9ShowOrderAction]]">Show Order</oj-button>
                 </div>
                 <!-- lab10 -->
                 <div slot="lab10">
                   <oj-form-layout>
                     <oj-input-text label-hint="Some Random Stuff" value="{{lab10Stuff}}"></oj-input-text>
                   </oj-form-layout>
-                  <oj-button on-oj-action="[[lab10Action1]]">Button Label</oj-button>
+                  <oj-button on-oj-action="[[lab10EnablePropagationAction]]">Enable Propagation</oj-button>
+                  <oj-button on-oj-action="[[lab10UnschedulePropagationAction]]">Unschedule Propagation</oj-button>
+                  <oj-button on-oj-action="[[lab10DeleteUsersAction]]">Delete Users</oj-button>
                 </div>
               </oj-switcher>
             </div>
@@ -274,7 +282,7 @@
               body: JSON.stringify(order)
             };
 
-            fetch('/deleteallorders', fetchOptions).then(fetchResult => {
+            fetch('/command', fetchOptions).then(fetchResult => {
               vm.httpCode(fetchResult.status);
               fetchResult.json().then(payload => {
                 vm.labResult(JSON.stringify(payload, null, 2));
@@ -298,7 +306,7 @@
               body: JSON.stringify(order)
             };
 
-            fetch('/command', fetchOptions).then(fetchResult => {
+            fetch('/commandWithOrder', fetchOptions).then(fetchResult => {
               vm.httpCode(fetchResult.status);
               fetchResult.json().then(payload => {
                 vm.labResult(JSON.stringify(payload, null, 2));
@@ -310,7 +318,27 @@
           // Lab 10. ----------------------------------------------------------- //
           this.lab10Stuff = ko.observable('XX');
 
-          this.lab10Action1 = function (event, vm) {
+
+          this.lab10EnablePropagationAction = function (event, vm) {
+            var fetchOptions = {
+              method: 'GET',
+              headers: { 'Content-Type': 'application/json' },
+            };
+
+            fetch('http://atpaqadmin.msdataworkshop/enablePropagation', fetchOptions).then(fetchResult => {
+              vm.httpCode(fetchResult.status);
+              fetchResult.json().then(payload => {
+                vm.labResult(JSON.stringify(payload, null, 2));
+              });
+            });
+          };
+
+          this.lab10UnschedulePropagationAction = function (event, vm) {
+            console.log(vm.lab10Stuff());
+            vm.labResult('You entered: ' + vm.lab10Stuff());
+          };
+
+          this.lab10DeleteUsersAction = function (event, vm) {
             console.log(vm.lab10Stuff());
             vm.labResult('You entered: ' + vm.lab10Stuff());
           };
