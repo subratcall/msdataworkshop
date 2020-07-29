@@ -1,97 +1,93 @@
 #!/bin/bash
 
-# either the following command or console can be used to find the DB ocids...
-# oci db autonomous-database list --compartment-id <COMPARTMENT_OCID>
-# oci db autonomous-database list --compartment-id ocid1.compartment.oc1..aaaaaaaatvh4oetwxoay4u6lj64mg7n6bvbc63wmesbwyfsvjlpp5zqhi3sa
+source ./ATP.properties
 
 export SCRIPT_DIR=$(dirname $0)
+export CURRENTTIME=$( date '+%F_%H:%M:%S' )
+echo CURRENTTIME is $CURRENTTIME  ...this will be appended to generated yamls
+mkdir generated-yaml
+
 echo "ORDER DB ......"
-########################################################################################
-# MODIFY "< >" VALUES for ORDER DB....
-########################################################################################
-export orderpdb_walletPassword=$(echo <ORDERPDB_WALLET_PW> | base64)
-export orderpdb_admin_password=$(echo <ORDERPDB_ADMIN_PW> | base64)
-export orderpdb_orderuser_password=$(echo <ORDERPDB_ORDERUSER_PW> | base64)
 echo "get wallet for order db..."
 mkdir orderdbwallet
 cd orderdbwallet
-oci db autonomous-database generate-wallet --autonomous-database-id <ORDERPDB_OCID> --file orderdbwallet.zip --password <ORDERPDB_WALLET_PW>
-#example... oci db autonomous-database generate-wallet --autonomous-database-id ocid1.autonomousdatabase.oc1.phx.abyhqljsal723ppfyoyd62esbe745hlkmwidrpz3eop57yyqc4q5t7tyw6ia --file orderdbwallet.zip --password Welcome_123
-########################################################################################
-# END MODIFY "< >" VALUES for ORDER DB....
-########################################################################################
+echo "oci db autonomous-database generate-wallet --autonomous-database-id $ORDERPDB_OCID --file orderdbwallet.zip --password $orderpdb_walletPassword"
+oci db autonomous-database generate-wallet --autonomous-database-id $ORDERPDB_OCID --file orderdbwallet.zip --password $orderpdb_walletPassword
 unzip orderdbwallet.zip
-export cwallet_sso=$(cat cwallet.sso | base64 | tr -d '\n\r' | base64 | tr -d '\n\r')
-export ewallet_p12=$(cat ewallet.p12 | base64 | tr -d '\n\r' | base64 | tr -d '\n\r')
-export keystore_jks=$(cat keystore.jks | base64 | tr -d '\n\r' | base64 | tr -d '\n\r')
-export ojdbc_properties=$(cat ojdbc.properties | base64 | tr -d '\n\r' | base64 | tr -d '\n\r')
-export README=$(cat README | base64 | tr -d '\n\r' | base64 | tr -d '\n\r')
-export sqlnet_ora=$(cat sqlnet.ora | base64 | tr -d '\n\r' | base64 | tr -d '\n\r')
-export tnsnames_ora=$(cat tnsnames.ora | base64 | tr -d '\n\r' | base64 | tr -d '\n\r')
-export truststore_jks=$(cat truststore.jks | base64 | tr -d '\n\r' | base64 | tr -d '\n\r')
+echo "export values for contents of wallet zip..."
+export orderpdb_cwallet_sso=$(cat cwallet.sso | base64 | tr -d '\n\r' | base64 | tr -d '\n\r')
+export orderpdb_ewallet_p12=$(cat ewallet.p12 | base64 | tr -d '\n\r' | base64 | tr -d '\n\r')
+export orderpdb_keystore_jks=$(cat keystore.jks | base64 | tr -d '\n\r' | base64 | tr -d '\n\r')
+export orderpdb_ojdbc_properties=$(cat ojdbc.properties | base64 | tr -d '\n\r' | base64 | tr -d '\n\r')
+export orderpdb_README=$(cat README | base64 | tr -d '\n\r' | base64 | tr -d '\n\r')
+export orderpdb_sqlnet_ora=$(cat sqlnet.ora | base64 | tr -d '\n\r' | base64 | tr -d '\n\r')
+export orderpdb_tnsnames_ora=$(cat tnsnames.ora | base64 | tr -d '\n\r' | base64 | tr -d '\n\r')
+export orderpdb_truststore_jks=$(cat truststore.jks | base64 | tr -d '\n\r' | base64 | tr -d '\n\r')
+echo "delete wallet zip and dir"
 rm orderdbwallet.zip
 cd ../
 rm -rf orderdbwallet
 
-echo "order yaml file replacements..."
+echo "base64 pws..."
+export orderpdb_walletPassword=$(echo $orderpdb_walletPassword | base64)
+export orderpdb_admin_password=$(echo $orderpdb_admin_password | base64)
+export orderpdb_orderuser_password=$(echo $orderpdb_orderuser_password | base64)
+
+echo "replace values in order yaml files (files are suffixed with ${CURRENTTIME})..."
 eval "cat <<EOF
 $(<$SCRIPT_DIR/atp-binding-order.yaml)
-EOF" > $SCRIPT_DIR/atp-binding-order.yaml
+EOF" > $SCRIPT_DIR/generated-yaml/atp-binding-order-${CURRENTTIME}.yaml
 eval "cat <<EOF
 $(<$SCRIPT_DIR/atp-secret-order-admin.yaml)
-EOF" > $SCRIPT_DIR/atp-secret-order-admin.yaml
+EOF" > $SCRIPT_DIR/generated-yaml/atp-secret-order-admin-${CURRENTTIME}.yaml
 eval "cat <<EOF
 $(<$SCRIPT_DIR/atp-secret-orderuser.yaml)
-EOF" > $SCRIPT_DIR/atp-secret-orderuser.yaml
+EOF" > $SCRIPT_DIR/generated-yaml/atp-secret-orderuser-${CURRENTTIME}.yaml
 
 echo "creating order binding, and admin and orderuser secrets..."
-kubectl create -f atp-binding-order.yaml -n msdataworkshop
-kubectl create -f atp-secret-order-admin.yaml -n msdataworkshop
-kubectl create -f atp-secret-orderuser.yaml -n msdataworkshop
+kubectl create -f generated-yaml/atp-binding-order-${CURRENTTIME}.yaml -n msdataworkshop
+kubectl create -f generated-yaml/atp-secret-order-admin-${CURRENTTIME}.yaml -n msdataworkshop
+kubectl create -f generated-yaml/atp-secret-orderuser-${CURRENTTIME}.yaml -n msdataworkshop
 
 
 
 
 echo "INVENTORY DB ......"
-########################################################################################
-# MODIFY "< >" VALUES for INVENTORY DB....
-########################################################################################
-export inventorypdb_walletPassword=$(echo <INVENTORYPDB_WALLET_PW> | base64)
-export inventorypdb_admin_password=$(echo <INVENTORYPDB_ADMIN_PW> | base64)
-export inventorypdb_inventoryuser_password=$(echo <INVENTORYPDB_INVENTORYUSER_PW> | base64)
 echo "get wallet for inventory db..."
 mkdir inventorydbwallet
 cd inventorydbwallet
-oci db autonomous-database generate-wallet --autonomous-database-id <INVENTORYPDB_OCID> --file dbwallet.zip --password <INVENTORYPDB_WALLET_PW>
-#example... oci db autonomous-database generate-wallet --autonomous-database-id ocid1.autonomousdatabase.oc1.phx.abyhqljsykgg4c5ou2yllx6pkt76nxppmt3wbmx2hwztkxkgmpjatz6fsxqq --file inventorydbwallet.zip --password Welcome_123
-########################################################################################
-# END MODIFY "< >" VALUES for INVENTORY DB....
-########################################################################################
+echo "oci db autonomous-database generate-wallet --autonomous-database-id $INVENTORYPDB_OCID --file dbwallet.zip --password $inventorypdb_walletPassword"
+oci db autonomous-database generate-wallet --autonomous-database-id $INVENTORYPDB_OCID --file inventorydbwallet.zip --password $inventorypdb_walletPassword
 unzip inventorydbwallet.zip
-export cwallet_sso=$(cat cwallet.sso | base64 | tr -d '\n\r' | base64 | tr -d '\n\r')
-export ewallet_p12=$(cat ewallet.p12 | base64 | tr -d '\n\r' | base64 | tr -d '\n\r')
-export keystore_jks=$(cat keystore.jks | base64 | tr -d '\n\r' | base64 | tr -d '\n\r')
-export ojdbc_properties=$(cat ojdbc.properties | base64 | tr -d '\n\r' | base64 | tr -d '\n\r')
-export README=$(cat README | base64 | tr -d '\n\r' | base64 | tr -d '\n\r')
-export sqlnet_ora=$(cat sqlnet.ora | base64 | tr -d '\n\r' | base64 | tr -d '\n\r')
-export tnsnames_ora=$(cat tnsnames.ora | base64 | tr -d '\n\r' | base64 | tr -d '\n\r')
-export truststore_jks=$(cat truststore.jks | base64 | tr -d '\n\r' | base64 | tr -d '\n\r')
+export inventorypdb_cwallet_sso=$(cat cwallet.sso | base64 | tr -d '\n\r' | base64 | tr -d '\n\r')
+export inventorypdb_ewallet_p12=$(cat ewallet.p12 | base64 | tr -d '\n\r' | base64 | tr -d '\n\r')
+export inventorypdb_keystore_jks=$(cat keystore.jks | base64 | tr -d '\n\r' | base64 | tr -d '\n\r')
+export inventorypdb_ojdbc_properties=$(cat ojdbc.properties | base64 | tr -d '\n\r' | base64 | tr -d '\n\r')
+export inventorypdb_README=$(cat README | base64 | tr -d '\n\r' | base64 | tr -d '\n\r')
+export inventorypdb_sqlnet_ora=$(cat sqlnet.ora | base64 | tr -d '\n\r' | base64 | tr -d '\n\r')
+export inventorypdb_tnsnames_ora=$(cat tnsnames.ora | base64 | tr -d '\n\r' | base64 | tr -d '\n\r')
+export inventorypdb_truststore_jks=$(cat truststore.jks | base64 | tr -d '\n\r' | base64 | tr -d '\n\r')
 rm inventorydbwallet.zip
 cd ../
 rm -rf inventorydbwallet
 
-echo "inventory yaml file replacements..."
+echo "base64 pws..."
+export inventorypdb_walletPassword=$(echo inventorypdb_walletPassword | base64)
+export inventorypdb_admin_password=$(echo inventorypdb_admin_password | base64)
+export inventorypdb_inventoryuser_password=$(echo inventorypdb_inventoryuser_password | base64)
+
+echo "replace values in inventory yaml files (files are suffixed with ${CURRENTTIME})..."
 eval "cat <<EOF
-$(<$SCRIPT_DIR/atp-binding-ordeer.yaml)
-EOF" > $SCRIPT_DIR/atp-binding-inventory.yaml
+$(<$SCRIPT_DIR/atp-binding-inventory.yaml)
+EOF" > $SCRIPT_DIR/generated-yaml/atp-binding-inventory-${CURRENTTIME}.yaml
 eval "cat <<EOF
 $(<$SCRIPT_DIR/atp-secret-inventory-admin.yaml)
-EOF" > $SCRIPT_DIR/atp-secret-inventory-admin.yaml
+EOF" > $SCRIPT_DIR/generated-yaml/atp-secret-inventory-admin-${CURRENTTIME}.yaml
 eval "cat <<EOF
 $(<$SCRIPT_DIR/atp-secret-inventoryuser.yaml)
-EOF" > $SCRIPT_DIR/atp-secret-inventoryuser.yaml
+EOF" > $SCRIPT_DIR/generated-yaml/atp-secret-inventoryuser-${CURRENTTIME}.yaml
 
 echo "creating inventory binding, and admin and inventoryuser secrets..."
-kubectl create -f atp-binding-inventory.yaml -n msdataworkshop
-kubectl create -f atp-secret-inventory-admin.yaml -n msdataworkshop
-kubectl create -f atp-secret-inventoryuser.yaml -n msdataworkshop
+kubectl create -f generated-yaml/atp-binding-inventory-${CURRENTTIME}.yaml -n msdataworkshop
+kubectl create -f generated-yaml/atp-secret-inventory-admin-${CURRENTTIME}.yaml -n msdataworkshop
+kubectl create -f generated-yaml/atp-secret-inventoryuser-${CURRENTTIME}.yaml -n msdataworkshop
