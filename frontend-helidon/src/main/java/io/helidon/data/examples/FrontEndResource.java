@@ -80,7 +80,40 @@ public class FrontEndResource {
         } catch (Exception e) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
-    }     
+    }
+
+    @Path("/sushi")
+    @GET
+    @Produces("image/svg+xml")
+    public Response sushi() {
+        try {
+            return Response.ok(Resource.create("web/images/sushi.svg").stream()).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+    }
+
+    @Path("/pizza")
+    @GET
+    @Produces("image/svg+xml")
+    public Response pizza() {
+        try {
+            return Response.ok(Resource.create("web/images/pizza.svg").stream()).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+    }
+
+    @Path("/burger")
+    @GET
+    @Produces("image/svg+xml")
+    public Response burger() {
+        try {
+            return Response.ok(Resource.create("web/images/burger.svg").stream()).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+    }
 
       /* -------------------------------------------------------------------------
       * JET UI supporting wrapper endpoints - we could make these calls
