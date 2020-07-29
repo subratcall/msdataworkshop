@@ -13,10 +13,10 @@ sed -i "s|%ORDER_PDB_NAME%|${ORDER_PDB_NAME}|g" atpaqadmin-deployment-${CURRENTT
 sed -i "s|%INVENTORY_PDB_NAME%|${INVENTORY_PDB_NAME}|g" atpaqadmin-deployment-${CURRENTTIME}.yaml
 
 if [ -z "$1" ]; then
-    kubectl create -f $SCRIPT_DIR/atpaqadmin-deployment-generated.yaml -n msdataworkshop
+    kubectl apply -f $SCRIPT_DIR/atpaqadmin-deployment-${CURRENTTIME}.yaml -n msdataworkshop
 else
-    kubectl create -f <(istioctl kube-inject -f $SCRIPT_DIR/atpaqadmin-deployment-generated.yaml) -n msdataworkshop
+    kubectl apply -f <(istioctl kube-inject -f $SCRIPT_DIR/atpaqadmin-deployment-${CURRENTTIME}.yaml) -n msdataworkshop
 fi
 
-kubectl create -f $SCRIPT_DIR/atpaqadmin-service.yaml -n msdataworkshop
+kubectl apply -f $SCRIPT_DIR/atpaqadmin-service.yaml -n msdataworkshop
 
