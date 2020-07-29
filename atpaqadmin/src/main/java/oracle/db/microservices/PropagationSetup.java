@@ -70,17 +70,20 @@ class PropagationSetup {
     String createInventoryTable(DataSource inventorypdbDataSource) throws SQLException {
         System.out.println("createInventoryTable and add items");
         String returnValue = "createInventoryTable and add items\n";
+        Connection connection = inventorypdbDataSource.getConnection(inventoryuser, inventorypw);
         try {
-            Connection connection = inventorypdbDataSource.getConnection(inventoryuser, inventorypw);
             connection.createStatement().execute(
                     "create table inventory (inventoryid varchar(16), inventorylocation varchar(32), inventorycount integer)");
             returnValue += " table created, ";
-            connection.createStatement().execute("insert into inventory values ('carrots', '1468 WEBSTER ST,San Francisco,CA', 0)");
-            connection.createStatement().execute("insert into inventory values ('cucumbers', '1469 WEBSTER ST,San Francisco,CA', 0)");
-            connection.createStatement().execute("insert into inventory values ('tomatoes', '1470 WEBSTER ST,San Francisco,CA', 0)");
-            connection.createStatement().execute("insert into inventory values ('onions', '1471 WEBSTER ST,San Francisco,CA', 0)");
-            returnValue += " table populated with veggie types, ";
-            returnValue += "success";
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            returnValue += ex.toString();
+        }
+        try {
+            connection.createStatement().execute("insert into inventory values ('sushi', '1468 WEBSTER ST,San Francisco,CA', 0)");
+            connection.createStatement().execute("insert into inventory values ('pizza', '1469 WEBSTER ST,San Francisco,CA', 0)");
+            connection.createStatement().execute("insert into inventory values ('burger', '1470 WEBSTER ST,San Francisco,CA', 0)");
+            returnValue += " table populated with food types, success";
         } catch (SQLException ex) {
             ex.printStackTrace();
             returnValue += ex.toString();

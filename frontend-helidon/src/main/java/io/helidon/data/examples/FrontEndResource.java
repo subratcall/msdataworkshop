@@ -31,7 +31,6 @@ import javax.ws.rs.core.Response;
 import io.helidon.common.configurable.Resource;
 
 
-
 @Path("/")
 @ApplicationScoped
 @Traced
@@ -83,7 +82,7 @@ public class FrontEndResource {
         }
     }     
 
-         /* -------------------------------------------------------------------------
+      /* -------------------------------------------------------------------------
       * JET UI supporting wrapper endpoints - we could make these calls
       * Directly from the JS code, however, this way, the UI is abstracted from 
       * having to know ultimately where the backend services are living 
@@ -112,93 +111,34 @@ public class FrontEndResource {
   
       }
 
-
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/command")
     public String command(Command command) {
-        String urlString = "http://" + command.serviceName + ".msdataworkshop:8080/" + command.commandName ;
-        System.out.println("FrontEndResource.command url:" + urlString);
+        boolean isOrderBasedCommand = command.serviceName.equals("order") && command.orderId != -1;
+        boolean isSupplierCommand = command.serviceName.equals("supplier");
+        boolean isHealthCommand = command.commandName.indexOf("health") > -1;
+        String urlString = "http://" + command.serviceName + ".msdataworkshop:8080/" + command.commandName +
+                (isOrderBasedCommand ? "?orderid=" + command.orderId : "") +
+                (isSupplierCommand ? "?itemid="+ command.orderItem : "");
+        System.out.println("FrontEndResource.command url:" + urlString );
         try {
-            return makeRequest(new URL(urlString));
-        } catch (IOException e) {
+            String response = makeRequest(new URL(urlString));
+            String returnString =  isOrderBasedCommand || isHealthCommand ? response: asJSONMessage(response);
+            System.out.println("FrontEndResource.command url:" + urlString + "  returnString:" + returnString);
+            return returnString;
+        } catch (Exception e) {
             e.printStackTrace();
-            return exceptionMessage(e);
-        }
-    }
-
-    @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("/commandWithOrder")
-    public String commandWithOrder(Command command) {
-        String urlString = "http://" + command.serviceName + ".msdataworkshop:8080/" + command.commandName + "?orderid=" + command.orderId;
-        System.out.println("FrontEndResource.command url:" + urlString);
-        try {
-            return makeRequest(new URL(urlString));
-        } catch (IOException e) {
-            e.printStackTrace();
-            return exceptionMessage(e);
+            return asJSONMessage(e);
         }
     }
 
 
-
-    @GET
-    @Produces(MediaType.TEXT_HTML)
-    @Path("/inventoryservicetest")
-    public String inventoryservicetest(@QueryParam("test") String test) {
-        try {
-            URL url = new URL("http://inventory.msdataworkshop:8080/" + test);
-            return makeRequest(url);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return exceptionMessage(e);
-        }
-    }
-
-    @GET
-    @Produces(MediaType.TEXT_HTML)
-    @Path("/inventoryservicetestwithitem")
-    public String inventoryservicetestwithitem(@QueryParam("test") String test, @QueryParam("itemid") String itemid) {
-        try {
-            URL url = new URL("http://inventory.msdataworkshop:8080/" + test + "?itemid=" + itemid);
-            return makeRequest(url);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return exceptionMessage(e);
-        }
-    }
-
-    @GET
-    @Produces(MediaType.TEXT_HTML)
-    @Path("/adminservicetest")
-    public String adminservicetest(@QueryParam("test") String test) {
-        try {
-            String urlString = "http://atpaqadmin.msdataworkshop:8080/" + test;
-            System.out.println("FrontEndResource.adminservicetest calling");
-            URL url = new URL(urlString);
-            return makeRequest(url);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return exceptionMessage(e);
-        }
-    }
-
-    @GET
-    @Produces(MediaType.TEXT_HTML)
-    @Path("/supplierservicecall")
-    public String supplierservicecall(@QueryParam("test") String test, @QueryParam("itemid") String itemid) {
-        try { //http://localhost:8080/supplier/getInventory?itemid=cucumbers
-            String urlString = "http://supplier.msdataworkshop:8080/supplier/" + test + "?itemid=" + itemid;
-            System.out.println("FrontEndResource.supplierservicecall urlString:" + urlString);
-            URL url = new URL(urlString);
-            return makeRequest(url);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return exceptionMessage(e);
-        }
+    private String asJSONMessage(Object e) {
+        FrontEndResponse frontEndResponse = new FrontEndResponse();
+        frontEndResponse.message = e.toString();
+        return JsonUtils.writeValueAsString(frontEndResponse);
     }
 
     // todo convert to rest call/annotation
@@ -211,10 +151,6 @@ public class FrontEndResource {
             ex.printStackTrace();
             return ex.getMessage();
         }
-    }
-
-    private String exceptionMessage( Exception e) {
-          return "{ message: " + "\"" + e + "\"}";
     }
 
 }

@@ -69,9 +69,8 @@ The workshop is designed to be modular and dynamic such that it is possible to d
             - example `docker login us-phoenix-1.ocir.io -u ax2mkasdfkkx/msdataworkshopuser -p Q:4qXo:7ADFaf9KZddZQ`
         - Verify with `docker image` command
    - For convenience, vi ~/.bashrc, append the following lines 
-        (substituting MSDATAWORKSHOP_NAMESPACE, MSDATAWORKSHOP_LOCATION, DOCKER_REGISTRY, and *PDB_NAME values as appropriate) 
+        (substituting MSDATAWORKSHOP_LOCATION, DOCKER_REGISTRY, and *PDB_NAME values as appropriate) 
 
-         export MSDATAWORKSHOP_NAMESPACE=msdataworkshop
          export MSDATAWORKSHOP_LOCATION=~/msdataworkshop
          source $MSDATAWORKSHOP_LOCATION/shortcutaliases
          export PATH=$PATH:$MSDATAWORKSHOP_LOCATION/utils/

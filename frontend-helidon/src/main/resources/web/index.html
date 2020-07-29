@@ -72,38 +72,43 @@
                 <div slot="lab7">
                   <oj-button on-oj-action="[[lab7Action1]]">Test Data Sources</oj-button>
                 </div>
-                <!-- lab8 -->
                 <div slot="lab8">
-                  <oj-button on-oj-action="[[lab8Action1]]">Create Users</oj-button>
-                  <oj-button on-oj-action="[[lab8Action2]]">Create Inventory Table</oj-button>
-                  <oj-button on-oj-action="[[lab8Action3]]">Create Database Links</oj-button>
-                  <oj-button on-oj-action="[[lab8Action4]]">Setup Tables Queues and Propagation</oj-button>
+                  <oj-button on-oj-action="[[lab8CreateUsersAction]]">Create Users</oj-button>
+                  <oj-button on-oj-action="[[lab8CreateInventoryTableAction]]">Create Inventory Table</oj-button>
+                  <oj-button on-oj-action="[[lab8CreateDatabaseLinksAction]]">Create Database Links</oj-button>
+                  <oj-button on-oj-action="[[lab8SetupTablesQueuesAndPropagationAction]]">Setup Tables Queues and Propagation</oj-button>
+                  <oj-button on-oj-action="[[lab8EnablePropagationAction]]">Enable Propagation</oj-button>
+                  <oj-button on-oj-action="[[lab8UnschedulePropagationAction]]">Unschedule Propagation</oj-button>
+                  <oj-button on-oj-action="[[lab8DeleteUsersAction]]">Delete Users</oj-button>
                 </div>
                 <!-- lab9 -->
                 <div slot="lab9">
                   <oj-form-layout>
-                    <oj-input-text label-hint="Veggie" value="{{lab9Veggie}}"></oj-input-text>
+                    <oj-input-text label-hint="Food" value="{{lab9Food}}"></oj-input-text>
                     <oj-input-text label-hint="Deliver to" value="{{lab9DeliverTo}}"></oj-input-text>
                     <oj-input-text label-hint="Order ID" value="{{lab9OrderId}}"></oj-input-text>
                   </oj-form-layout>
                   <oj-button on-oj-action="[[lab9DeleteAllOrdersAction]]">Delete All Orders</oj-button>
-                  <oj-button on-oj-action="[[lab9Action1]]">Place Order</oj-button>
+                  <oj-button on-oj-action="[[lab9PlaceOrderAction]]">Place Order</oj-button>
                   <oj-button on-oj-action="[[lab9ShowOrderAction]]">Show Order</oj-button>
+                  <br><br>
                   <oj-form-layout>
                     <oj-input-text label-hint="Item" value="{{lab9Item}}"></oj-input-text>
                   </oj-form-layout>
-                  <oj-button on-oj-action="[[lab9ShowOrderAction]]">Decrement Inventory</oj-button>
-                  <oj-button on-oj-action="[[lab9ShowOrderAction]]">Increment Inventory</oj-button>
-                  <oj-button on-oj-action="[[lab9ShowOrderAction]]">Show Order</oj-button>
+                  <oj-button on-oj-action="[[lab9AddInventoryAction]]">Add Inventory</oj-button>
+                  <oj-button on-oj-action="[[lab9RemoveInventoryAction]]">Remove Inventory</oj-button>
+                  <oj-button on-oj-action="[[lab9GetInventoryAction]]">Get Inventory</oj-button>
                 </div>
                 <!-- lab10 -->
                 <div slot="lab10">
-                  <oj-form-layout>
-                    <oj-input-text label-hint="Some Random Stuff" value="{{lab10Stuff}}"></oj-input-text>
-                  </oj-form-layout>
-                  <oj-button on-oj-action="[[lab10EnablePropagationAction]]">Enable Propagation</oj-button>
-                  <oj-button on-oj-action="[[lab10UnschedulePropagationAction]]">Unschedule Propagation</oj-button>
-                  <oj-button on-oj-action="[[lab10DeleteUsersAction]]">Delete Users</oj-button>
+                  <oj-button on-oj-action="[[lab10ShowMetricsAction]]">Show Metrics</oj-button>
+                  <br><br>
+                  <oj-button on-oj-action="[[lab10healthliveAction]]">Show Health: Liveness</oj-button>
+                  <oj-button on-oj-action="[[lab10healthreadyAction]]">Show Health: Readiness</oj-button>
+                  <oj-button on-oj-action="[[lab10ordersetlivenesstofalseAction]]">Set Liveness to False</oj-button>
+                  <oj-button on-oj-action="[[lab10lastContainerStartTimeAction]]">Get Last Container Start Time</oj-button>
+                  <br><br>
+                  <oj-button on-oj-action="[[lab10ShowTracingAction]]">Show Tracing</oj-button>
                 </div>
               </oj-switcher>
             </div>
@@ -194,12 +199,12 @@
           const smQuery = ResponsiveUtils.getFrameworkQuery(ResponsiveUtils.FRAMEWORK_QUERY_KEY.SM_ONLY);
           this.smScreen = ResponsiveKnockoutUtils.createMediaQueryObservable(smQuery);
 
-          //Hold the results of the last call 
+          //Hold the results of the last call
           this.labResult = ko.observable();
           this.httpCode = ko.observable();
 
 
-          // Screen Control 
+          // Screen Control
           this.selectedTask = ko.observable('about');
           this.selectedTask.subscribe(function () { this.labResult(null) }.bind(this));
 
@@ -208,7 +213,7 @@
           this.menuTasks = new Map();
           this.menuTasks.set('about', { label: 'About', title: 'About the GrubDash Explorer', description: 'The GrubDash Explorer screen allows you to test the results of each lab.  Simply click the tab on the left that corresponds to the lab that you want to test out and follow the on-screen instructions.' });
           this.menuTasks.set('lab7', { label: 'Datasources', title: 'Datasources', description: 'Verify that the Datasources are all working' });
-          this.menuTasks.set('lab8', { label: 'Setup Data and Messaging', title: 'Define Setup Data', description: 'This lab seeds setup data into the GrubDash system' });
+          this.menuTasks.set('lab8', { label: 'Setup (and Tear Down) Data and Messaging', title: 'Define Setup Data', description: 'This lab seeds setup data into the GrubDash system' });
           this.menuTasks.set('lab9', { label: 'Transactional', title: 'Transactional', description: 'JSON and relational data types, AQ transactional event-driven communication, choreography saga, event sourcing, and CQRS' });
           this.menuTasks.set('lab10', { label: 'Tracing, Metrics, and Health', title: 'Tracing, Metrics, and Health', description: 'Use Helidon features to provide tracing, metrics, and health checks' });
 
@@ -220,36 +225,195 @@
 
           // Lab 7. ----------------------------------------------------------- //
           this.lab7Action1 = function (event, vm) {
-            vm.labResult('Lab 7.1 done');
-          }
+            var order = {
+              serviceName: 'atpaqadmin',
+              commandName: 'testdatasources',
+              orderId: -1,
+              orderItem: vm.lab9Food(),
+              deliverTo: vm.lab9DeliverTo()
+            };
+            var fetchOptions = {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(order)
+            };
 
-          // Lab 8. ----------------------------------------------------------- //
-          this.lab8Action1 = function (event, vm) {
-            vm.labResult('Lab 8.1 done');
-          }
-          this.lab8Action2 = function (event, vm) {
-            vm.labResult('Lab 8.2 done');
-          }
-          this.lab8Action3 = function (event, vm) {
-            vm.labResult('Lab 8.3 done');
-          }
-          this.lab8Action4 = function (event, vm) {
-            vm.labResult('Lab 8.4 done');
-          }
+            fetch('/command', fetchOptions).then(fetchResult => {
+              vm.httpCode(fetchResult.status);
+              fetchResult.json().then(payload => {
+                vm.labResult(JSON.stringify(payload, null, 2));
+              });
+            });
+          };
+
+
+      // Lab 8. ----------------------------------------------------------- //
+          this.lab8CreateUsersAction = function (event, vm) {
+            var order = {
+              serviceName: 'atpaqadmin',
+              commandName: 'createUsers',
+              orderId: -1,
+              orderItem: vm.lab9Food(),
+              deliverTo: vm.lab9DeliverTo()
+            };
+            var fetchOptions = {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(order)
+            };
+
+            fetch('/command', fetchOptions).then(fetchResult => {
+              vm.httpCode(fetchResult.status);
+              fetchResult.json().then(payload => {
+                vm.labResult(JSON.stringify(payload, null, 2));
+              });
+            });
+          };
+
+          this.lab8CreateInventoryTableAction = function (event, vm) {
+            var order = {
+              serviceName: 'atpaqadmin',
+              commandName: 'createInventoryTable',
+              orderId: -1,
+              orderItem: vm.lab9Food(),
+              deliverTo: vm.lab9DeliverTo()
+            };
+            var fetchOptions = {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(order)
+            };
+
+            fetch('/command', fetchOptions).then(fetchResult => {
+              vm.httpCode(fetchResult.status);
+              fetchResult.json().then(payload => {
+                vm.labResult(JSON.stringify(payload, null, 2));
+              });
+            });
+          };
+
+          this.lab8CreateDatabaseLinksAction = function (event, vm) {
+            var order = {
+              serviceName: 'atpaqadmin',
+              commandName: 'createDBLinks',
+              orderId: -1,
+              orderItem: vm.lab9Food(),
+              deliverTo: vm.lab9DeliverTo()
+            };
+            var fetchOptions = {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(order)
+            };
+
+            fetch('/command', fetchOptions).then(fetchResult => {
+              vm.httpCode(fetchResult.status);
+              fetchResult.json().then(payload => {
+                vm.labResult(JSON.stringify(payload, null, 2));
+              });
+            });
+          };
+
+          this.lab8SetupTablesQueuesAndPropagationAction = function (event, vm) {
+            var order = {
+              serviceName: 'atpaqadmin',
+              commandName: 'setupTablesQueuesAndPropagation',
+              orderId: -1,
+              orderItem: vm.lab9Food(),
+              deliverTo: vm.lab9DeliverTo()
+            };
+            var fetchOptions = {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(order)
+            };
+
+            fetch('/command', fetchOptions).then(fetchResult => {
+              vm.httpCode(fetchResult.status);
+              fetchResult.json().then(payload => {
+                vm.labResult(JSON.stringify(payload, null, 2));
+              });
+            });
+          };
+
+          this.lab8EnablePropagationAction = function (event, vm) {
+            var order = {
+              serviceName: 'atpaqadmin',
+              commandName: 'enablePropagation',
+              orderId: -1,
+              orderItem: vm.lab9Food(),
+              deliverTo: vm.lab9DeliverTo()
+            };
+            var fetchOptions = {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(order)
+            };
+
+            fetch('/command', fetchOptions).then(fetchResult => {
+              vm.httpCode(fetchResult.status);
+              fetchResult.json().then(payload => {
+                vm.labResult(JSON.stringify(payload, null, 2));
+              });
+            });
+          };
+
+          this.lab8UnschedulePropagationAction = function (event, vm) {
+            var order = {
+              serviceName: 'atpaqadmin',
+              commandName: 'unschedulePropagation',
+              orderId: -1,
+              orderItem: vm.lab9Food(),
+              deliverTo: vm.lab9DeliverTo()
+            };
+            var fetchOptions = {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(order)
+            };
+
+            fetch('/command', fetchOptions).then(fetchResult => {
+              vm.httpCode(fetchResult.status);
+              fetchResult.json().then(payload => {
+                vm.labResult(JSON.stringify(payload, null, 2));
+              });
+            });
+          };
+
+          this.lab8DeleteUsersAction = function (event, vm) {
+            var order = {
+              serviceName: 'atpaqadmin',
+              commandName: 'deleteUsers',
+              orderId: -1,
+              orderItem: vm.lab9Food(),
+              deliverTo: vm.lab9DeliverTo()
+            };
+            var fetchOptions = {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(order)
+            };
+
+            fetch('/command', fetchOptions).then(fetchResult => {
+              vm.httpCode(fetchResult.status);
+              fetchResult.json().then(payload => {
+                vm.labResult(JSON.stringify(payload, null, 2));
+              });
+            });
+          };
 
           // Lab 9. ----------------------------------------------------------- //
-          this.lab9Veggie = ko.observable('cucumbers');
+          this.lab9Food = ko.observable('sushi');
           this.lab9OrderId = ko.observable(66);
           this.lab9DeliverTo = ko.observable('780 PANORAMA DR,San Francisco,CA');
+          this.lab9Item = ko.observable('sushi');
 
-          this.lab9Action1 = function (event, vm) {
-            // Create the payload ensuring that the types
-            // match the corresponding Java Object
+          this.lab9PlaceOrderAction = function (event, vm) {
             var order = {
               serviceName: 'order',
               commandName: 'placeOrder',
               orderId: Number.parseInt(vm.lab9OrderId()),
-              orderItem: vm.lab9Veggie(),
+              orderItem: vm.lab9Food(),
               deliverTo: vm.lab9DeliverTo()
             };
             var fetchOptions = {
@@ -267,14 +431,12 @@
           }
 
           this.lab9DeleteAllOrdersAction = function (event, vm) {
-            // Create the payload ensuring that the types
-            // match the corresponding Java Object
             var order = {
               serviceName: 'order',
               commandName: 'deleteallorders',
-              orderId: Number.parseInt(vm.lab9OrderId()),
-              orderItem: vm.lab9Veggie(),
-              deliverTo: vm.lab9DeliverTo()
+              orderId: -1,
+              orderItem: '',
+              deliverTo: ''
             };
             var fetchOptions = {
               method: 'POST',
@@ -291,13 +453,11 @@
           }
 
           this.lab9ShowOrderAction = function (event, vm) {
-            // Create the payload ensuring that the types
-            // match the corresponding Java Object
             var order = {
               serviceName: 'order',
               commandName: 'showorder',
               orderId: Number.parseInt(vm.lab9OrderId()),
-              orderItem: vm.lab9Veggie(),
+              orderItem: vm.lab9Food(),
               deliverTo: vm.lab9DeliverTo()
             };
             var fetchOptions = {
@@ -306,7 +466,30 @@
               body: JSON.stringify(order)
             };
 
-            fetch('/commandWithOrder', fetchOptions).then(fetchResult => {
+            fetch('/command', fetchOptions).then(fetchResult => {
+              vm.httpCode(fetchResult.status);
+              fetchResult.json().then(payload => {
+                vm.labResult(JSON.stringify(payload, null, 2));
+              });
+            });
+          }
+          // supplier service
+
+          this.lab9AddInventoryAction = function (event, vm) {
+            var order = {
+              serviceName: 'supplier',
+              commandName: 'addInventory',
+              orderId: -1,
+              orderItem: vm.lab9Item(),
+              deliverTo: vm.lab9DeliverTo()
+            };
+            var fetchOptions = {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(order)
+            };
+
+            fetch('/command', fetchOptions).then(fetchResult => {
               vm.httpCode(fetchResult.status);
               fetchResult.json().then(payload => {
                 vm.labResult(JSON.stringify(payload, null, 2));
@@ -314,18 +497,68 @@
             });
           }
 
-
-          // Lab 10. ----------------------------------------------------------- //
-          this.lab10Stuff = ko.observable('XX');
-
-
-          this.lab10EnablePropagationAction = function (event, vm) {
+          this.lab9RemoveInventoryAction = function (event, vm) {
+            var order = {
+              serviceName: 'supplier',
+              commandName: 'removeInventory',
+              orderId: -1,
+              orderItem: vm.lab9Item(),
+              deliverTo: vm.lab9DeliverTo()
+            };
             var fetchOptions = {
-              method: 'GET',
+              method: 'POST',
               headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(order)
             };
 
-            fetch('http://atpaqadmin.msdataworkshop/enablePropagation', fetchOptions).then(fetchResult => {
+            fetch('/command', fetchOptions).then(fetchResult => {
+              vm.httpCode(fetchResult.status);
+              fetchResult.json().then(payload => {
+                vm.labResult(JSON.stringify(payload, null, 2));
+              });
+            });
+          }
+
+          this.lab9GetInventoryAction = function (event, vm) {
+            var order = {
+              serviceName: 'supplier',
+              commandName: 'getInventory',
+              orderId: -1,
+              orderItem: vm.lab9Item(),
+              deliverTo: vm.lab9DeliverTo()
+            };
+            var fetchOptions = {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(order)
+            };
+
+            fetch('/command', fetchOptions).then(fetchResult => {
+              vm.httpCode(fetchResult.status);
+              fetchResult.json().then(payload => {
+                vm.labResult(JSON.stringify(payload, null, 2));
+              });
+            });
+          }
+
+          // Lab 10. ----------------------------------------------------------- //
+
+
+          this.lab10ShowMetricsAction = function (event, vm) {
+            var order = {
+              serviceName: 'order',
+              commandName: 'metrics',
+              orderId: -1,
+              orderItem: vm.lab9Food(),
+              deliverTo: vm.lab9DeliverTo()
+            };
+            var fetchOptions = {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(order)
+            };
+
+            fetch('/command', fetchOptions).then(fetchResult => {
               vm.httpCode(fetchResult.status);
               fetchResult.json().then(payload => {
                 vm.labResult(JSON.stringify(payload, null, 2));
@@ -333,20 +566,119 @@
             });
           };
 
-          this.lab10UnschedulePropagationAction = function (event, vm) {
-            console.log(vm.lab10Stuff());
-            vm.labResult('You entered: ' + vm.lab10Stuff());
+
+          this.lab10healthliveAction = function (event, vm) {
+            var order = {
+              serviceName: 'order',
+              commandName: 'health/live',
+              orderId: -1,
+              orderItem: vm.lab9Food(),
+              deliverTo: vm.lab9DeliverTo()
+            };
+            var fetchOptions = {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(order)
+            };
+
+            fetch('/command', fetchOptions).then(fetchResult => {
+              vm.httpCode(fetchResult.status);
+              fetchResult.json().then(payload => {
+                vm.labResult(JSON.stringify(payload, null, 2));
+              });
+            });
           };
 
-          this.lab10DeleteUsersAction = function (event, vm) {
-            console.log(vm.lab10Stuff());
-            vm.labResult('You entered: ' + vm.lab10Stuff());
+          this.lab10healthreadyAction = function (event, vm) {
+            var order = {
+              serviceName: 'order',
+              commandName: 'health/ready',
+              orderId: -1,
+              orderItem: vm.lab9Food(),
+              deliverTo: vm.lab9DeliverTo()
+            };
+            var fetchOptions = {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(order)
+            };
+
+            fetch('/command', fetchOptions).then(fetchResult => {
+              vm.httpCode(fetchResult.status);
+              fetchResult.json().then(payload => {
+                vm.labResult(JSON.stringify(payload, null, 2));
+              });
+            });
+          };
+
+          this.lab10ordersetlivenesstofalseAction = function (event, vm) {
+            var order = {
+              serviceName: 'order',
+              commandName: 'ordersetlivenesstofalse',
+              orderId: -1,
+              orderItem: vm.lab9Food(),
+              deliverTo: vm.lab9DeliverTo()
+            };
+            var fetchOptions = {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(order)
+            };
+
+            fetch('/command', fetchOptions).then(fetchResult => {
+              vm.httpCode(fetchResult.status);
+              fetchResult.json().then(payload => {
+                vm.labResult(JSON.stringify(payload, null, 2));
+              });
+            });
+          };
+
+          this.lab10lastContainerStartTimeAction = function (event, vm) {
+            var order = {
+              serviceName: 'order',
+              commandName: 'lastContainerStartTime',
+              orderId: -1,
+              orderItem: vm.lab9Food(),
+              deliverTo: vm.lab9DeliverTo()
+            };
+            var fetchOptions = {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(order)
+            };
+
+            fetch('/command', fetchOptions).then(fetchResult => {
+              vm.httpCode(fetchResult.status);
+              fetchResult.json().then(payload => {
+                vm.labResult(JSON.stringify(payload, null, 2));
+              });
+            });
+          };
+
+          this.lab10ShowTracingAction = function (event, vm) {
+            var order = {
+              serviceName: 'atpaqadmin',
+              commandName: 'deleteUsers',
+              orderId: -1,
+              orderItem: vm.lab9Food(),
+              deliverTo: vm.lab9DeliverTo()
+            };
+            var fetchOptions = {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(order)
+            };
+
+            fetch('/command', fetchOptions).then(fetchResult => {
+              vm.httpCode(fetchResult.status);
+              fetchResult.json().then(payload => {
+                vm.labResult(JSON.stringify(payload, null, 2));
+              });
+            });
           };
 
 
-
-
-          // Footer      
+          // Footer
           this.footerLinks = [
             { name: 'About Oracle', linkId: 'aboutOracle', linkTarget: 'http://www.oracle.com/us/corporate/index.html#menu-about' },
             { name: "Contact Us", id: "contactUs", linkTarget: "http://www.oracle.com/us/corporate/contact/index.html" },

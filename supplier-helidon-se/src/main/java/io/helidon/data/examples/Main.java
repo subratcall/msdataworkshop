@@ -49,7 +49,7 @@ public final class Main {
     return Routing
         .builder()
         .register(JsonSupport.create())
-        .register("/supplier", rsiService)
+        .register("/", rsiService)
         .build();
   }
 }

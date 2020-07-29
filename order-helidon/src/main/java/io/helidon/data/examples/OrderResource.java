@@ -85,6 +85,7 @@ public class OrderResource {
         startEventConsumerIfNotStarted();
         OrderDetail orderDetail = new OrderDetail();
         orderDetail.setOrderId(orderid);
+        orderDetail.setItemId(itemid);
         orderDetail.setOrderStatus("pending");
         orderDetail.setDeliveryLocation(deliverylocation);
         cachedOrders.put(orderid, orderDetail);
@@ -203,21 +204,16 @@ public class OrderResource {
         System.out.println("--->deleteallorders");
         try {
             return Response.ok()
-                    .entity(getReturnJSON(orderServiceEventProducer.dropOrderViaSODA(atpOrderPdb)))
+                    .entity(orderServiceEventProducer.dropOrderViaSODA(atpOrderPdb))
                     .build();
         } catch (Exception e) {
             e.printStackTrace();
             return Response.ok()
-                    .entity(getReturnJSON("deleteallorders failed with exception:" + e.toString()))
+                    .entity("deleteallorders failed with exception:" + e.toString())
                     .build();
         }
     }
 
-    String getReturnJSON (String message) {
-        String returnJSON = " {  \"message\": \"" + message + "\"}";
-        System.out.println("OrderResource.getReturnJSON returnJSON:" + returnJSON);
-        return returnJSON;
-    }
 
     @Path("/ordersetlivenesstofalse")
     @GET

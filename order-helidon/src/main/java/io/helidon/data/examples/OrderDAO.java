@@ -14,6 +14,7 @@ public class OrderDAO {
     public Order get(Connection conn, String id) throws OracleException {
         OracleDatabase soda = new OracleRDBMSClient().getDatabase(conn);
         OracleCollection col = soda.openCollection(collectionName);
+        if(col == null) return null;
         OracleDocument doc = col.find().key(id).getOne();
         if (Objects.nonNull(doc)) {
             return JsonUtils.read(doc.getContentAsString(), Order.class);
