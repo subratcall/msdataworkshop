@@ -8,6 +8,7 @@ echo CURRENTTIME is $CURRENTTIME  ...this will be appended to generated deployme
 
 cp atpaqadmin-deployment.yaml atpaqadmin-deployment-$CURRENTTIME.yaml
 
+#may hit sed incompat issue with mac
 sed -i "s|%DOCKER_REGISTRY%|${DOCKER_REGISTRY}|g" atpaqadmin-deployment-${CURRENTTIME}.yaml
 sed -i "s|%ORDER_PDB_NAME%|${ORDER_PDB_NAME}|g" atpaqadmin-deployment-${CURRENTTIME}.yaml
 sed -i "s|%INVENTORY_PDB_NAME%|${INVENTORY_PDB_NAME}|g" atpaqadmin-deployment-${CURRENTTIME}.yaml
