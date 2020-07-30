@@ -83,7 +83,7 @@ public class ATPAQAdminResource {
   @Produces(MediaType.TEXT_HTML)
   public String testdatasources() {
       System.out.println("test datasources...");
-      String resultString = "<br>test datasources... <br>orderpdbDataSource...";
+      String resultString = "orderpdbDataSource...";
     try {
       resultString += " connection:" + orderpdbDataSource.getConnection();
       System.out.println(resultString);
@@ -91,7 +91,7 @@ public class ATPAQAdminResource {
       resultString += e;
       e.printStackTrace();
     }
-    resultString += "<br>inventorypdbDataSource...";
+    resultString += " inventorypdbDataSource...";
       try {
         resultString += " connection:" + inventorypdbDataSource.getConnection();
         System.out.println(resultString);

@@ -132,6 +132,11 @@ public class FrontEndResource {
                       "&itemid=" + command.orderItem + "&deliverylocation=" + URLEncoder.encode(command.deliverTo, "UTF-8"));
               String json = makeRequest(url);
               System.out.println("FrontEndResource.placeorder json:" + json);
+              if (json.indexOf("fail") > -1) { // we return 200 regardless and check for "fail"
+                  if (json.indexOf("SQLIntegrityConstraintViolationException" ) > -1)
+                      return asJSONMessage("SQLIntegrityConstraintViolationException. Delete All Orders or use a different order id to avoid dupes.");
+                  else return asJSONMessage( json);
+              }
               System.out.println("FrontEndResource.placeorder complete, now show order...");
               url = new URL("http://order.msdataworkshop:8080/showorder?orderid=" + command.orderId );
               json = makeRequest(url);

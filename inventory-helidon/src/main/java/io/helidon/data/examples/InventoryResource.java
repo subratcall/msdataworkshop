@@ -37,7 +37,6 @@ public class InventoryResource {
     PoolDataSource atpInventoryPDB;
 
     private Connection conn = null;
-    private InventoryServiceInitialization dbandMessagingInitialization= new InventoryServiceInitialization();
     private InventoryServiceOrderEventConsumer oracleAQEventListener;
     // todo get these from env
     static String inventoryuser = "INVENTORYUSER";

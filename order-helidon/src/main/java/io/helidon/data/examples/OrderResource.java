@@ -15,10 +15,14 @@
  */
 package io.helidon.data.examples;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.Initialized;
+import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.ws.rs.*;
@@ -73,6 +77,17 @@ public class OrderResource {
                 .build();
     }
 
+    public void init(@Observes @Initialized(ApplicationScoped.class) Object init) {
+        System.out.println("OrderResource.init " + init);
+        try {
+            Connection connection = atpOrderPdb.getConnection();
+            System.out.println("OrderResource.init atpOrderPdb.getConnection():" + connection);
+            connection.close();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
     @Path("/placeOrder")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -104,7 +119,7 @@ public class OrderResource {
         } catch (Exception e) {
             e.printStackTrace();
             return Response.ok()
-                    .entity("orderid = " + orderid + " failed with exception:" + e.toString())
+                    .entity("orderid = " + orderid + " failed with exception:" + e.getCause())
                     .build();
         }
 

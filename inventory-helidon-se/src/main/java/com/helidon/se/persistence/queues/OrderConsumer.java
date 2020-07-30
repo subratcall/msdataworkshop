@@ -35,7 +35,7 @@ public class OrderConsumer implements AutoCloseable {
                     context.execute(conn -> {
                         String location = dao.decrement(conn, order.getItemid());
                         context.sendMessage(
-                                new InventoryMessage(order.getOrderid(), order.getItemid(), location, "lettuce"),
+                                new InventoryMessage(order.getOrderid(), order.getItemid(), location, "beer"),
                                 queueOwner, invQueue);
                         conn.commit();
                         return null;

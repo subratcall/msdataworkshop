@@ -54,7 +54,7 @@ def run():
                     {'orderid': orderInfo["orderid"],
                      'itemid': orderInfo["itemid"],
                      'inventorylocation': inventorylocation if cursor.rowcount == 1 else "inventorydoesnotexist",
-                     'suggestiveSale': "lettuce"})
+                     'suggestiveSale': "beer"})
                 payload.TEXT_LEN = len(payload.TEXT_VC)
                 inventoryQueue.enqOne(conn.msgproperties(payload = payload))
 

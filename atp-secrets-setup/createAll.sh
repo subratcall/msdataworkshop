@@ -14,6 +14,7 @@ cd orderdbwallet
 echo "oci db autonomous-database generate-wallet --autonomous-database-id $ORDERPDB_OCID --file orderdbwallet.zip --password $orderpdb_walletPassword"
 oci db autonomous-database generate-wallet --autonomous-database-id $ORDERPDB_OCID --file orderdbwallet.zip --password $orderpdb_walletPassword
 unzip orderdbwallet.zip
+rm orderdbwallet.zip
 echo "export values for contents of wallet zip..."
 export orderpdb_cwallet_sso=$(cat cwallet.sso | base64 | tr -d '\n\r' | base64 | tr -d '\n\r')
 export orderpdb_ewallet_p12=$(cat ewallet.p12 | base64 | tr -d '\n\r' | base64 | tr -d '\n\r')
@@ -23,10 +24,7 @@ export orderpdb_README=$(cat README | base64 | tr -d '\n\r' | base64 | tr -d '\n
 export orderpdb_sqlnet_ora=$(cat sqlnet.ora | base64 | tr -d '\n\r' | base64 | tr -d '\n\r')
 export orderpdb_tnsnames_ora=$(cat tnsnames.ora | base64 | tr -d '\n\r' | base64 | tr -d '\n\r')
 export orderpdb_truststore_jks=$(cat truststore.jks | base64 | tr -d '\n\r' | base64 | tr -d '\n\r')
-echo "delete wallet zip and dir"
-rm orderdbwallet.zip
 cd ../
-rm -rf orderdbwallet
 
 echo "base64 pws..."
 export orderpdb_walletPassword=$(echo $orderpdb_walletPassword | base64)
@@ -58,6 +56,7 @@ cd inventorydbwallet
 echo "oci db autonomous-database generate-wallet --autonomous-database-id $INVENTORYPDB_OCID --file dbwallet.zip --password $inventorypdb_walletPassword"
 oci db autonomous-database generate-wallet --autonomous-database-id $INVENTORYPDB_OCID --file inventorydbwallet.zip --password $inventorypdb_walletPassword
 unzip inventorydbwallet.zip
+rm inventorydbwallet.zip
 export inventorypdb_cwallet_sso=$(cat cwallet.sso | base64 | tr -d '\n\r' | base64 | tr -d '\n\r')
 export inventorypdb_ewallet_p12=$(cat ewallet.p12 | base64 | tr -d '\n\r' | base64 | tr -d '\n\r')
 export inventorypdb_keystore_jks=$(cat keystore.jks | base64 | tr -d '\n\r' | base64 | tr -d '\n\r')
@@ -66,9 +65,7 @@ export inventorypdb_README=$(cat README | base64 | tr -d '\n\r' | base64 | tr -d
 export inventorypdb_sqlnet_ora=$(cat sqlnet.ora | base64 | tr -d '\n\r' | base64 | tr -d '\n\r')
 export inventorypdb_tnsnames_ora=$(cat tnsnames.ora | base64 | tr -d '\n\r' | base64 | tr -d '\n\r')
 export inventorypdb_truststore_jks=$(cat truststore.jks | base64 | tr -d '\n\r' | base64 | tr -d '\n\r')
-rm inventorydbwallet.zip
 cd ../
-rm -rf inventorydbwallet
 
 echo "base64 pws..."
 export inventorypdb_walletPassword=$(echo $inventorypdb_walletPassword | base64)

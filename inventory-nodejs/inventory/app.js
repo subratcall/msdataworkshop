@@ -180,7 +180,7 @@ async function processOrder() {
       orderid: orderMsgContent.orderid,
       itemid: orderMsgContent.itemid,
       inventorylocation: location,
-      suggestiveSale: "lettuce"
+      suggestiveSale: "beer"
     });
     const inventoryMsgContent = new inventoryQueue.payloadTypeClass({
       TEXT_VC: inventoryMsgText,
