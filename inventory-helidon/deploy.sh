@@ -10,7 +10,7 @@ if [ -z "DOCKER_REGISTRY" ]; then
     exit 1
 fi
 
-cp inventory-helidon-deployment_template.yaml inventory-helidon-deployment.yaml
+cp inventory-helidon-deployment.yaml inventory-helidon-deployment.yaml
 
 sed -i "s|%DOCKER_REGISTRY%|${DOCKER_REGISTRY}|g" inventory-helidon-deployment.yaml
 sed -i "s|%INVENTORY_PDB_NAME%|${INVENTORY_PDB_NAME}|g" inventory-helidon-deployment.yaml

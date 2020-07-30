@@ -51,7 +51,6 @@ kubectl create -f generated-yaml/atp-secret-orderuser-${CURRENTTIME}.yaml -n msd
 
 
 
-
 echo "INVENTORY DB ......"
 echo "get wallet for inventory db..."
 mkdir inventorydbwallet
@@ -72,9 +71,9 @@ cd ../
 rm -rf inventorydbwallet
 
 echo "base64 pws..."
-export inventorypdb_walletPassword=$(echo inventorypdb_walletPassword | base64)
-export inventorypdb_admin_password=$(echo inventorypdb_admin_password | base64)
-export inventorypdb_inventoryuser_password=$(echo inventorypdb_inventoryuser_password | base64)
+export inventorypdb_walletPassword=$(echo $inventorypdb_walletPassword | base64)
+export inventorypdb_admin_password=$(echo $inventorypdb_admin_password | base64)
+export inventorypdb_inventoryuser_password=$(echo $inventorypdb_inventoryuser_password | base64)
 
 echo "replace values in inventory yaml files (files are suffixed with ${CURRENTTIME})..."
 eval "cat <<EOF
