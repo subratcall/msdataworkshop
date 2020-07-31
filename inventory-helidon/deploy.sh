@@ -2,20 +2,15 @@
 
 SCRIPT_DIR=$(dirname $0)
 
-IMAGE_NAME=inventory-helidon
-IMAGE_VERSION=0.1
+echo create atpaqadmin deployment and service...
+export CURRENTTIME=$( date '+%F_%H:%M:%S' )
+echo CURRENTTIME is $CURRENTTIME  ...this will be appended to generated deployment yaml
 
-if [ -z "DOCKER_REGISTRY" ]; then
-    echo "Error: DOCKER_REGISTRY env variable needs to be set!"
-    exit 1
-fi
+cp atpaqadmin-deployment.yaml atpaqadmin-deployment-$CURRENTTIME.yaml
 
-cp inventory-helidon-deployment.yaml inventory-helidon-deployment.yaml
-
+#may hit sed incompat issue with mac
 sed -i "s|%DOCKER_REGISTRY%|${DOCKER_REGISTRY}|g" inventory-helidon-deployment.yaml
 sed -i "s|%INVENTORY_PDB_NAME%|${INVENTORY_PDB_NAME}|g" inventory-helidon-deployment.yaml
-
-export IMAGE=${DOCKER_REGISTRY}/${IMAGE_NAME}:${IMAGE_VERSION}
 
 if [ -z "$1" ]; then
     kubectl create -f $SCRIPT_DIR/inventory-helidon-deployment.yaml -n msdataworkshop

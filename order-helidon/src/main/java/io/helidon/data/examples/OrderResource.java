@@ -139,7 +139,7 @@ public class OrderResource {
         }
     }
 
-    @Path("/showorder")
+    @Path("/showordercache")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response showorder(@QueryParam("orderid") String orderId) {
@@ -156,7 +156,7 @@ public class OrderResource {
                 .build();
     }
 
-    @Path("/showordernocache")
+    @Path("/showorder")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response showordernocache(@QueryParam("orderid") String orderId) {

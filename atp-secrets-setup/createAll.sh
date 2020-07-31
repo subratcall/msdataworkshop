@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source ./ATP.properties
+source ../msdataworkshop.properties
 
 export SCRIPT_DIR=$(dirname $0)
 export CURRENTTIME=$( date '+%F_%H:%M:%S' )

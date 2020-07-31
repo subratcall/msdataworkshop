@@ -2,22 +2,19 @@
 
 SCRIPT_DIR=$(dirname $0)
 
-IMAGE_NAME=frontend-helidon
-IMAGE_VERSION=0.1
+echo create frontend deployment and service...
+export CURRENTTIME=$( date '+%F_%H:%M:%S' )
+echo CURRENTTIME is $CURRENTTIME  ...this will be appended to generated deployment yaml
 
-if [ -z "DOCKER_REGISTRY" ]; then
-    echo "Error: DOCKER_REGISTRY env variable needs to be set!"
-    exit 1
-fi
+cp frontend-helidon-deployment.yaml frontend-helidon-deployment-$CURRENTTIME.yaml
 
-sed -i "s|%DOCKER_REGISTRY%|${DOCKER_REGISTRY}|g" frontend-helidon-deployment.yaml
-
-export IMAGE=${DOCKER_REGISTRY}/${IMAGE_NAME}:${IMAGE_VERSION}
+#may hit sed incompat issue with mac
+sed -i "s|%DOCKER_REGISTRY%|${DOCKER_REGISTRY}|g" frontend-helidon-deployment-$CURRENTTIME.yaml
 
 if [ -z "$1" ]; then
-    kubectl create -f $SCRIPT_DIR/frontend-helidon-deployment.yaml -n msdataworkshop
+    kubectl create -f $SCRIPT_DIR/frontend-helidon-deployment-$CURRENTTIME.yaml -n msdataworkshop
 else
-    kubectl create -f <(istioctl kube-inject -f $SCRIPT_DIR/frontend-helidon-deployment.yaml) -n msdataworkshop
+    kubectl create -f <(istioctl kube-inject -f $SCRIPT_DIR/frontend-helidon-deployment-$CURRENTTIME.yaml) -n msdataworkshop
 fi
 
 kubectl create -f $SCRIPT_DIR/frontend-service.yaml -n msdataworkshop
