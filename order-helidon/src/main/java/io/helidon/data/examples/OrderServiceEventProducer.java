@@ -84,7 +84,10 @@ class OrderServiceEventProducer {
     }
 
     Order getOrderViaSODA( DataSource dataSource, String orderid) throws Exception {
-        return new OrderDAO().get(dataSource.getConnection(), orderid);
+        Connection jdbcConnection = dataSource.getConnection();
+        Order order = new OrderDAO().get(jdbcConnection, orderid);
+        jdbcConnection.close();
+        return order;
     }
 
 }
