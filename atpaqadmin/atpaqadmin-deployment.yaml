@@ -98,7 +98,6 @@ spec:
               key: walletPassword
         - name: cwalletobjecturi
           value: "%cwalletobjecturi%"
-#          value: "https://objectstorage.us-phoenix-1.oraclecloud.com/p/T3rEVg-abJcGE8m-DaO1LcyfGn_ysR2FIqiMdayivNc/n/ax2mkfmpukkx/b/msdataworkshopbucket/o/cwallet.sso"
         - name: orderhostname
           value: "%orderhostname%"
         - name: orderport
@@ -106,7 +105,7 @@ spec:
         - name: orderservice_name
           value: "%orderservice_name%"
         - name: orderssl_server_cert_dn
-          value: %orderssl_server_cert_dn%
+          value: "%orderssl_server_cert_dn%"
         - name: inventoryhostname
           value: "%inventoryhostname%"
         - name: inventoryport
@@ -114,7 +113,7 @@ spec:
         - name: inventoryservice_name
           value: "%inventoryservice_name%"
         - name: inventoryssl_server_cert_dn
-          value: %inventoryssl_server_cert_dn%
+          value: "%inventoryssl_server_cert_dn%"
         volumeMounts:
         - name: creds-order
           mountPath: /msdataworkshop/creds-order
