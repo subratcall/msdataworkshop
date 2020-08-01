@@ -29,7 +29,7 @@ echo cwalletobjecturi is created and added to atpaqadmin-deployment-${CURRENTTIM
 echo adding other values in atpaqadmin-deployment-${CURRENTTIME}.yaml as parsed from tnsnames.ora s
 
 #echo ____________________________________________________
-#export orderdb_tptnsentry=$(grep -i "^${ORDER_PDB_NAME}_tp" $MSDATAWORKSHOP_LOCATION/atp-secrets-setup/orderdbwallet/tnsnames.ora)
+export orderdb_tptnsentry=$(grep -i "^${ORDER_PDB_NAME}_tp" $MSDATAWORKSHOP_LOCATION/atp-secrets-setup/orderdbwallet/tnsnames.ora)
 #echo $ORDER_PDB_NAME tp entry... $orderdb_tptnsentry
 echo ____________________________________________________
 # for each variable, string off begin (based on identifier)
@@ -71,7 +71,7 @@ echo $orderssl_server_cert_dn
 
 
 #echo ____________________________________________________
-#export inventorydb_tptnsentry=$(grep -i "^${INVENTORY_PDB_NAME}_tp" $MSDATAWORKSHOP_LOCATION/atp-secrets-setup/inventorydbwallet/tnsnames.ora)
+export inventorydb_tptnsentry=$(grep -i "^${INVENTORY_PDB_NAME}_tp" $MSDATAWORKSHOP_LOCATION/atp-secrets-setup/inventorydbwallet/tnsnames.ora)
 #echo $INVENTORY_PDB_NAME tp entry... $inventorydb_tptnsentry
 echo ____________________________________________________
 # for each variable, string off begin (based on identifier)
