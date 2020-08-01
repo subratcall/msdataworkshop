@@ -96,27 +96,25 @@ spec:
             secretKeyRef:
               name: atp-user-cred-orderadmin
               key: walletPassword
-# PROVIDE VALUES FOR THE FOLLOWING...
         - name: cwalletobjecturi
           value: "%cwalletobjecturi%"
 #          value: "https://objectstorage.us-phoenix-1.oraclecloud.com/p/T3rEVg-abJcGE8m-DaO1LcyfGn_ysR2FIqiMdayivNc/n/ax2mkfmpukkx/b/msdataworkshopbucket/o/cwallet.sso"
         - name: orderhostname
-          value: "adb.us-phoenix-1.oraclecloud.com"
+          value: %orderhostname%
         - name: orderport
-          value: "1522"
+          value: %orderport%
         - name: orderservice_name
-          value: "fcnesu1k4xmzwf1_orderdb_high.atp.oraclecloud.com"
+          value: %orderservice_name%
         - name: orderssl_server_cert_dn
-          value: "CN=adwc.uscom-east-1.oraclecloud.com,OU=Oracle BMCS US,O=Oracle Corporation,L=Redwood City,ST=California,C=US"
+          value: %orderssl_server_cert_dn%
         - name: inventoryhostname
-          value: "adb.us-phoenix-1.oraclecloud.com"
+          value: %inventoryhostname%
         - name: inventoryport
-          value: "1522"
+          value: %inventoryport%
         - name: inventoryservice_name
-          value: "fcnesu1k4xmzwf1_inventorydb_high.atp.oraclecloud.com"
+          value: %inventoryservice_name%
         - name: inventoryssl_server_cert_dn
-          value: "CN=adwc.uscom-east-1.oraclecloud.com,OU=Oracle BMCS US,O=Oracle Corporation,L=Redwood City,ST=California,C=US"
-# ...PROVIDE VALUES FOR THE FOLLOWING END
+          value: %inventoryssl_server_cert_dn%
         volumeMounts:
         - name: creds-order
           mountPath: /msdataworkshop/creds-order
