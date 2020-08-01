@@ -26,7 +26,7 @@ sed -i "s|%cwalletobjecturi%|${cwalletobjecturi}|g" atpaqadmin-deployment-${CURR
 
 
 echo cwalletobjecturi is created and added to atpaqadmin-deployment-${CURRENTTIME}.yaml
-echo adding other values in atpaqadmin-deployment-${CURRENTTIME}.yaml as parsed from tnsnames.ora(s)
+echo adding other values in atpaqadmin-deployment-${CURRENTTIME}.yaml as parsed from tnsnames.ora s
 
 echo ____________________________________________________
 export orderdb_tptnsentry=$(grep -i "^${ORDER_PDB_NAME}_tp" $MSDATAWORKSHOP_LOCATION/atp-secrets-setup/orderdbwallet/tnsnames.ora)
