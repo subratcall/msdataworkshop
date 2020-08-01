@@ -17,9 +17,9 @@ sed -i "s|%INVENTORY_PDB_NAME%|${INVENTORY_PDB_NAME}|g" inventory-helidon-se-dep
 export IMAGE=${DOCKER_REGISTRY}/${IMAGE_NAME}:${IMAGE_VERSION}
 
 if [ -z "$1" ]; then
-    kubectl create -f "$SCRIPT_DIR"/deployment-${CURRENTTIME}.yaml -n msdataworkshop
+    kubectl apply -f "$SCRIPT_DIR"/deployment-${CURRENTTIME}.yaml -n msdataworkshop
 else
-    kubectl create -f <(istioctl kube-inject -f "$SCRIPT_DIR"/deployment-${CURRENTTIME}.yaml) -n msdataworkshop
+    kubectl apply -f <(istioctl kube-inject -f "$SCRIPT_DIR"/deployment-${CURRENTTIME}.yaml) -n msdataworkshop
 fi
 
 kubectl create -f "$SCRIPT_DIR"/inventory-helidon-se-service.yaml -n msdataworkshop

@@ -17,4 +17,4 @@ else
     kubectl apply -f <(istioctl kube-inject -f $SCRIPT_DIR/frontend-helidon-deployment-$CURRENTTIME.yaml) -n msdataworkshop
 fi
 
-kubectl apply -f $SCRIPT_DIR/frontend-service.yaml -n msdataworkshop
+kubectl create -f $SCRIPT_DIR/frontend-service.yaml -n msdataworkshop
