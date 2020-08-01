@@ -16,6 +16,8 @@ sed -i "s|%INVENTORY_PDB_NAME%|${INVENTORY_PDB_NAME}|g" atpaqadmin-deployment-${
 echo conducting setup required to create dblinks in OCI....
 ./setupForDBLinksInCloud.sh
 
+echo  attempting to deploy atpaqadmin-deployment-${CURRENTTIME}.yaml
+
 if [ -z "$1" ]; then
     kubectl apply -f $SCRIPT_DIR/atpaqadmin-deployment-${CURRENTTIME}.yaml -n msdataworkshop
 else

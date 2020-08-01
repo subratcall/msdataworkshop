@@ -28,9 +28,9 @@ sed -i "s|%cwalletobjecturi%|${cwalletobjecturi}|g" atpaqadmin-deployment-${CURR
 echo cwalletobjecturi is created and added to atpaqadmin-deployment-${CURRENTTIME}.yaml
 echo adding other values in atpaqadmin-deployment-${CURRENTTIME}.yaml as parsed from tnsnames.ora s
 
-echo ____________________________________________________
-export orderdb_tptnsentry=$(grep -i "^${ORDER_PDB_NAME}_tp" $MSDATAWORKSHOP_LOCATION/atp-secrets-setup/orderdbwallet/tnsnames.ora)
-echo $ORDER_PDB_NAME tp entry... $orderdb_tptnsentry
+#echo ____________________________________________________
+#export orderdb_tptnsentry=$(grep -i "^${ORDER_PDB_NAME}_tp" $MSDATAWORKSHOP_LOCATION/atp-secrets-setup/orderdbwallet/tnsnames.ora)
+#echo $ORDER_PDB_NAME tp entry... $orderdb_tptnsentry
 echo ____________________________________________________
 # for each variable, string off begin (based on identifier)
 echo orderhostname...
@@ -70,9 +70,9 @@ export orderssl_server_cert_dn=${orderssl_server_cert_dn%"$c"}
 echo $orderssl_server_cert_dn
 
 
-echo ____________________________________________________
-export inventorydb_tptnsentry=$(grep -i "^${INVENTORY_PDB_NAME}_tp" $MSDATAWORKSHOP_LOCATION/atp-secrets-setup/inventorydbwallet/tnsnames.ora)
-echo $INVENTORY_PDB_NAME tp entry... $inventorydb_tptnsentry
+#echo ____________________________________________________
+#export inventorydb_tptnsentry=$(grep -i "^${INVENTORY_PDB_NAME}_tp" $MSDATAWORKSHOP_LOCATION/atp-secrets-setup/inventorydbwallet/tnsnames.ora)
+#echo $INVENTORY_PDB_NAME tp entry... $inventorydb_tptnsentry
 echo ____________________________________________________
 # for each variable, string off begin (based on identifier)
 echo inventoryhostname...
@@ -113,14 +113,15 @@ echo $inventoryssl_server_cert_dn
 
 
 
-echo setting values in atpaqadmin-deployment.yaml ...
+echo setting values in atpaqadmin-deployment-${CURRENTTIME}.yaml ...
 
-sed -i "s|%orderhostname%|${orderhostname}|g" atpaqadmin-deployment.yaml
-sed -i "s|%orderport%|${orderport}|g" atpaqadmin-deployment.yaml
-sed -i "s|%orderservice_name%|${orderservice_name}|g" atpaqadmin-deployment.yaml
-sed -i "s|%orderssl_server_cert_dn%|${orderssl_server_cert_dn}|g" atpaqadmin-deployment.yaml
+sed -i "s|%orderhostname%|${orderhostname}|g" atpaqadmin-deployment-${CURRENTTIME}.yaml
+sed -i "s|%orderport%|${orderport}|g" atpaqadmin-deployment-${CURRENTTIME}.yaml
+sed -i "s|%orderservice_name%|${orderservice_name}|g" atpaqadmin-deployment-${CURRENTTIME}.yaml
+sed -i "s|%orderssl_server_cert_dn%|${orderssl_server_cert_dn}|g" atpaqadmin-deployment-${CURRENTTIME}.yaml
 
-sed -i "s|%inventoryhostname%|${inventoryhostname}|g" atpaqadmin-deployment.yaml
-sed -i "s|%inventoryport%|${orderhostname}|g" atpaqadmin-deployment.yaml
-sed -i "s|%inventoryservice_name%|${inventoryport}|g" atpaqadmin-deployment.yaml
-sed -i "s|%inventoryservice_name%|${inventoryservice_name}|g" atpaqadmin-deployment.yaml
+sed -i "s|%inventoryhostname%|${inventoryhostname}|g" atpaqadmin-deployment-${CURRENTTIME}.yaml
+sed -i "s|%inventoryport%|${orderhostname}|g" atpaqadmin-deployment-${CURRENTTIME}.yaml
+sed -i "s|%inventoryservice_name%|${inventoryport}|g" atpaqadmin-deployment-${CURRENTTIME}.yaml
+sed -i "s|%inventoryservice_name%|${inventoryservice_name}|g" atpaqadmin-deployment-${CURRENTTIME}.yaml
+
