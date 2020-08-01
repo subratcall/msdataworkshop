@@ -14,7 +14,7 @@ oci os bucket create --name msdataworkshop --compartment-id $OCI_COMPARTMENT_ID
 echo delete cwallet.sso in bucket ...ignore ObjectNotFound exception if this is the first time running the script...
 # Will be prompted "Are you sure you want to delete this resource? [y/N]"
 
-echo put cwallet.sso in bucket...
+echo put cwallet.sso in bucket ...select "y" when asked to overwrite
 oci os object put --bucket-name msdataworkshop --file $MSDATAWORKSHOP_LOCATION/atp-secrets-setup/orderdbwallet/cwallet.sso
 
 echo create link to cwallet.sso in objectstorage, save, export, and echo value..
