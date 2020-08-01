@@ -61,9 +61,9 @@ export orderservice_name=${orderservice_name%"$c"}
 echo $orderservice_name
 echo
 echo orderssl_server_cert_dn...
-export b="(ssl_server_cert_dn="
+export b="(ssl_server_cert_dn=\""
 export orderssl_server_cert_dn=$(echo ${orderdb_tptnsentry/*$b/$b})
-export c=")))"
+export c="\")))"
 export orderssl_server_cert_dn=$(echo ${orderssl_server_cert_dn/$c*/$c})
 export orderssl_server_cert_dn=${orderssl_server_cert_dn#"$b"}
 export orderssl_server_cert_dn=${orderssl_server_cert_dn%"$c"}
@@ -103,9 +103,9 @@ export inventoryservice_name=${inventoryservice_name%"$c"}
 echo $inventoryservice_name
 echo
 echo inventoryssl_server_cert_dn...
-export b="(ssl_server_cert_dn="
+export b="(ssl_server_cert_dn=\""
 export inventoryssl_server_cert_dn=$(echo ${inventorydb_tptnsentry/*$b/$b})
-export c=")))"
+export c="\")))"
 export inventoryssl_server_cert_dn=$(echo ${inventoryssl_server_cert_dn/$c*/$c})
 export inventoryssl_server_cert_dn=${inventoryssl_server_cert_dn#"$b"}
 export inventoryssl_server_cert_dn=${inventoryssl_server_cert_dn%"$c"}
@@ -121,7 +121,7 @@ sed -i "s|%orderservice_name%|${orderservice_name}|g" atpaqadmin-deployment-${CU
 sed -i "s|%orderssl_server_cert_dn%|${orderssl_server_cert_dn}|g" atpaqadmin-deployment-${CURRENTTIME}.yaml
 
 sed -i "s|%inventoryhostname%|${inventoryhostname}|g" atpaqadmin-deployment-${CURRENTTIME}.yaml
-sed -i "s|%inventoryport%|${orderhostname}|g" atpaqadmin-deployment-${CURRENTTIME}.yaml
-sed -i "s|%inventoryservice_name%|${inventoryport}|g" atpaqadmin-deployment-${CURRENTTIME}.yaml
+sed -i "s|%inventoryport%|${inventoryport}|g" atpaqadmin-deployment-${CURRENTTIME}.yaml
 sed -i "s|%inventoryservice_name%|${inventoryservice_name}|g" atpaqadmin-deployment-${CURRENTTIME}.yaml
+sed -i "s|%inventoryssl_server_cert_dn%|${inventoryssl_server_cert_dn}|g" atpaqadmin-deployment-${CURRENTTIME}.yaml
 
