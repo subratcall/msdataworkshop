@@ -13,8 +13,8 @@ sed -i "s|%DOCKER_REGISTRY%|${DOCKER_REGISTRY}|g" atpaqadmin-deployment-${CURREN
 sed -i "s|%ORDER_PDB_NAME%|${ORDER_PDB_NAME}|g" atpaqadmin-deployment-${CURRENTTIME}.yaml
 sed -i "s|%INVENTORY_PDB_NAME%|${INVENTORY_PDB_NAME}|g" atpaqadmin-deployment-${CURRENTTIME}.yaml
 
+echo conducting setup required to create dblinks in OCI....
 ./setupForDBLinksInCloud.sh
-
 
 if [ -z "$1" ]; then
     kubectl apply -f $SCRIPT_DIR/atpaqadmin-deployment-${CURRENTTIME}.yaml -n msdataworkshop
