@@ -5,4 +5,4 @@ curl -sLO https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-20.1
 gunzip graalvm-ce-java11-linux-amd64-20.1.0.tar.gz
 tar xvf graalvm-ce-java11-linux-amd64-20.1.0.tar
 rm graalvm-ce-java11-linux-amd64-20.1.0.tar
-
+mv graalvm-ce-java11-20.1.0 ~/
