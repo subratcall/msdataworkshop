@@ -12,9 +12,9 @@ cp frontend-helidon-deployment.yaml frontend-helidon-deployment-$CURRENTTIME.yam
 sed -i "s|%DOCKER_REGISTRY%|${DOCKER_REGISTRY}|g" frontend-helidon-deployment-$CURRENTTIME.yaml
 
 if [ -z "$1" ]; then
-    kubectl create -f $SCRIPT_DIR/frontend-helidon-deployment-$CURRENTTIME.yaml -n msdataworkshop
+    kubectl apply -f $SCRIPT_DIR/frontend-helidon-deployment-$CURRENTTIME.yaml -n msdataworkshop
 else
-    kubectl create -f <(istioctl kube-inject -f $SCRIPT_DIR/frontend-helidon-deployment-$CURRENTTIME.yaml) -n msdataworkshop
+    kubectl apply -f <(istioctl kube-inject -f $SCRIPT_DIR/frontend-helidon-deployment-$CURRENTTIME.yaml) -n msdataworkshop
 fi
 
-kubectl create -f $SCRIPT_DIR/frontend-service.yaml -n msdataworkshop
+kubectl apply -f $SCRIPT_DIR/frontend-service.yaml -n msdataworkshop
