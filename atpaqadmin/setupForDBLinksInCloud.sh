@@ -2,14 +2,14 @@
 
 
 # get the order and inventory connection info again - we just need wallet for band tnsnames
-echo list existing buckets...
-oci os bucket list --compartment-id $OCI_COMPARTMENT_ID
+#echo list existing buckets...
+#oci os bucket list --compartment-id $OCI_COMPARTMENT_ID
 
-echo create msdataworkshop bucket
+echo create msdataworkshop bucket ...ignore BucketAlreadyExists exception if this is not the first time running the script...
 oci os bucket create --name msdataworkshop --compartment-id $OCI_COMPARTMENT_ID
 
-echo list existing buckets again...
-oci os bucket list --compartment-id $OCI_COMPARTMENT_ID
+#echo list existing buckets again...
+#oci os bucket list --compartment-id $OCI_COMPARTMENT_ID
 
 echo delete cwallet.sso in bucket ...ignore ObjectNotFound exception if this is the first time running the script...
 # Will be prompted "Are you sure you want to delete this resource? [y/N]"
