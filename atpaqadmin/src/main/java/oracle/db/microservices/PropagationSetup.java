@@ -69,12 +69,18 @@ class PropagationSetup {
 
     String createInventoryTable(DataSource inventorypdbDataSource) throws SQLException {
         System.out.println("createInventoryTable and add items");
-        String returnValue = "createInventoryTable and add items\n";
+        String returnValue = "createInventoryTable and add items... ";
         Connection connection = inventorypdbDataSource.getConnection(inventoryuser, inventorypw);
         try {
+            connection.createStatement().execute( "drop table inventory");
+            returnValue += " inventory table dropped, ";
+        } catch (SQLException ex) {
+            System.out.println("PropagationSetup.createInventoryTable exception during drop table is expected if table was not created yet ex" + ex.getMessage());
+        }
+        try {
             connection.createStatement().execute(
-                    "create table inventory (inventoryid varchar(16), inventorylocation varchar(32), inventorycount integer)");
-            returnValue += " table created, ";
+                    "create table inventory (inventoryid varchar(16) PRIMARY KEY NOT NULL, inventorylocation varchar(32), inventorycount integer CONSTRAINT positive_inventory CHECK (inventorycount >= 0) )");
+            returnValue += " inventory table created, ";
         } catch (SQLException ex) {
             ex.printStackTrace();
             returnValue += ex.toString();

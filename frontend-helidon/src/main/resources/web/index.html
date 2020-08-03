@@ -121,7 +121,10 @@
                   <oj-button on-oj-action="[[lab10ordersetlivenesstofalseAction]]">Set Liveness to False</oj-button>
                   <oj-button on-oj-action="[[lab10lastContainerStartTimeAction]]">Get Last Container Start Time</oj-button>
                   <br><br>
-                  <oj-button on-oj-action="[[lab10ShowTracingAction]]">Show Tracing</oj-button>
+                  <form id="jaegerLink" action="http://129.146.198.72/" method="get" target="_blank">
+                    <input type="submit" value="Show Tracing" />
+                  </form>
+<!--                  <oj-button on-oj-action="[[lab10ShowTracingAction]]">Show Tracing</oj-button>-->
                 </div>
               </oj-switcher>
             </div>
@@ -165,6 +168,14 @@
   <script src="https://static.oracle.com/cdn/jet/9.0.0/3rdparty/require/require.js"></script>
   <script type="text/javascript" src="https://static.oracle.com/cdn/jet/9.0.0/default/js/bundles-config.js"></script>
   <script>
+
+
+window.onload = function() {
+       //when the document is finished loading, replace everything
+       //between the <a ...> </a> tags with the value of splitText
+   document.getElementById("jaegerLink").innerHTML=splitText;
+}
+
     (function () {
       requirejs.config({
         baseUrl: "js",
@@ -493,7 +504,7 @@
               serviceName: 'supplier',
               commandName: 'addInventory',
               orderId: -1,
-              orderItem: '',
+              orderItem: vm.lab9Food(),
               deliverTo: ''
             };
             var fetchOptions = {
@@ -515,7 +526,7 @@
               serviceName: 'supplier',
               commandName: 'removeInventory',
               orderId: -1,
-              orderItem: '',
+              orderItem: vm.lab9Food(),
               deliverTo: ''
             };
             var fetchOptions = {
@@ -537,7 +548,7 @@
               serviceName: 'supplier',
               commandName: 'getInventory',
               orderId: -1,
-              orderItem: '',
+              orderItem: vm.lab9Food(),
               deliverTo: ''
             };
             var fetchOptions = {
