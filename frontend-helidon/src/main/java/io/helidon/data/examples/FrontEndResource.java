@@ -15,6 +15,8 @@
  */
 package io.helidon.data.examples;
 
+import io.opentracing.Span;
+import io.opentracing.Tracer;
 import org.eclipse.microprofile.opentracing.Traced;
 
 import java.io.*;
@@ -24,6 +26,7 @@ import java.net.URLEncoder;
 import java.util.Scanner;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -36,6 +39,8 @@ import io.helidon.common.configurable.Resource;
 @Traced
 public class FrontEndResource {
 
+    @Inject
+    private Tracer tracer;
     private String JAEGER_QUERY_ADDRESS = System.getenv("JAEGER_QUERY_ADDRESS");
 
  /* -------------------------------------------------------
@@ -125,6 +130,7 @@ public class FrontEndResource {
       @POST
       @Consumes(MediaType.APPLICATION_JSON)
       @Produces(MediaType.APPLICATION_JSON)
+      @Traced(operationName = "Frontend.placeOrder")
       @Path("/placeorder")
       public String placeorder(Command command) {
           try {
@@ -154,9 +160,14 @@ public class FrontEndResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Traced
+    @Traced(operationName = "FrontEnd.command")
     @Path("/command")
     public String command(Command command) {
+
+        Span activeSpan = tracer.buildSpan("orderDetail").asChildOf(tracer.activeSpan()).start();
+        activeSpan.setTag("orderid", command.orderId);
+        activeSpan.setBaggageItem("command.orderId", "" + command.orderId);
+
         boolean isOrderBasedCommand = command.serviceName.equals("order") && command.orderId != -1;
         boolean isSupplierCommand = command.serviceName.equals("supplier");
         boolean isHealthCommand = command.commandName.indexOf("health") > -1;
