@@ -36,6 +36,8 @@ import io.helidon.common.configurable.Resource;
 @Traced
 public class FrontEndResource {
 
+    private String JAEGER_QUERY_ADDRESS = System.getenv("JAEGER_QUERY_ADDRESS");
+
  /* -------------------------------------------------------
      * JET UI Entry point 
      * -------------------------------------------------------*/
@@ -152,6 +154,7 @@ public class FrontEndResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
+    @Traced
     @Path("/command")
     public String command(Command command) {
         boolean isOrderBasedCommand = command.serviceName.equals("order") && command.orderId != -1;

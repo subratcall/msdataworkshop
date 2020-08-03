@@ -470,8 +470,8 @@
               serviceName: 'order',
               commandName: 'showorder',
               orderId: Number.parseInt(vm.lab9OrderId()),
-              orderItem: vm.lab9Food(),
-              deliverTo: vm.lab9DeliverTo()
+              orderItem: '',
+              deliverTo: ''
             };
             var fetchOptions = {
               method: 'POST',
@@ -493,8 +493,8 @@
               serviceName: 'supplier',
               commandName: 'addInventory',
               orderId: -1,
-              orderItem: vm.lab9Item(),
-              deliverTo: vm.lab9DeliverTo()
+              orderItem: '',
+              deliverTo: ''
             };
             var fetchOptions = {
               method: 'POST',
@@ -515,8 +515,8 @@
               serviceName: 'supplier',
               commandName: 'removeInventory',
               orderId: -1,
-              orderItem: vm.lab9Item(),
-              deliverTo: vm.lab9DeliverTo()
+              orderItem: '',
+              deliverTo: ''
             };
             var fetchOptions = {
               method: 'POST',
@@ -537,8 +537,8 @@
               serviceName: 'supplier',
               commandName: 'getInventory',
               orderId: -1,
-              orderItem: vm.lab9Item(),
-              deliverTo: vm.lab9DeliverTo()
+              orderItem: '',
+              deliverTo: ''
             };
             var fetchOptions = {
               method: 'POST',
@@ -562,8 +562,8 @@
               serviceName: 'order',
               commandName: 'metrics',
               orderId: -1,
-              orderItem: vm.lab9Food(),
-              deliverTo: vm.lab9DeliverTo()
+              orderItem: '',
+              deliverTo: ''
             };
             var fetchOptions = {
               method: 'POST',
@@ -585,8 +585,8 @@
               serviceName: 'order',
               commandName: 'health/live',
               orderId: -1,
-              orderItem: vm.lab9Food(),
-              deliverTo: vm.lab9DeliverTo()
+              orderItem: '',
+              deliverTo: ''
             };
             var fetchOptions = {
               method: 'POST',
@@ -607,8 +607,8 @@
               serviceName: 'order',
               commandName: 'health/ready',
               orderId: -1,
-              orderItem: vm.lab9Food(),
-              deliverTo: vm.lab9DeliverTo()
+              orderItem: '',
+              deliverTo: ''
             };
             var fetchOptions = {
               method: 'POST',
@@ -629,8 +629,8 @@
               serviceName: 'order',
               commandName: 'ordersetlivenesstofalse',
               orderId: -1,
-              orderItem: vm.lab9Food(),
-              deliverTo: vm.lab9DeliverTo()
+              orderItem: '',
+              deliverTo: ''
             };
             var fetchOptions = {
               method: 'POST',
@@ -651,8 +651,8 @@
               serviceName: 'order',
               commandName: 'lastContainerStartTime',
               orderId: -1,
-              orderItem: vm.lab9Food(),
-              deliverTo: vm.lab9DeliverTo()
+              orderItem: '',
+              deliverTo: ''
             };
             var fetchOptions = {
               method: 'POST',
@@ -669,12 +669,13 @@
           };
 
           this.lab10ShowTracingAction = function (event, vm) {
+            var JAEGER_QUERY_ADDRESS = process.env.JAEGER_QUERY_ADDRESS
             var order = {
-              serviceName: 'atpaqadmin',
-              commandName: 'deleteUsers',
+              serviceName: 'jaeger',
+              commandName: '',
               orderId: -1,
-              orderItem: vm.lab9Food(),
-              deliverTo: vm.lab9DeliverTo()
+              orderItem: '',
+              deliverTo: ''
             };
             var fetchOptions = {
               method: 'POST',

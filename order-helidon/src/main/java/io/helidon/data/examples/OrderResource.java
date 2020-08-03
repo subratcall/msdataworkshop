@@ -49,7 +49,6 @@ public class OrderResource {
     @Inject
     private Tracer tracer;
 
-    private boolean isOrderEventConsumerStarted = false;
     OrderServiceEventProducer orderServiceEventProducer = new OrderServiceEventProducer();
     static final String orderQueueOwner = "ORDERUSER";
     static final String orderQueueName = "orderqueue";
@@ -83,6 +82,7 @@ public class OrderResource {
             Connection connection = atpOrderPdb.getConnection();
             System.out.println("OrderResource.init atpOrderPdb.getConnection():" + connection);
             connection.close();
+            startEventConsumer();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -97,7 +97,6 @@ public class OrderResource {
     public Response placeOrder(@QueryParam("orderid") String orderid, @QueryParam("itemid") String itemid,
                                @QueryParam("deliverylocation") String deliverylocation) {
         System.out.println("--->placeOrder... orderid:" + orderid + " itemid:" + itemid);
-        startEventConsumerIfNotStarted();
         OrderDetail orderDetail = new OrderDetail();
         orderDetail.setOrderId(orderid);
         orderDetail.setItemId(itemid);
@@ -130,13 +129,10 @@ public class OrderResource {
                 .build();
     }
 
-    private void startEventConsumerIfNotStarted() {
-        System.out.println("OrderResource.startEventConsumerIfNotStarted isOrderEventConsumerStarted:" + isOrderEventConsumerStarted);
-        if (!isOrderEventConsumerStarted) {
-            OrderServiceEventConsumer orderServiceEventConsumer = new OrderServiceEventConsumer(this);
-            new Thread(orderServiceEventConsumer).start();
-            isOrderEventConsumerStarted = true;
-        }
+    private void startEventConsumer() {
+        System.out.println("OrderResource.startEventConsumerIfNotStarted startEventConsumer...");
+        OrderServiceEventConsumer orderServiceEventConsumer = new OrderServiceEventConsumer(this);
+        new Thread(orderServiceEventConsumer).start();
     }
 
     @Path("/showordercache")
