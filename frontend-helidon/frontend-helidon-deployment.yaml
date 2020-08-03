@@ -17,5 +17,8 @@ spec:
       - name: frontend
         image: %DOCKER_REGISTRY%/frontend-helidon:0.1
         imagePullPolicy: Always
+        env:
+        - name: JAEGER_QUERY_ADDRESS
+          value: "%JAEGER_QUERY_ADDRESS%"
         ports:
         - containerPort: 8080

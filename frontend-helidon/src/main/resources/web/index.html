@@ -121,7 +121,10 @@
                   <oj-button on-oj-action="[[lab10ordersetlivenesstofalseAction]]">Set Liveness to False</oj-button>
                   <oj-button on-oj-action="[[lab10lastContainerStartTimeAction]]">Get Last Container Start Time</oj-button>
                   <br><br>
-                  <oj-button on-oj-action="[[lab10ShowTracingAction]]">Show Tracing</oj-button>
+                  <form id="jaegerLink" action="http://129.146.198.72/" method="get" target="_blank">
+                    <input type="submit" value="Show Tracing" />
+                  </form>
+<!--                  <oj-button on-oj-action="[[lab10ShowTracingAction]]">Show Tracing</oj-button>-->
                 </div>
               </oj-switcher>
             </div>
@@ -165,6 +168,8 @@
   <script src="https://static.oracle.com/cdn/jet/9.0.0/3rdparty/require/require.js"></script>
   <script type="text/javascript" src="https://static.oracle.com/cdn/jet/9.0.0/default/js/bundles-config.js"></script>
   <script>
+
+
     (function () {
       requirejs.config({
         baseUrl: "js",
@@ -470,8 +475,8 @@
               serviceName: 'order',
               commandName: 'showorder',
               orderId: Number.parseInt(vm.lab9OrderId()),
-              orderItem: vm.lab9Food(),
-              deliverTo: vm.lab9DeliverTo()
+              orderItem: '',
+              deliverTo: ''
             };
             var fetchOptions = {
               method: 'POST',
@@ -493,8 +498,8 @@
               serviceName: 'supplier',
               commandName: 'addInventory',
               orderId: -1,
-              orderItem: vm.lab9Item(),
-              deliverTo: vm.lab9DeliverTo()
+              orderItem: vm.lab9Food(),
+              deliverTo: ''
             };
             var fetchOptions = {
               method: 'POST',
@@ -515,8 +520,8 @@
               serviceName: 'supplier',
               commandName: 'removeInventory',
               orderId: -1,
-              orderItem: vm.lab9Item(),
-              deliverTo: vm.lab9DeliverTo()
+              orderItem: vm.lab9Food(),
+              deliverTo: ''
             };
             var fetchOptions = {
               method: 'POST',
@@ -537,8 +542,8 @@
               serviceName: 'supplier',
               commandName: 'getInventory',
               orderId: -1,
-              orderItem: vm.lab9Item(),
-              deliverTo: vm.lab9DeliverTo()
+              orderItem: vm.lab9Food(),
+              deliverTo: ''
             };
             var fetchOptions = {
               method: 'POST',
@@ -562,8 +567,8 @@
               serviceName: 'order',
               commandName: 'metrics',
               orderId: -1,
-              orderItem: vm.lab9Food(),
-              deliverTo: vm.lab9DeliverTo()
+              orderItem: '',
+              deliverTo: ''
             };
             var fetchOptions = {
               method: 'POST',
@@ -585,8 +590,8 @@
               serviceName: 'order',
               commandName: 'health/live',
               orderId: -1,
-              orderItem: vm.lab9Food(),
-              deliverTo: vm.lab9DeliverTo()
+              orderItem: '',
+              deliverTo: ''
             };
             var fetchOptions = {
               method: 'POST',
@@ -607,8 +612,8 @@
               serviceName: 'order',
               commandName: 'health/ready',
               orderId: -1,
-              orderItem: vm.lab9Food(),
-              deliverTo: vm.lab9DeliverTo()
+              orderItem: '',
+              deliverTo: ''
             };
             var fetchOptions = {
               method: 'POST',
@@ -629,8 +634,8 @@
               serviceName: 'order',
               commandName: 'ordersetlivenesstofalse',
               orderId: -1,
-              orderItem: vm.lab9Food(),
-              deliverTo: vm.lab9DeliverTo()
+              orderItem: '',
+              deliverTo: ''
             };
             var fetchOptions = {
               method: 'POST',
@@ -651,8 +656,8 @@
               serviceName: 'order',
               commandName: 'lastContainerStartTime',
               orderId: -1,
-              orderItem: vm.lab9Food(),
-              deliverTo: vm.lab9DeliverTo()
+              orderItem: '',
+              deliverTo: ''
             };
             var fetchOptions = {
               method: 'POST',
@@ -669,12 +674,13 @@
           };
 
           this.lab10ShowTracingAction = function (event, vm) {
+            var JAEGER_QUERY_ADDRESS = process.env.JAEGER_QUERY_ADDRESS
             var order = {
-              serviceName: 'atpaqadmin',
-              commandName: 'deleteUsers',
+              serviceName: 'jaeger',
+              commandName: '',
               orderId: -1,
-              orderItem: vm.lab9Food(),
-              deliverTo: vm.lab9DeliverTo()
+              orderItem: '',
+              deliverTo: ''
             };
             var fetchOptions = {
               method: 'POST',

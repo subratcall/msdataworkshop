@@ -49,12 +49,5 @@ cd supplier-helidon-se
 cd ../
 
 echo ________________________________________
-echo building and pushing orderstreaming-helidon-se...
-echo ________________________________________
-cd orderstreaming-helidon-se
-./build.sh
-cd ../
-
-echo ________________________________________
 echo ...finished
 echo ________________________________________

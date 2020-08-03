@@ -43,13 +43,6 @@ cd supplier-helidon-se
 cd ../
 
 echo ________________________________________
-echo deploying orderstreaming-helidon-se...
-echo ________________________________________
-cd orderstreaming-helidon-se
-./deploy.sh
-cd ../
-
-echo ________________________________________
 echo ...finished
 echo ________________________________________
 

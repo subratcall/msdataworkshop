@@ -1,14 +1,17 @@
 package io.helidon.data.examples;
 
+import oracle.jdbc.internal.OraclePreparedStatement;
 import oracle.jms.*;
 
 import javax.jms.*;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 
 public class InventoryServiceOrderEventConsumer implements Runnable {
 
+    private static final String DECREMENT_BY_ID = "update inventory set inventorycount = inventorycount - 1 where inventoryid = ? and inventorycount > 0 returning inventorylocation into ?";
     InventoryResource inventoryResource;
 
     public InventoryServiceOrderEventConsumer(InventoryResource inventoryResource) {
@@ -83,23 +86,24 @@ public class InventoryServiceOrderEventConsumer implements Runnable {
     }
 
     //returns location if exists and "inventorydoesnotexist" otherwise
-    private String evaluateInventory(AQjmsSession session, String itemid) throws JMSException, SQLException {
+    private String evaluateInventory(AQjmsSession session, String id) throws JMSException, SQLException {
         Connection dbConnection = session.getDBConnection();
         System.out.println("-------------->evaluateInventory connection:" + dbConnection +
-                "Session:" + session + " check inventory for inventoryid:" + itemid);
-        int inventorycount;
-        String inventoryLocation = "";
-        ResultSet resultSet = dbConnection.createStatement().executeQuery(
-                "select * from inventory  where inventoryid = '" + itemid + "'");
-        if (resultSet.next()) {
-            inventorycount = resultSet.getInt("inventorycount");
-            inventoryLocation = resultSet.getString("inventorylocation");
-            System.out.println("MessagingService.doIncomingOutgoing inventorycount:" + inventorycount);
-        } else inventorycount = 0;
-        String status = inventorycount > 0 ? "inventoryexists" : "inventorydoesnotexist";
-        inventoryLocation = inventorycount > 0 ? inventoryLocation : "inventorydoesnotexist";
-        System.out.println("InventoryServiceOrderEventConsumer.updateDataAndSendEventOnInventory status:" + status);
-        return inventoryLocation;
+                "Session:" + session + " check inventory for inventoryid:" + id);
+        try (OraclePreparedStatement st = (OraclePreparedStatement) dbConnection.prepareStatement(DECREMENT_BY_ID)) {
+            st.setString(1, id);
+            st.registerReturnParameter(2, Types.VARCHAR);
+            int i = st.executeUpdate();
+            ResultSet res = st.getReturnResultSet();
+            if (i > 0 && res.next()) {
+                String location = res.getString(1);
+                System.out.println("InventoryServiceOrderEventConsumer.updateDataAndSendEventOnInventory id {" + id + "} location {" + location + "}");
+                return location;
+            } else {
+                System.out.println("InventoryServiceOrderEventConsumer.updateDataAndSendEventOnInventory id {" + id + "} inventorydoesnotexist");
+                return "inventorydoesnotexist";
+            }
+        }
     }
 
 
