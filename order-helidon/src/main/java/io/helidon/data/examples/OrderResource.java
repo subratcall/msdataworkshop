@@ -32,6 +32,13 @@ import javax.ws.rs.core.Response;
 import oracle.ucp.jdbc.PoolDataSource;
 import org.eclipse.microprofile.metrics.annotation.Counted;
 import org.eclipse.microprofile.metrics.annotation.Timed;
+import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.eclipse.microprofile.openapi.annotations.enums.SchemaType;
+import org.eclipse.microprofile.openapi.annotations.media.Content;
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
+import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 import org.eclipse.microprofile.opentracing.Traced;
 import io.opentracing.Tracer;
 import io.opentracing.Span;
@@ -88,14 +95,44 @@ public class OrderResource {
         }
     }
 
+    @Operation(summary = "Places a new order",
+            description = "Orders a specific item for delivery to a location")
+    @APIResponses({
+            @APIResponse(
+                    responseCode = "200",
+                    description = "Status of successfully-placed order",
+                    content = @Content(mediaType = "text/plain")
+            ),
+            @APIResponse(
+                    responseCode = "500",
+                    description = "Error report of a failure to place an order",
+                    content = @Content(mediaType = "text/plain")
+            )
+    })
     @Path("/placeOrder")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Traced(operationName = "OrderResource.placeOrder")
     @Timed(name = "placeOrder_timed") //length of time of an object
     @Counted(name = "placeOrder_counted") //amount of invocations
-    public Response placeOrder(@QueryParam("orderid") String orderid, @QueryParam("itemid") String itemid,
-                               @QueryParam("deliverylocation") String deliverylocation) {
+    public Response placeOrder(
+            @Parameter(description = "The order ID for the order",
+                    required = true,
+                    example = "1",
+                    schema = @Schema(type = SchemaType.STRING))
+            @QueryParam("orderid") String orderid,
+
+            @Parameter(description = "The item ID of the item being ordered",
+                    required = true,
+                    example = "1",
+                    schema = @Schema(type = SchemaType.STRING))
+            @QueryParam("itemid") String itemid,
+
+            @Parameter(description = "Where the item should be delivered",
+                    required = true,
+                    example = "Home",
+                    schema = @Schema(type = SchemaType.STRING))
+            @QueryParam("deliverylocation") String deliverylocation) {
         System.out.println("--->placeOrder... orderid:" + orderid + " itemid:" + itemid);
         OrderDetail orderDetail = new OrderDetail();
         orderDetail.setOrderId(orderid);
@@ -117,7 +154,7 @@ public class OrderResource {
                     orderServiceEventProducer.updateDataAndSendEvent(atpOrderPdb, orderid, itemid, deliverylocation));
         } catch (Exception e) {
             e.printStackTrace();
-            return Response.ok()
+            return Response.serverError()
                     .entity("orderid = " + orderid + " failed with exception:" + e.getCause())
                     .build();
         }
