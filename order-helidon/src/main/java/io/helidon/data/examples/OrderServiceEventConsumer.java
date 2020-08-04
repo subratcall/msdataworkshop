@@ -62,7 +62,7 @@ public class OrderServiceEventConsumer implements Runnable {
                     if(orderDetail == null){
                         throw new JMSException("Rollingback message as no orderDetail found for orderid:" + orderid +
                                 ". It may have been started by another server (eg if horizontally scaling) or " +
-                                " this server started the order but crashed. "); //todo add "hydration"/caching of orders during init of service to avoid this
+                                " this server started the order but crashed. "); //todo add "hydration"/caching of orders during init of service to handle this recovery scenario
                     }
                     else{
                         boolean isSuccessfulInventoryCheck = !(inventorylocation == null || inventorylocation.equals("")

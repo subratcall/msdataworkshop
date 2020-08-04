@@ -28,6 +28,8 @@ import java.util.Scanner;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.*;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -42,7 +44,12 @@ public class FrontEndResource {
     @Inject
     private Tracer tracer;
     private String JAEGER_QUERY_ADDRESS = System.getenv("JAEGER_QUERY_ADDRESS");
+    private Client client;
 
+    public FrontEndResource() {
+        client = ClientBuilder.newBuilder()
+                .build();
+    }
  /* -------------------------------------------------------
      * JET UI Entry point 
      * -------------------------------------------------------*/
@@ -136,9 +143,8 @@ public class FrontEndResource {
           try {
               System.out.println("FrontEndResource.serviceName " + command.serviceName);
               System.out.println("FrontEndResource.commandName " + command.commandName);
-              URL url = new URL("http://order.msdataworkshop:8080/placeOrder?orderid=" + command.orderId +
+              String json = makeRequest("http://order.msdataworkshop:8080/placeOrder?orderid=" + command.orderId +
                       "&itemid=" + command.orderItem + "&deliverylocation=" + URLEncoder.encode(command.deliverTo, "UTF-8"));
-              String json = makeRequest(url);
               System.out.println("FrontEndResource.placeorder json:" + json);
               if (json.indexOf("fail") > -1) { // we return 200 regardless and check for "fail"
                   if (json.indexOf("SQLIntegrityConstraintViolationException" ) > -1)
@@ -146,8 +152,7 @@ public class FrontEndResource {
                   else return asJSONMessage( json);
               }
               System.out.println("FrontEndResource.placeorder complete, now show order...");
-              url = new URL("http://order.msdataworkshop:8080/showorder?orderid=" + command.orderId );
-              json = makeRequest(url);
+              json = makeRequest("http://order.msdataworkshop:8080/showorder?orderid=" + command.orderId);
               System.out.println("FrontEndResource.placeorder showorder json:" + json);
               return json;
           } catch (IOException e) {
@@ -176,7 +181,7 @@ public class FrontEndResource {
                 (isSupplierCommand ? "?itemid="+ command.orderItem : "");
         System.out.println("FrontEndResource.command url:" + urlString );
         try {
-            String response = makeRequest(new URL(urlString));
+            String response = makeRequest(urlString);
             String returnString =  isOrderBasedCommand || isHealthCommand ? response: asJSONMessage(response);
             System.out.println("FrontEndResource.command url:" + urlString + "  returnString:" + returnString);
             return returnString;
@@ -186,23 +191,18 @@ public class FrontEndResource {
         }
     }
 
-
     private String asJSONMessage(Object e) {
         FrontEndResponse frontEndResponse = new FrontEndResponse();
         frontEndResponse.message = e.toString();
         return JsonUtils.writeValueAsString(frontEndResponse);
     }
 
-    // todo convert to rest call/annotation
-    private String makeRequest(URL url) throws IOException {
-        URLConnection connection = url.openConnection();
-        InputStream response = connection.getInputStream();
-        try (Scanner scanner = new Scanner(response)) {
-            return scanner.hasNext() ? scanner.useDelimiter("\\A").next() : "" + response;
-        } catch (java.util.NoSuchElementException ex) {
-            ex.printStackTrace();
-            return ex.getMessage();
-        }
+    private String makeRequest(String url) throws IOException {
+        System.out.println("FrontEndResource.makeRequest url.toString():" + url);
+        Response response = client.target(url).request().get();
+        String entity = response.readEntity(String.class);
+        System.out.println("OrderResource.placeOrder response from inventory:" + entity);
+        return entity;
     }
 
 }
