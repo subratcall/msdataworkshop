@@ -102,7 +102,7 @@ public class OrderResource {
     @APIResponses({
             @APIResponse(
                     responseCode = "200",
-                    description = "Status of successfully-placed order",
+                    description = "Confirmation of a successfully-placed order",
                     content = @Content(mediaType = "text/plain")
             ),
             @APIResponse(
@@ -120,13 +120,13 @@ public class OrderResource {
     public Response placeOrder(
             @Parameter(description = "The order ID for the order",
                     required = true,
-                    example = "1",
+                    example = "66",
                     schema = @Schema(type = SchemaType.STRING))
             @QueryParam("orderid") String orderid,
 
             @Parameter(description = "The item ID of the item being ordered",
                     required = true,
-                    example = "1",
+                    example = "sushi",
                     schema = @Schema(type = SchemaType.STRING))
             @QueryParam("itemid") String itemid,
 
@@ -174,10 +174,27 @@ public class OrderResource {
         new Thread(orderServiceEventConsumer).start();
     }
 
+    @Operation(summary = "Displays an order",
+            description = "Displays a previously-placed order, including if the order is cached")
+    @APIResponses({
+            @APIResponse(
+                    responseCode = "200",
+                    description = "Previously-placed order",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(
+                                    implementation = Order.class
+                            ))
+            )
+    })
     @Path("/showordercache")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response showorder(@QueryParam("orderid") String orderId) {
+    public Response showorder(
+            @Parameter(description = "The order ID for the order",
+                    required = true,
+                    example = "1",
+                    schema = @Schema(type = SchemaType.STRING))
+            @QueryParam("orderid") String orderId) {
         System.out.println("--->showorder for orderId:" + orderId);
         OrderDetail orderDetail = cachedOrders.get(orderId);
         if (orderDetail == null || orderDetail.getOrderStatus().equals("pending")) {
@@ -191,10 +208,27 @@ public class OrderResource {
                 .build();
     }
 
+    @Operation(summary = "Displays an order",
+            description = "Displays a previously-placed order, excluding if the order is cached")
+    @APIResponses({
+            @APIResponse(
+                    responseCode = "200",
+                    description = "Previously-placed order",
+                    content = @Content(mediaType = "application/json",
+                        schema = @Schema(
+                                implementation = Order.class
+                        ))
+            )
+    })
     @Path("/showorder")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response showordernocache(@QueryParam("orderid") String orderId) {
+    public Response showordernocache(
+            @Parameter(description = "The order ID for the order",
+                    required = true,
+                    example = "1",
+                    schema = @Schema(type = SchemaType.STRING))
+            @QueryParam("orderid") String orderId) {
         System.out.println("--->showorder (via JSON/SODA query) for orderId:" + orderId);
         try {
             Order order = orderServiceEventProducer.getOrderViaSODA(atpOrderPdb, orderId);
@@ -205,13 +239,22 @@ public class OrderResource {
                     .build();
         } catch (Exception e) {
             e.printStackTrace();
-            return Response.ok()
+            return Response.serverError()
                     .entity("showorder orderid = " + orderId + " failed with exception:" + e.toString())
                     .build();
         }
 
     }
 
+    @Operation(summary = "Lists all orders",
+            description = "Lists the information for all previously-placed orders")
+    @APIResponses({
+            @APIResponse(
+                    responseCode = "200",
+                    description = "Display of previously-placed orders",
+                    content = @Content(mediaType = "text/html")
+            )
+    })
     @Path("/showallorders")
     @GET
     @Produces(MediaType.TEXT_HTML)
@@ -228,10 +271,24 @@ public class OrderResource {
     }
 
 
+    @Operation(summary = "Deletes an order",
+            description = "Deletes a previously-placed order")
+    @APIResponses({
+            @APIResponse(
+                    responseCode = "200",
+                    description = "Confirmation/result of the order deletion",
+                    content = @Content(mediaType = "text/plain")
+            )
+    })
     @Path("/deleteorder")
     @GET
     @Produces(MediaType.TEXT_PLAIN)
-    public Response deleteorder(@QueryParam("orderid") String orderId) {
+    public Response deleteorder(
+            @Parameter(description = "The order ID for the order",
+                    required = true,
+                    example = "1",
+                    schema = @Schema(type = SchemaType.STRING))
+            @QueryParam("orderid") String orderId) {
         System.out.println("--->deleteorder for orderId:" + orderId);
         String returnString = "orderId = " + orderId + "<br>";
         try {
@@ -247,6 +304,15 @@ public class OrderResource {
         }
     }
 
+    @Operation(summary = "Deletes all orders",
+            description = "Deletes all previously-placed orders")
+    @APIResponses({
+            @APIResponse(
+                    responseCode = "200",
+                    description = "Confirmation/result of the order deletion",
+                    content = @Content(mediaType = "application/json")
+            )
+    })
     @Path("/deleteallorders")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
