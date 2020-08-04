@@ -32,8 +32,10 @@ import javax.ws.rs.core.Response;
 import oracle.ucp.jdbc.PoolDataSource;
 import org.eclipse.microprofile.metrics.annotation.Counted;
 import org.eclipse.microprofile.metrics.annotation.Timed;
+import org.eclipse.microprofile.openapi.annotations.OpenAPIDefinition;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.enums.SchemaType;
+import org.eclipse.microprofile.openapi.annotations.info.Info;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
@@ -46,6 +48,9 @@ import io.opentracing.Span;
 @Path("/")
 @ApplicationScoped
 @Traced
+@OpenAPIDefinition(
+        info = @Info(title = "grubdash", description = "Order processing for grubdash", version = "0.0.1")
+)
 public class OrderResource {
 
     @Inject
