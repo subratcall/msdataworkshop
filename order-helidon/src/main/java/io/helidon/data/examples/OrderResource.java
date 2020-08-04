@@ -48,9 +48,6 @@ import io.opentracing.Span;
 @Path("/")
 @ApplicationScoped
 @Traced
-@OpenAPIDefinition(
-        info = @Info(title = "grubdash", description = "Order processing for grubdash", version = "0.0.1")
-)
 public class OrderResource {
 
     @Inject
