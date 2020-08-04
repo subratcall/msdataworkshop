@@ -13,7 +13,7 @@ import java.util.Set;
 @ApplicationScoped
 @ApplicationPath("/")
 @OpenAPIDefinition(
-        info = @Info(title = "grubdash", description = "Order processing for grubdash", version = "0.0.1")
+        info = @Info(title = "GrubDash", description = "Order processing for GrubDash", version = "0.0.1")
 )
 public class OrderApplication extends Application {
 
