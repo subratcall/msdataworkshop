@@ -38,6 +38,7 @@ import io.opentracing.Span;
 
 @Path("/")
 @ApplicationScoped
+@Traced
 public class OrderResource {
 
     @Inject
@@ -87,12 +88,6 @@ public class OrderResource {
         }
     }
 
-    private void startEventConsumer() {
-        System.out.println("OrderResource.startEventConsumerIfNotStarted startEventConsumer...");
-        OrderServiceEventConsumer orderServiceEventConsumer = new OrderServiceEventConsumer(this);
-        new Thread(orderServiceEventConsumer).start();
-    }
-
     @Path("/placeOrder")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -122,17 +117,22 @@ public class OrderResource {
                     orderServiceEventProducer.updateDataAndSendEvent(atpOrderPdb, orderid, itemid, deliverylocation));
         } catch (Exception e) {
             e.printStackTrace();
-            return Response.serverError()
+            return Response.ok()
                     .entity("orderid = " + orderid + " failed with exception:" + e.getCause())
                     .build();
-        } finally {
-            activeSpan.log("end placing order");
-            activeSpan.finish();
         }
+
+        activeSpan.log("end placing order");
 
         return Response.ok()
                 .entity("orderid = " + orderid + " orderstatus = " + orderDetail.getOrderStatus() + " order placed")
                 .build();
+    }
+
+    private void startEventConsumer() {
+        System.out.println("OrderResource.startEventConsumerIfNotStarted startEventConsumer...");
+        OrderServiceEventConsumer orderServiceEventConsumer = new OrderServiceEventConsumer(this);
+        new Thread(orderServiceEventConsumer).start();
     }
 
     @Path("/showordercache")
