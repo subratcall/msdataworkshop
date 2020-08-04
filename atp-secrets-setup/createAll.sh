@@ -12,7 +12,7 @@ echo "get wallet for order db..."
 mkdir orderdbwallet
 cd orderdbwallet
 echo "oci db autonomous-database generate-wallet --autonomous-database-id $ORDERPDB_OCID --file orderdbwallet.zip --password $orderpdb_walletPassword"
-oci db autonomous-database generate-wallet --autonomous-database-id $ORDERPDB_OCID --file orderdbwallet.zip --password $orderpdb_walletPassword
+oci db autonomous-database generate-wallet --generate-type all --autonomous-database-id $ORDERPDB_OCID --file orderdbwallet.zip --password $orderpdb_walletPassword
 unzip orderdbwallet.zip
 rm orderdbwallet.zip
 echo "export values for contents of wallet zip..."

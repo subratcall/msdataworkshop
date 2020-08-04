@@ -42,6 +42,20 @@ cd inventory-python
 cd ../
 
 echo ________________________________________
+echo building and pushing inventory-nodejs...
+echo ________________________________________
+cd inventory-nodejs
+./build.sh
+cd ../
+
+echo ________________________________________
+echo building and pushing inventory-helidon-se...
+echo ________________________________________
+cd inventory-helidon-se
+./build.sh
+cd ../
+
+echo ________________________________________
 echo building and pushing supplier-helidon-se...
 echo ________________________________________
 cd supplier-helidon-se
