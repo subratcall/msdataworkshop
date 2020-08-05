@@ -43,7 +43,6 @@ public class FrontEndResource {
 
     @Inject
     private Tracer tracer;
-    private String JAEGER_QUERY_ADDRESS = System.getenv("JAEGER_QUERY_ADDRESS");
     private Client client;
 
     public FrontEndResource() {
