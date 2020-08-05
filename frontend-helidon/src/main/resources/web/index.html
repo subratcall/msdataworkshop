@@ -140,10 +140,6 @@
                   <form id="jaegerLink" action="%JAEGER_QUERY_ADDRESS%" method="get" target="_blank">
                     <input class="button button1" type="submit" value="Show Tracing" />
                   </form>
-
-<!--                  <button class="button button1">250px</button><br>-->
-<!--                  <button class="button button2">50%</button><br>-->
-<!--                  <button class="button button3">100%</button>-->
                 </div>
               </oj-switcher>
             </div>
@@ -520,7 +516,7 @@
               serviceName: 'supplier',
               commandName: 'addInventory',
               orderId: -1,
-              orderItem: vm.lab9Food(),
+              orderItem: vm.lab9Item(),
               deliverTo: ''
             };
             var fetchOptions = {
@@ -542,7 +538,7 @@
               serviceName: 'supplier',
               commandName: 'removeInventory',
               orderId: -1,
-              orderItem: vm.lab9Food(),
+              orderItem: vm.lab9Item(),
               deliverTo: ''
             };
             var fetchOptions = {
@@ -564,7 +560,7 @@
               serviceName: 'supplier',
               commandName: 'getInventory',
               orderId: -1,
-              orderItem: vm.lab9Food(),
+              orderItem: vm.lab9Item(),
               deliverTo: ''
             };
             var fetchOptions = {
