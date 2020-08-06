@@ -28,6 +28,13 @@ cd order-helidon
 cd ../
 
 echo ________________________________________
+echo building and pushing supplier-helidon-se...
+echo ________________________________________
+cd supplier-helidon-se
+./build.sh
+cd ../
+
+echo ________________________________________
 echo building and pushing inventory-helidon...
 echo ________________________________________
 cd inventory-helidon
@@ -52,13 +59,6 @@ echo ________________________________________
 echo building and pushing inventory-helidon-se...
 echo ________________________________________
 cd inventory-helidon-se
-./build.sh
-cd ../
-
-echo ________________________________________
-echo building and pushing supplier-helidon-se...
-echo ________________________________________
-cd supplier-helidon-se
 ./build.sh
 cd ../
 

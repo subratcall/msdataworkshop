@@ -627,8 +627,8 @@
 
             fetch('/metrics', fetchOptions).then(fetchResult => {
               vm.httpCode(fetchResult.status);
-              fetchResult.json().then(payload => {
-                vm.labResult(JSON.stringify(payload, null, 2));
+              fetchResult.text().then(payload => {
+                vm.labResult(payload);
                 vm.inProgress(false);
               });
             });
