@@ -4,6 +4,7 @@
  Licensed under The Universal Permissive License (UPL), Version 1.0
  as shown at https://oss.oracle.com/licenses/upl/
  -->
+
 <html lang="en-us">
 
 <head>
@@ -86,19 +87,19 @@
               <oj-switcher value="[[selectedTask]]">
                 <!-- lab7 -->
                 <div slot="lab7">
-                  <oj-button on-oj-action="[[lab7Action1]]">Test Data Sources</oj-button>
+                  <oj-button disabled="[[inProgress]]" on-oj-action="[[lab7TestDatasourcesAction]]">Test Data Sources</oj-button>
                 </div>
                 <div slot="lab8">
                   Setup...<br><br>
-                  <oj-button on-oj-action="[[lab8CreateUsersAction]]">Create Users</oj-button>
-                  <oj-button on-oj-action="[[lab8CreateInventoryTableAction]]">Create Inventory Table</oj-button>
-                  <oj-button on-oj-action="[[lab8CreateDatabaseLinksAction]]">Create Database Links</oj-button>
-                  <oj-button on-oj-action="[[lab8SetupTablesQueuesAndPropagationAction]]">Setup Tables Queues and Propagation</oj-button>
+                  <oj-button disabled="[[inProgress]]" on-oj-action="[[lab8CreateUsersAction]]">Create Users</oj-button>
+                  <oj-button disabled="[[inProgress]]" on-oj-action="[[lab8CreateInventoryTableAction]]">Create Inventory Table</oj-button>
+                  <oj-button disabled="[[inProgress]]" on-oj-action="[[lab8CreateDatabaseLinksAction]]">Create Database Links</oj-button>
+                  <oj-button disabled="[[inProgress]]" on-oj-action="[[lab8SetupTablesQueuesAndPropagationAction]]">Setup Tables Queues and Propagation</oj-button>
                   <br><br><br><br>
                   Teardown and other admin...<br><br>
-                  <oj-button on-oj-action="[[lab8EnablePropagationAction]]">Enable Propagation</oj-button>
-                  <oj-button on-oj-action="[[lab8UnschedulePropagationAction]]">Unschedule Propagation</oj-button>
-                  <oj-button on-oj-action="[[lab8DeleteUsersAction]]">Delete Users</oj-button>
+                  <oj-button disabled="[[inProgress]]" on-oj-action="[[lab8EnablePropagationAction]]">Enable Propagation</oj-button>
+                  <oj-button disabled="[[inProgress]]" on-oj-action="[[lab8UnschedulePropagationAction]]">Unschedule Propagation</oj-button>
+                  <oj-button disabled="[[inProgress]]" on-oj-action="[[lab8DeleteUsersAction]]">Delete Users</oj-button>
                 </div>
                 <!-- lab9 -->
                 <div slot="lab9">
@@ -115,27 +116,27 @@
                     <oj-input-text label-hint="Deliver to" value="{{lab9DeliverTo}}"></oj-input-text>
                     <oj-input-text label-hint="Order ID" value="{{lab9OrderId}}"></oj-input-text>
                   </oj-form-layout>
-                  <oj-button on-oj-action="[[lab9DeleteAllOrdersAction]]">Delete All Orders</oj-button>
-                  <oj-button on-oj-action="[[lab9PlaceOrderAction]]">Place Order</oj-button>
-                  <oj-button on-oj-action="[[lab9ShowOrderAction]]">Show Order</oj-button>
+                  <oj-button disabled="[[inProgress]]" on-oj-action="[[lab9DeleteAllOrdersAction]]">Delete All Orders</oj-button>
+                  <oj-button disabled="[[inProgress]]" on-oj-action="[[lab9PlaceOrderAction]]">Place Order</oj-button>
+                  <oj-button disabled="[[inProgress]]" on-oj-action="[[lab9ShowOrderAction]]">Show Order</oj-button>
                   <br><br>
                   <br>Supplier/Inventory Admin...
                   <br>
                   <oj-form-layout>
                     <oj-input-text label-hint="Item" value="{{lab9Item}}"></oj-input-text>
                   </oj-form-layout>
-                  <oj-button on-oj-action="[[lab9AddInventoryAction]]">Add Inventory</oj-button>
-                  <oj-button on-oj-action="[[lab9RemoveInventoryAction]]">Remove Inventory</oj-button>
-                  <oj-button on-oj-action="[[lab9GetInventoryAction]]">Get Inventory</oj-button>
+                  <oj-button disabled="[[inProgress]]" on-oj-action="[[lab9AddInventoryAction]]">Add Inventory</oj-button>
+                  <oj-button disabled="[[inProgress]]" on-oj-action="[[lab9RemoveInventoryAction]]">Remove Inventory</oj-button>
+                  <oj-button disabled="[[inProgress]]" on-oj-action="[[lab9GetInventoryAction]]">Get Inventory</oj-button>
                 </div>
                 <!-- lab10 -->
                 <div slot="lab10">
-                  <oj-button on-oj-action="[[lab10ShowMetricsAction]]">Show Metrics</oj-button>
+                  <oj-button disabled="[[inProgress]]" on-oj-action="[[lab10ShowMetricsAction]]">Show Metrics</oj-button>
                   <br><br>
-                  <oj-button on-oj-action="[[lab10healthliveAction]]">Show Health: Liveness</oj-button>
-                  <oj-button on-oj-action="[[lab10healthreadyAction]]">Show Health: Readiness</oj-button>
-                  <oj-button on-oj-action="[[lab10ordersetlivenesstofalseAction]]">Set Liveness to False</oj-button>
-                  <oj-button on-oj-action="[[lab10lastContainerStartTimeAction]]">Get Last Container Start Time</oj-button>
+                  <oj-button disabled="[[inProgress]]" on-oj-action="[[lab10healthliveAction]]">Show Health: Liveness</oj-button>
+                  <oj-button disabled="[[inProgress]]" on-oj-action="[[lab10healthreadyAction]]">Show Health: Readiness</oj-button>
+                  <oj-button disabled="[[inProgress]]" on-oj-action="[[lab10ordersetlivenesstofalseAction]]">Set Liveness to False</oj-button>
+                  <oj-button disabled="[[inProgress]]" on-oj-action="[[lab10lastContainerStartTimeAction]]">Get Last Container Start Time</oj-button>
                   <br><br>
                   <form id="jaegerLink" action="%JAEGER_QUERY_ADDRESS%" method="get" target="_blank">
                     <input class="button button1" type="submit" value="Show Tracing" />
@@ -255,12 +256,13 @@
           //Drives the navigation list itself
           this.tasks = new ArrayDataProvider(Array.from(this.menuTasks.entries()).map(entry => { entry[1].id = entry[0]; return entry[1]; }), { keyAttributes: 'id' });
 
-
+          this.inProgress = ko.observable(false);
 
           // Function calls and state relating to given labs
 
           // Lab 7. ----------------------------------------------------------- //
-          this.lab7Action1 = function (event, vm) {
+          this.lab7TestDatasourcesAction = function (event, vm) {
+            vm.inProgress(true);
             var order = {
               serviceName: 'atpaqadmin',
               commandName: 'testdatasources',
@@ -280,11 +282,13 @@
                 vm.labResult(JSON.stringify(payload, null, 2));
               });
             });
+            vm.inProgress(false);
           };
 
 
       // Lab 8. ----------------------------------------------------------- //
           this.lab8CreateUsersAction = function (event, vm) {
+            vm.inProgress(true);
             var order = {
               serviceName: 'atpaqadmin',
               commandName: 'createUsers',
@@ -304,9 +308,11 @@
                 vm.labResult(JSON.stringify(payload, null, 2));
               });
             });
+            vm.inProgress(false);
           };
 
           this.lab8CreateInventoryTableAction = function (event, vm) {
+            vm.inProgress(true);
             var order = {
               serviceName: 'atpaqadmin',
               commandName: 'createInventoryTable',
@@ -326,9 +332,11 @@
                 vm.labResult(JSON.stringify(payload, null, 2));
               });
             });
+            vm.inProgress(false);
           };
 
           this.lab8CreateDatabaseLinksAction = function (event, vm) {
+            vm.inProgress(true);
             var order = {
               serviceName: 'atpaqadmin',
               commandName: 'createDBLinks',
@@ -348,9 +356,11 @@
                 vm.labResult(JSON.stringify(payload, null, 2));
               });
             });
+            vm.inProgress(false);
           };
 
           this.lab8SetupTablesQueuesAndPropagationAction = function (event, vm) {
+            vm.inProgress(true);
             var order = {
               serviceName: 'atpaqadmin',
               commandName: 'setupTablesQueuesAndPropagation',
@@ -370,9 +380,11 @@
                 vm.labResult(JSON.stringify(payload, null, 2));
               });
             });
+            vm.inProgress(false);
           };
 
           this.lab8EnablePropagationAction = function (event, vm) {
+            vm.inProgress(true);
             var order = {
               serviceName: 'atpaqadmin',
               commandName: 'enablePropagation',
@@ -392,9 +404,11 @@
                 vm.labResult(JSON.stringify(payload, null, 2));
               });
             });
+            vm.inProgress(false);
           };
 
           this.lab8UnschedulePropagationAction = function (event, vm) {
+            vm.inProgress(true);
             var order = {
               serviceName: 'atpaqadmin',
               commandName: 'unschedulePropagation',
@@ -414,9 +428,11 @@
                 vm.labResult(JSON.stringify(payload, null, 2));
               });
             });
+            vm.inProgress(false);
           };
 
           this.lab8DeleteUsersAction = function (event, vm) {
+            vm.inProgress(true);
             var order = {
               serviceName: 'atpaqadmin',
               commandName: 'deleteUsers',
@@ -436,6 +452,7 @@
                 vm.labResult(JSON.stringify(payload, null, 2));
               });
             });
+            vm.inProgress(false);
           };
 
           // Lab 9. ----------------------------------------------------------- //
@@ -445,6 +462,7 @@
           this.lab9Item = ko.observable('sushi');
 
           this.lab9PlaceOrderAction = function (event, vm) {
+            vm.inProgress(true);
             var order = {
               serviceName: 'order',
               commandName: 'placeOrder',
@@ -464,9 +482,11 @@
                 vm.labResult(JSON.stringify(payload, null, 2));
               });
             });
+            vm.inProgress(false);
           }
 
           this.lab9DeleteAllOrdersAction = function (event, vm) {
+            vm.inProgress(true);
             var order = {
               serviceName: 'order',
               commandName: 'deleteallorders',
@@ -486,9 +506,11 @@
                 vm.labResult(JSON.stringify(payload, null, 2));
               });
             });
+            vm.inProgress(false);
           }
 
           this.lab9ShowOrderAction = function (event, vm) {
+            vm.inProgress(true);
             var order = {
               serviceName: 'order',
               commandName: 'showorder',
@@ -508,10 +530,12 @@
                 vm.labResult(JSON.stringify(payload, null, 2));
               });
             });
+            vm.inProgress(false);
           }
           // supplier service
 
           this.lab9AddInventoryAction = function (event, vm) {
+            vm.inProgress(true);
             var order = {
               serviceName: 'supplier',
               commandName: 'addInventory',
@@ -531,9 +555,11 @@
                 vm.labResult(JSON.stringify(payload, null, 2));
               });
             });
+            vm.inProgress(false);
           }
 
           this.lab9RemoveInventoryAction = function (event, vm) {
+            vm.inProgress(true);
             var order = {
               serviceName: 'supplier',
               commandName: 'removeInventory',
@@ -553,9 +579,11 @@
                 vm.labResult(JSON.stringify(payload, null, 2));
               });
             });
+            vm.inProgress(false);
           }
 
           this.lab9GetInventoryAction = function (event, vm) {
+            vm.inProgress(true);
             var order = {
               serviceName: 'supplier',
               commandName: 'getInventory',
@@ -575,12 +603,14 @@
                 vm.labResult(JSON.stringify(payload, null, 2));
               });
             });
+            vm.inProgress(false);
           }
 
           // Lab 10. ----------------------------------------------------------- //
 
 
           this.lab10ShowMetricsAction = function (event, vm) {
+            vm.inProgress(true);
             var order = {
               serviceName: 'order',
               commandName: 'metrics',
@@ -600,10 +630,12 @@
                 vm.labResult(JSON.stringify(payload, null, 2));
               });
             });
+            vm.inProgress(false);
           };
 
 
           this.lab10healthliveAction = function (event, vm) {
+            vm.inProgress(true);
             var order = {
               serviceName: 'order',
               commandName: 'health/live',
@@ -623,9 +655,11 @@
                 vm.labResult(JSON.stringify(payload, null, 2));
               });
             });
+            vm.inProgress(false);
           };
 
           this.lab10healthreadyAction = function (event, vm) {
+            vm.inProgress(true);
             var order = {
               serviceName: 'order',
               commandName: 'health/ready',
@@ -645,9 +679,11 @@
                 vm.labResult(JSON.stringify(payload, null, 2));
               });
             });
+            vm.inProgress(false);
           };
 
           this.lab10ordersetlivenesstofalseAction = function (event, vm) {
+            vm.inProgress(true);
             var order = {
               serviceName: 'order',
               commandName: 'ordersetlivenesstofalse',
@@ -667,9 +703,11 @@
                 vm.labResult(JSON.stringify(payload, null, 2));
               });
             });
+            vm.inProgress(false);
           };
 
           this.lab10lastContainerStartTimeAction = function (event, vm) {
+            vm.inProgress(true);
             var order = {
               serviceName: 'order',
               commandName: 'lastContainerStartTime',
@@ -689,10 +727,11 @@
                 vm.labResult(JSON.stringify(payload, null, 2));
               });
             });
+            vm.inProgress(false);
           };
 
           this.lab10ShowTracingAction = function (event, vm) {
-<!--            var JAEGER_QUERY_ADDRESS = process.env.JAEGER_QUERY_ADDRESS-->
+            vm.inProgress(true);
             var order = {
               serviceName: 'jaeger',
               commandName: '',
@@ -712,6 +751,7 @@
                 vm.labResult(JSON.stringify(payload, null, 2));
               });
             });
+            vm.inProgress(false);
           };
 
 

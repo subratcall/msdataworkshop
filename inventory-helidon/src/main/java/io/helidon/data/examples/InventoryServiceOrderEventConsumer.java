@@ -4,6 +4,7 @@ import oracle.jdbc.internal.OraclePreparedStatement;
 import oracle.jms.*;
 
 import javax.jms.*;
+import java.lang.IllegalStateException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -54,11 +55,17 @@ public class InventoryServiceOrderEventConsumer implements Runnable {
                     System.out.print(" itemid:" + order.getItemid());
                     System.out.println("((AQjmsSession) qsess).getDBConnection(): " + ((AQjmsSession) qsess).getDBConnection());
                     updateDataAndSendEventOnInventory((AQjmsSession) qsess, order.getOrderid(), order.getItemid());
+                    qsess.commit();
+                    System.out.println("message sent");
                 } else {
                   //  done = true;
                 }
                 Thread.sleep(500);
-            } catch (Exception e) {
+            } catch (IllegalStateException e) {
+                System.out.println("IllegalStateException in performJmsOperations: " + e);
+                qsess.commit();
+                done = true;
+            }catch (Exception e) {
                 System.out.println("Error in performJmsOperations: " + e);
                 qsess.rollback();
                 done = true;
@@ -81,8 +88,6 @@ public class InventoryServiceOrderEventConsumer implements Runnable {
         objmsg.setJMSCorrelationID("" + 2);
         objmsg.setJMSPriority(2);
         publisher.publish(inventoryTopic, objmsg, DeliveryMode.PERSISTENT,2, AQjmsConstants.EXPIRATION_NEVER);
-        session.commit();
-        System.out.println("message sent");
     }
 
     //returns location if exists and "inventorydoesnotexist" otherwise
