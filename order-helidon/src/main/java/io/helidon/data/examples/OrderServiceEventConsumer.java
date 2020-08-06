@@ -32,10 +32,10 @@ public class OrderServiceEventConsumer implements Runnable {
             Queue queue = ((AQjmsSession) session).getQueue(OrderResource.orderQueueOwner, OrderResource.inventoryQueueName);
             System.out.println("listenForMessages... " + "dataSource:" + dataSource + " queueOwner:" + OrderResource.orderQueueOwner +
                     " queueName:" + OrderResource.inventoryQueueName + " queue:" + queue);
-            receiveMessages(session,  queue);
+            receiveMessages(session, queue);
         } catch (Exception e) {
-            System.out.println("Error in performJmsOperations: " + e);
-            return "exception:"+e.toString();
+            System.out.println("Error in dolistenForMessages: " + e);
+            return "exception:" + e.toString();
         }
         return "success";
     }
@@ -59,33 +59,33 @@ public class OrderServiceEventConsumer implements Runnable {
                     String inventorylocation = inventory.getInventorylocation();
                     OrderDetail orderDetail = orderResource.cachedOrders.get(orderid);
                     System.out.println("Lookup orderid:" + orderid + " orderDetail:" + orderDetail + " itemid:" + itemid + " inventorylocation:" + inventorylocation);
-                    if(orderDetail == null){
-                        throw new JMSException("Rollingback message as no orderDetail found for orderid:" + orderid +
-                                ". It may have been started by another server (eg if horizontally scaling) or " +
-                                " this server started the order but crashed. "); //todo add "hydration"/caching of orders during init of service to handle this recovery scenario
+                    if (orderDetail == null) {
+                        System.out.println("Order not in cache, querying DB orderid:" + orderid);
+                        Order order = orderResource.orderServiceEventProducer.getOrderViaSODA(orderResource.atpOrderPdb, orderid);
+                        if (order == null)
+                            throw new JMSException("Rollingback message as no orderDetail found for orderid:" + orderid +
+                                    ". It may have been started by another server (eg if horizontally scaling) or " +
+                                    " this server started the order but crashed. ");
                     }
-                    else{
-                        boolean isSuccessfulInventoryCheck = !(inventorylocation == null || inventorylocation.equals("")
-                                || inventorylocation.equals("inventorydoesnotexist")
-                                || inventorylocation.equals("none"));
-                        if (isSuccessfulInventoryCheck) {
-                            orderDetail.setOrderStatus("success inventory exists");
-                                    orderDetail.setInventoryLocation(inventorylocation);
-                                    orderDetail.setSuggestiveSale(inventory.getSuggestiveSale());
-                        } else {
-                            orderDetail.setOrderStatus("failed inventory does not exist");
-                        }
-                        Order updatedOrder = new Order(orderDetail);
-                        orderResource.orderServiceEventProducer.updateOrderViaSODA(updatedOrder, ((AQjmsSession) qsess).getDBConnection());
+                    boolean isSuccessfulInventoryCheck = !(inventorylocation == null || inventorylocation.equals("")
+                            || inventorylocation.equals("inventorydoesnotexist")
+                            || inventorylocation.equals("none"));
+                    if (isSuccessfulInventoryCheck) {
+                        orderDetail.setOrderStatus("success inventory exists");
+                        orderDetail.setInventoryLocation(inventorylocation);
+                        orderDetail.setSuggestiveSale(inventory.getSuggestiveSale());
+                    } else {
+                        orderDetail.setOrderStatus("failed inventory does not exist");
                     }
+                    Order updatedOrder = new Order(orderDetail);
+                    orderResource.orderServiceEventProducer.updateOrderViaSODA(updatedOrder, ((AQjmsSession) qsess).getDBConnection());
                     System.out.println("((AQjmsSession) qsess).getDBConnection(): " + ((AQjmsSession) qsess).getDBConnection());
                 } else {
                     Thread.sleep(500);
                 }
                 qsess.commit();
             } catch (Exception e) {
-                System.out.println("Error in performJmsOperations: " + e);
-                done = true;
+                System.out.println("Error in receiveMessages: " + e);
                 qsess.rollback();
             }
         }
