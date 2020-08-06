@@ -11,7 +11,8 @@ if [ -z "DOCKER_REGISTRY" ]; then
 fi
 
 export IMAGE=${DOCKER_REGISTRY}/${IMAGE_NAME}:${IMAGE_VERSION}
-# this is not ideal but makes it conveneint to access Jaeger UI from app page...
+# this is not ideal but makes it convenient to access Jaeger UI from app page...
+cp src/main/resources/web/index.html-template src/main/resources/web/index.html
 sed -i "s|%JAEGER_QUERY_ADDRESS%|${JAEGER_QUERY_ADDRESS}|g" src/main/resources/web/index.html
 
 mvn install
