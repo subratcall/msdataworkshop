@@ -142,7 +142,7 @@ class PropagationSetup {
         createDBLink(inventorypdbDataSource.getConnection(inventoryuser, inventorypw),
                 GET_OBJECT_CWALLETSSO_DATA_PUMP_DIR, DROP_CREDENTIAL_ORDERPDB_CRED_SQL,
                 CREATE_CREDENTIAL_ORDERPDB_CRED_SQL, CREATE_DBLINK_INVENTORYTOORDER_SQL, inventoryToOrderLinkName);
-        String verifyDBLinksReply = verifyDBLinks(orderpdbDataSource, inventorypdbDataSource);
+        verifyDBLinks(orderpdbDataSource, inventorypdbDataSource);
         return "DBLinks created and verified successfully";
     }
 
@@ -184,17 +184,18 @@ class PropagationSetup {
         return "success";
     }
 
-    public String setup(DataSource orderpdbDataSource, DataSource inventorypdbDataSource,
-                        boolean isSetupOrderToInventory, boolean isSetupInventoryToOrder) {
-        String returnString = "in setup... " +
-                "isSetupOrderToInventory:" + isSetupOrderToInventory + " isSetupInventoryToOrder:" + isSetupInventoryToOrder;
+    public String setupTablesQueuesAndPropagation(DataSource orderpdbDataSource, DataSource inventorypdbDataSource,
+                                                  boolean isSetupOrderToInventory, boolean isSetupInventoryToOrder) {
+        System.out.println("PropagationSetup.setup isSetupOrderToInventory:" + isSetupOrderToInventory +
+                " isSetupInventoryToOrder:" + isSetupInventoryToOrder);
+        String returnString = "";
         //propagation of order queue from orderpdb to inventorypdb
-        if (isSetupOrderToInventory) returnString += setup(orderpdbDataSource, inventorypdbDataSource,
+        if (isSetupOrderToInventory) returnString += setupTablesQueuesAndPropagation(orderpdbDataSource, inventorypdbDataSource,
                 orderuser, orderpw, orderQueueName,
                 orderQueueTableName, inventoryuser, inventorypw,
                 orderToInventoryLinkName, false);
         //propagation of inventory queue from inventorypdb to orderpdb
-        if (isSetupInventoryToOrder) returnString += setup(inventorypdbDataSource, orderpdbDataSource,
+        if (isSetupInventoryToOrder) returnString += setupTablesQueuesAndPropagation(inventorypdbDataSource, orderpdbDataSource,
                 inventoryuser, inventorypw, inventoryQueueName,
                 inventoryQueueTableName, orderuser, orderpw,
                 inventoryToOrderLinkName, false);
@@ -204,7 +205,7 @@ class PropagationSetup {
     public String testOrderToInventory(DataSource orderpdbDataSource, DataSource inventorypdbDataSource) {
         String returnString = "in testOrderToInventory...";
         //propagation of order queue from orderpdb to inventorypdb
-        returnString += setup(orderpdbDataSource, inventorypdbDataSource,
+        returnString += setupTablesQueuesAndPropagation(orderpdbDataSource, inventorypdbDataSource,
                 orderuser, orderpw, orderQueueName,
                 orderQueueTableName, inventoryuser, inventorypw,
                 orderToInventoryLinkName, true);
@@ -214,14 +215,14 @@ class PropagationSetup {
     public String testInventoryToOrder(DataSource orderpdbDataSource, DataSource inventorypdbDataSource) {
         String returnString = "in testInventoryToOrder...";
         //propagation of inventory queue from inventorypdb to orderpdb
-        returnString += setup(inventorypdbDataSource, orderpdbDataSource,
+        returnString += setupTablesQueuesAndPropagation(inventorypdbDataSource, orderpdbDataSource,
                 inventoryuser, inventorypw, inventoryQueueName,
                 inventoryQueueTableName, orderuser, orderpw,
                 inventoryToOrderLinkName, true);
         return returnString;
     }
 
-    private String setup(
+    private String setupTablesQueuesAndPropagation(
             DataSource sourcepdbDataSource, DataSource targetpdbDataSource, String sourcename, String sourcepw,
             String sourcequeuename, String sourcequeuetable, String targetuser, String targetpw,
             String linkName, boolean isTest) {
@@ -249,13 +250,12 @@ class PropagationSetup {
             tconn.close();
             qsess.close();
             qconn.close();
-            System.out.println("success");
-            returnString += "\n ...success";
-            return returnString;
+            System.out.println("success for " + returnString);
+            return "success for " + sourcequeuename;
         } catch (Exception ex) {
             System.out.println("Exception-1: " + ex);
             ex.printStackTrace();
-            return returnString += "\n ..." + ex.toString();
+            return "setup failed:" + ex.toString() + returnString;
         }
     }
 

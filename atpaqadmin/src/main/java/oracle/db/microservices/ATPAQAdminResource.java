@@ -85,7 +85,8 @@ public class ATPAQAdminResource {
       System.out.println("test datasources...");
       String resultString = "orderpdbDataSource...";
     try {
-      resultString += " connection:" + orderpdbDataSource.getConnection();
+      orderpdbDataSource.getConnection();
+      resultString += " connection successful";
       System.out.println(resultString);
     } catch (Exception e) {
       resultString += e;
@@ -93,7 +94,8 @@ public class ATPAQAdminResource {
     }
     resultString += " inventorypdbDataSource...";
       try {
-        resultString += " connection:" + inventorypdbDataSource.getConnection();
+        inventorypdbDataSource.getConnection();
+        resultString += " connection successful";
         System.out.println(resultString);
       } catch (Exception e) {
         resultString += e;
@@ -112,7 +114,7 @@ public class ATPAQAdminResource {
       returnValue += propagationSetup.createUsers(orderpdbDataSource, inventorypdbDataSource);
       returnValue += propagationSetup.createInventoryTable(inventorypdbDataSource);
       returnValue += propagationSetup.createDBLinks(orderpdbDataSource, inventorypdbDataSource);
-      returnValue += propagationSetup.setup(orderpdbDataSource, inventorypdbDataSource,
+      returnValue += propagationSetup.setupTablesQueuesAndPropagation(orderpdbDataSource, inventorypdbDataSource,
               true, true);
       return " result of setupAll : success... " + returnValue;
     } catch (Exception e) {
@@ -162,11 +164,11 @@ public class ATPAQAdminResource {
     try {
       System.out.println("createDBLinks ...");
       returnValue += propagationSetup.createDBLinks(orderpdbDataSource, inventorypdbDataSource);
-      return " result of createDBLinks :  " + returnValue;
+      return  returnValue;
     } catch (Exception e) {
       e.printStackTrace();
       returnValue += e;
-      return " result of createDBLinks : " + returnValue;
+      return "Exception during DBLinks create : " + returnValue;
     }
   }
 
@@ -190,16 +192,13 @@ public class ATPAQAdminResource {
   @GET
   @Produces(MediaType.TEXT_HTML)
   public String setupTablesQueuesAndPropagation() {
-    String returnValue = "";
     try {
       System.out.println("setupTablesQueuesAndPropagation ...");
-      returnValue += propagationSetup.setup(orderpdbDataSource, inventorypdbDataSource,
+      return propagationSetup.setupTablesQueuesAndPropagation(orderpdbDataSource, inventorypdbDataSource,
               true, true);
-      return " result of setupTablesQueuesAndPropagation :  " + returnValue;
     } catch (Exception e) {
       e.printStackTrace();
-      returnValue += e;
-      return " result of setupTablesQueuesAndPropagation : " + returnValue;
+      return "Setup Tables Queues And Propagation failed : " + e;
     }
   }
 
@@ -225,7 +224,7 @@ public class ATPAQAdminResource {
   private String getString(String returnValue, String s, boolean b, boolean b2, String s2, String s3) {
     try {
       System.out.println(s);
-      returnValue += propagationSetup.setup(orderpdbDataSource, inventorypdbDataSource,  b, b2);
+      returnValue += propagationSetup.setupTablesQueuesAndPropagation(orderpdbDataSource, inventorypdbDataSource,  b, b2);
       return s2 + returnValue;
     } catch (Exception e) {
       e.printStackTrace();
