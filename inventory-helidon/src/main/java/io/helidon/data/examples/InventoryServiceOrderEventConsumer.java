@@ -58,17 +58,14 @@ public class InventoryServiceOrderEventConsumer implements Runnable {
                     qsess.commit();
                     System.out.println("message sent");
                 } else {
-                  //  done = true;
+                    Thread.sleep(500);
                 }
-                Thread.sleep(500);
             } catch (IllegalStateException e) {
-                System.out.println("IllegalStateException in performJmsOperations: " + e);
+                System.out.println("IllegalStateException in performJmsOperations: " + e + " unrecognized message will be ignored");
                 qsess.commit();
-                done = true;
-            }catch (Exception e) {
+            } catch (Exception e) {
                 System.out.println("Error in performJmsOperations: " + e);
                 qsess.rollback();
-                done = true;
             }
         }
     }
