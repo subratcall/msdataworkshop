@@ -1,4 +1,6 @@
 #!/bin/bash
 
-kubectl delete deployment.apps/inventory-nodejs -n msdataworkshop
+echo delete inventory-nodejs deployment...
+
+kubectl delete deployment inventory-nodejs -n msdataworkshop
 
