@@ -1,7 +1,5 @@
 #!/bin/bash
 
-SCRIPT_DIR=$(dirname $0)
-
 IMAGE_NAME=inventory-helidon
 IMAGE_VERSION=0.1
 
