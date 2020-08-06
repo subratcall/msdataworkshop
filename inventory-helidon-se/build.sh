@@ -1,7 +1,7 @@
 #!/bin/bash
 
-IMAGE_NAME=inventory-helidon-se
-IMAGE_VERSION=0.1
+export IMAGE_NAME=inventory-helidon-se
+export IMAGE_VERSION=0.1
 
 if [ -z "$DOCKER_REGISTRY" ]; then
     echo "Error: DOCKER_REGISTRY env variable needs to be set!"
