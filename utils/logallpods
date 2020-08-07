@@ -1,0 +1,3 @@
+#!/bin/bash
+export app=$1
+kubectl logs -f -l app=$app -n msdataworkshop
