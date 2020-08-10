@@ -50,9 +50,9 @@ public class OrderServiceEventConsumer implements Runnable {
                 if (textMessage != null) {
                     String messageText = textMessage.getText();
                     System.out.println("messageText " + messageText);
-                    System.out.println("Priority: " + textMessage.getIntProperty("Priority"));
+//                    System.out.println("Priority: " + textMessage.getIntProperty("Priority"));
                     System.out.print(" Pri: " + textMessage.getJMSPriority());
-                    System.out.print(" Message: " + textMessage.getIntProperty("Id"));
+//                    System.out.print(" Message: " + textMessage.getIntProperty("Id"));
                     Inventory inventory = JsonUtils.read(messageText, Inventory.class);
                     String orderid = inventory.getOrderid();
                     String itemid = inventory.getItemid();

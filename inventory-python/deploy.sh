@@ -21,4 +21,4 @@ else
     kubectl apply -f <(istioctl kube-inject -f $SCRIPT_DIR/inventory-python-deployment-$CURRENTTIME.yaml) -n msdataworkshop
 fi
 
-kubectl create -f $SCRIPT_DIR/inventory-service.yaml -n msdataworkshop
+#kubectl create -f $SCRIPT_DIR/inventory-service.yaml -n msdataworkshop
