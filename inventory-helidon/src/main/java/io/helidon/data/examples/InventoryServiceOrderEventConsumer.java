@@ -22,12 +22,12 @@ public class InventoryServiceOrderEventConsumer implements Runnable {
 
     @Override
     public void run() {
-        System.out.println("Receive Messages...");
-            try {
-                listenForOrderEvents();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        System.out.println("Receive messages...");
+        try {
+            listenForOrderEvents();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void listenForOrderEvents() throws Exception {
@@ -39,8 +39,7 @@ public class InventoryServiceOrderEventConsumer implements Runnable {
         boolean done = false;
         while (!done) {
             try {
-                if (qconn == null || qsess == null || dbConnection.isClosed())
-                {
+                if (qconn == null || qsess == null ||  dbConnection.isClosed()) {
                     qconn = qcfact.createQueueConnection(inventoryResource.inventoryuser, inventoryResource.inventorypw);
                     qsess = qconn.createQueueSession(true, Session.CLIENT_ACKNOWLEDGE);
                     qconn.start();
@@ -48,34 +47,34 @@ public class InventoryServiceOrderEventConsumer implements Runnable {
                     consumer = (AQjmsConsumer) qsess.createConsumer(queue);
                 }
                 TextMessage orderMessage = (TextMessage) (consumer.receive(-1));
-                    String txt = orderMessage.getText();
-                    System.out.println("txt " + txt);
-                    System.out.print("JMSPriority: " + orderMessage.getJMSPriority());
-                    System.out.println("Priority: " + orderMessage.getIntProperty("Priority"));
-                    System.out.print(" Message: " + orderMessage.getIntProperty("Id"));
-                    Order order = JsonUtils.read(txt, Order.class);
-                    System.out.print(" orderid:" + order.getOrderid());
-                    System.out.print(" itemid:" + order.getItemid());
-                    System.out.println("((AQjmsSession) qsess).getDBConnection(): " + ((AQjmsSession) qsess).getDBConnection());
-                    updateDataAndSendEventOnInventory((AQjmsSession) qsess, order.getOrderid(), order.getItemid());
-                    qsess.commit();
-                    System.out.println("message sent");
+                String txt = orderMessage.getText();
+                System.out.println("txt " + txt);
+                System.out.print("JMSPriority: " + orderMessage.getJMSPriority());
+                System.out.println("Priority: " + orderMessage.getIntProperty("Priority"));
+                System.out.print(" Message: " + orderMessage.getIntProperty("Id"));
+                Order order = JsonUtils.read(txt, Order.class);
+                System.out.print(" orderid:" + order.getOrderid());
+                System.out.print(" itemid:" + order.getItemid());
+                System.out.println("((AQjmsSession) qsess).getDBConnection(): " + ((AQjmsSession) qsess).getDBConnection());
+                updateDataAndSendEventOnInventory((AQjmsSession) qsess, order.getOrderid(), order.getItemid());
+                qsess.commit();
+                System.out.println("message sent");
             } catch (IllegalStateException e) {
                 System.out.println("IllegalStateException in receiveMessages: " + e + " unrecognized message will be ignored");
-                if(qsess != null) qsess.commit(); //drain unrelated messages - todo add selector for this instead
+                if (qsess != null) qsess.commit(); //drain unrelated messages - todo add selector for this instead
             } catch (Exception e) {
                 System.out.println("Error in receiveMessages: " + e);
-                if(qsess != null) qsess.rollback();
+                if (qsess != null) qsess.rollback();
             }
         }
     }
 
     private void updateDataAndSendEventOnInventory(AQjmsSession session, String orderid, String itemid) throws Exception {
         String inventorylocation = evaluateInventory(session, itemid);
-        Inventory inventory = new Inventory(orderid, itemid, inventorylocation,"beer"); //static suggestiveSale - represents an additional service/event
+        Inventory inventory = new Inventory(orderid, itemid, inventorylocation, "beer"); //static suggestiveSale - represents an additional service/event
         String jsonString = JsonUtils.writeValueAsString(inventory);
-        Topic inventoryTopic =  session.getTopic(InventoryResource.inventoryuser, InventoryResource.inventoryQueueName);
-        System.out.println("send inventory status message... jsonString:" + jsonString + " inventoryTopic:" + inventoryTopic) ;
+        Topic inventoryTopic = session.getTopic(InventoryResource.inventoryuser, InventoryResource.inventoryQueueName);
+        System.out.println("send inventory status message... jsonString:" + jsonString + " inventoryTopic:" + inventoryTopic);
         TextMessage objmsg = session.createTextMessage();
         TopicPublisher publisher = session.createPublisher(inventoryTopic);
         objmsg.setIntProperty("Id", 1);
@@ -83,7 +82,7 @@ public class InventoryServiceOrderEventConsumer implements Runnable {
         objmsg.setText(jsonString);
         objmsg.setJMSCorrelationID("" + 2);
         objmsg.setJMSPriority(2);
-        publisher.publish(inventoryTopic, objmsg, DeliveryMode.PERSISTENT,2, AQjmsConstants.EXPIRATION_NEVER);
+        publisher.publish(inventoryTopic, objmsg, DeliveryMode.PERSISTENT, 2, AQjmsConstants.EXPIRATION_NEVER);
     }
 
     //returns location if exists and "inventorydoesnotexist" otherwise

@@ -14,7 +14,7 @@ import oracle.ucp.jdbc.PoolDataSourceFactory;
 
 public class SupplierService implements Service {
 
-    private PoolDataSource pool;
+    private final PoolDataSource pool;
 
     public SupplierService(Config config) throws SQLException {
 
@@ -26,6 +26,7 @@ public class SupplierService implements Service {
         pool.setURL(url);
         pool.setUser(user);
         pool.setPassword(password);
+        pool.setInactiveConnectionTimeout(60);
         pool.setConnectionFactoryClassName("oracle.jdbc.pool.OracleDataSource");
     }
 
