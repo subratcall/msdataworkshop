@@ -78,7 +78,7 @@ public class OrderServiceEventConsumer implements Runnable {
                 qsess.commit();
             } catch (Exception e) {
                 e.printStackTrace();
-                System.out.println("Error in receiveMessages: " + e);
+                System.out.println("Exception in receiveMessages: " + e);
                 qsess.rollback();
             }
         }

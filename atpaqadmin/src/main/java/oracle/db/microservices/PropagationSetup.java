@@ -362,7 +362,7 @@ class PropagationSetup {
             e.printStackTrace();
             return e.toString();
         }
-        return "success";
+        return topicName + " : success ";
     }
 
     private static void sendMessages(TopicSession topicSession, Topic topic) throws JMSException {
