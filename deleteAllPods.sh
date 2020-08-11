@@ -1,60 +1,44 @@
 #!/bin/bash
 
 echo ________________________________________
-echo undeploying frontend-helidon...
+echo deleting pod frontend-helidon...
 echo ________________________________________
-cd frontend-helidon
-./undeploy.sh
-cd ../
+deletepod frontend
 
 echo ________________________________________
-echo undeploying atpaqadmin...
+echo deleting pod atpaqadmin...
 echo ________________________________________
-cd atpaqadmin
-./undeploy.sh
-cd ../
+deletepod admin
 
 echo ________________________________________
-echo undeploying order-helidon...
+echo deleting pod order-helidon...
 echo ________________________________________
-cd order-helidon
-./undeploy.sh
-cd ../
+deletepod order
 
 echo ________________________________________
-echo undeploying supplier-helidon-se...
+echo deleting pod supplier-helidon-se...
 echo ________________________________________
-cd supplier-helidon-se
-./undeploy.sh
-cd ../
+deletepod supplier
 
 echo ________________________________________
-echo undeploying inventory-helidon...
+echo deleting pod inventory-helidon...
 echo ________________________________________
-cd inventory-helidon
-./undeploy.sh
-cd ../
+deletepod inventory-helidon
 
 echo ________________________________________
-echo undeploying inventory-python...
+echo deleting pod inventory-python...
 echo ________________________________________
-cd inventory-python
-./undeploy.sh
-cd ../
+deletepod inventory-python
 
 echo ________________________________________
-echo undeploying inventory-nodejs...
+echo deleting pod inventory-nodejs...
 echo ________________________________________
-cd inventory-nodejs
-./undeploy.sh
-cd ../
+deletepod inventory-nodejs
 
 echo ________________________________________
-echo undeploying inventory-helidon-se...
+echo deleting pod inventory-helidon-se...
 echo ________________________________________
-cd inventory-helidon-se
-./undeploy.sh
-cd ../
+deletepod inventory-helidon-se
 
 
 echo ________________________________________

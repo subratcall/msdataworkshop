@@ -22,25 +22,20 @@ cd order-helidon
 cd ../
 
 echo ________________________________________
+echo deploying supplier-helidon-se...
+echo ________________________________________
+cd supplier-helidon-se
+./deploy.sh
+cd ../
+
+echo ________________________________________
 echo deploying inventory-helidon...
 echo ________________________________________
 cd inventory-helidon
 ./deploy.sh
 cd ../
 
-echo ________________________________________
-echo deploying inventory-python...
-echo ________________________________________
-cd inventory-python
-./deploy.sh
-cd ../
-
-echo ________________________________________
-echo deploying supplier-helidon-se...
-echo ________________________________________
-cd supplier-helidon-se
-./deploy.sh
-cd ../
+# note that this creates only the inventory helidon (MP) deployment
 
 echo ________________________________________
 echo ...finished
