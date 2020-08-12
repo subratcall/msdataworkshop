@@ -44,9 +44,8 @@ def run():
 
                 # Update the inventory for this order.  If no row is updated there is no inventory.
                 ilvar = cursor.var(str)
-                ilvar.setvalue(0,"")
                 cursor.execute(sql, [orderInfo["itemid"], ilvar])
-                inventorylocation = ilvar.getvalue(0)
+                inventorylocation = ilvar.getvalue(0)[0]
 
                 # Enqueue the response on the inventory queue
                 payload = conn.gettype("SYS.AQ$_JMS_TEXT_MESSAGE").newobject()
