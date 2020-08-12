@@ -6,10 +6,10 @@ const think = 1.0/rps;
 
 export default function() {
   const delay = think * Math.random();
-  sleep(delay);
+//  sleep(delay);
   let orderid=(10000000 * __ENV.RUN + 100000 * __VU + __ITER).toString();
   const res = http.get(`http://${__ENV.LB}:8080/placeOrder?orderid=${orderid}&itemid=34&deliverylocation=London`);
-  sleep(think - delay);
+//  sleep(think - delay);
 
   const checkRes = check(res, {
     'status is 200': r => r.status === 200,
