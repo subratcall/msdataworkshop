@@ -45,14 +45,13 @@ def run():
                 # Update the inventory for this order.  If no row is updated there is no inventory.
                 ilvar = cursor.var(str)
                 cursor.execute(sql, [orderInfo["itemid"], ilvar])
-                inventorylocation = ilvar.getvalue(0)[0]
 
                 # Enqueue the response on the inventory queue
                 payload = conn.gettype("SYS.AQ$_JMS_TEXT_MESSAGE").newobject()
                 payload.TEXT_VC = simplejson.dumps(
                     {'orderid': orderInfo["orderid"],
                      'itemid': orderInfo["itemid"],
-                     'inventorylocation': inventorylocation if cursor.rowcount == 1 else "inventorydoesnotexist",
+                     'inventorylocation': ilvar.getvalue(0)[0] if cursor.rowcount == 1 else "inventorydoesnotexist",
                      'suggestiveSale': "beer"})
                 payload.TEXT_LEN = len(payload.TEXT_VC)
                 inventoryQueue.enqOne(conn.msgproperties(payload = payload))
