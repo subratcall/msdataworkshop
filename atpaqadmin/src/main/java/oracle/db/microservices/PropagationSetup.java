@@ -345,7 +345,7 @@ class PropagationSetup {
         System.out.println("_____________________________________________");
         AQjmsAgent agt = new AQjmsAgent("", destinationqueueuser + "." + name + "@" + linkName);
 //        ((AQjmsSession) topicSession).createRemoteSubscriber(topic1, agt, "JMSPriority = 2");
-        ((AQjmsSession) topicSession).createRemoteSubscriber(topic1, agt, null)
+        ((AQjmsSession) topicSession).createRemoteSubscriber(topic1, agt, null);
         ((AQjmsDestination) topic1).schedulePropagation(
                 topicSession, linkName, null, null, null, new Double(0));
     }
