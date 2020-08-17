@@ -4,6 +4,8 @@ metadata:
   name: frontend
   labels:
     app: frontend
+  annotations:
+    service.beta.kubernetes.io/oci-load-balancer-shape: 400Mbps
 spec:
   type: LoadBalancer
   ports:
