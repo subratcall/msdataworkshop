@@ -14,7 +14,7 @@ echo MSDATAWORKSHOP_REGION... $MSDATAWORKSHOP_REGION
 export MSDATAWORKSHOP_COMPARTMENT_ID=$(cat $WORKINGDIR/msdataworkshopcompartmentid.txt)
 echo MSDATAWORKSHOP_COMPARTMENT_ID... $MSDATAWORKSHOP_COMPARTMENT_ID
 echo
-oci ce cluster list --compartment-id $MSDATAWORKSHOP_COMPARTMENT_ID | jq '.data[]  | select(.name == "msdataworkshopcluster") | .id' | tr -d '"' > $WORKINGDIR/msdataworkshopclusterid.txt
+oci ce cluster list --compartment-id $MSDATAWORKSHOP_COMPARTMENT_ID --lifecycle-state ACTIVE | jq '.data[]  | select(.name == "msdataworkshopcluster") | .id' | tr -d '"' > $WORKINGDIR/msdataworkshopclusterid.txt
 cat $WORKINGDIR/msdataworkshopclusterid.txt
 export MSDATAWORKSHOP_CLUSTER_ID=$(cat $WORKINGDIR/msdataworkshopclusterid.txt)
 echo MSDATAWORKSHOP_CLUSTER_ID... $MSDATAWORKSHOP_CLUSTER_ID

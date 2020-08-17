@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo Insure MSDATAWORKSHOP_OCIR_AUTHKEY argument is in quotes.
+echo Ensure MSDATAWORKSHOP_OCIR_AUTHKEY argument is in quotes.
 echo Usage example : ./dockerLogin.sh foo@bar.com "8nO[BKNU5iwasdf2xeefU;yl"
 
 export WORKINGDIR=workingdir
