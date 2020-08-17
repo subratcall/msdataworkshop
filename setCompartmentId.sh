@@ -24,11 +24,6 @@ mkdir $WORKINGDIR
 
 
 export MSDATAWORKSHOP_REGION=$2
-if [[ $MSDATAWORKSHOP_REGION == "" ]]
-then
-  echo defaulting to region us-ashburn-1
-  export MSDATAWORKSHOP_REGION=us-ashburn-1
-fi
 echo $MSDATAWORKSHOP_REGION | tr -d '"' > $WORKINGDIR/msdataworkshopregion.txt
 echo MSDATAWORKSHOP_REGION... $MSDATAWORKSHOP_REGION
 

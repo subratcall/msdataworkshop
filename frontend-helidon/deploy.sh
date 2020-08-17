@@ -5,6 +5,7 @@ SCRIPT_DIR=$(dirname $0)
 echo create frontend deployment and service...
 export CURRENTTIME=$( date '+%F_%H:%M:%S' )
 echo CURRENTTIME is $CURRENTTIME  ...this will be appended to generated deployment yaml
+echo DOCKER_REGISTRY is $DOCKER_REGISTRY
 
 cp frontend-helidon-deployment.yaml frontend-helidon-deployment-$CURRENTTIME.yaml
 
