@@ -3,8 +3,14 @@
 if [[ $1 == "" ]]
 then
   echo Required argument MSDATAWORKSHOP_COMPARTMENT_ID not provided. The compartmentid can be copied from the OCI Console.
-  echo Usage example : ./setCompartmentId.sh ocid1.compartment.oc1..aaaaaaaaxbvaatfz6dyfqbxhmasxfyui4rjek5dnzgcbivfwvsho77myfnqq
-  echo [optional second argument is for specifying region. The default value is us-ashburn-1]
+  echo Usage example : ./setCompartmentId.sh ocid1.compartment.oc1..aaaaaaaaxbvaatfz6dyfqbxhmasxfyui4rjek5dnzgcbivfwvsho77myfnqq us-ashburn-1
+  exit
+fi
+
+if [[ $2 == "" ]]
+then
+  echo Required argument $MSDATAWORKSHOP_REGION not provided. The region id can be copied from the OCI Console.
+  echo Usage example : ./setCompartmentId.sh ocid1.compartment.oc1..aaaaaaaaxbvaatfz6dyfqbxhmasxfyui4rjek5dnzgcbivfwvsho77myfnqq us-ashburn-1
   exit
 fi
 
