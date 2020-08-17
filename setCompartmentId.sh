@@ -22,11 +22,9 @@ export WORKINGDIR=workingdir
 echo creating working directory $WORKINGDIR to store values...
 mkdir $WORKINGDIR
 
-
 export MSDATAWORKSHOP_REGION=$2
 echo $MSDATAWORKSHOP_REGION | tr -d '"' > $WORKINGDIR/msdataworkshopregion.txt
 echo MSDATAWORKSHOP_REGION... $MSDATAWORKSHOP_REGION
-
 
 export MSDATAWORKSHOP_COMPARTMENT_ID=$1
 echo $MSDATAWORKSHOP_COMPARTMENT_ID | tr -d '"' > $WORKINGDIR/msdataworkshopcompartmentid.txt
