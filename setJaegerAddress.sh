@@ -11,7 +11,7 @@ kubectl get services jaeger-query -n msdataworkshop --output jsonpath='{.status.
 export MSDATAWORKSHOP_JAEGER_IP=$(cat $WORKINGDIR/msdataworkshopjaegeraddress.txt)
 echo MSDATAWORKSHOP_JAEGER_IP... $MSDATAWORKSHOP_JAEGER_IP
 
-if [[ MSDATAWORKSHOP_JAEGER_IP == "" ]]
+if [[ $MSDATAWORKSHOP_JAEGER_IP == "" ]]
 then
   echo "MSDATAWORKSHOP_JAEGER_IP does not exist. OKE may still be provisioning the loadbalancer. Try running ./setJaegerAddress.sh again or check the OCI console for progress."
 fi
