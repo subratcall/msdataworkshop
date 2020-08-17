@@ -18,4 +18,7 @@ else
     kubectl apply -f <(istioctl kube-inject -f $SCRIPT_DIR/frontend-helidon-deployment-$CURRENTTIME.yaml) -n msdataworkshop
 fi
 
+echo creating frontend loadbalancer service
+echo "AlreadyExists" error is expected if installGraalVMJaegerAndFrontendLB.sh was previous run...
+
 kubectl create -f $SCRIPT_DIR/frontend-service.yaml -n msdataworkshop
