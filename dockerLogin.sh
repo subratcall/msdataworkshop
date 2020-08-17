@@ -1,5 +1,8 @@
 #!/bin/bash
 
+echo Insure MSDATAWORKSHOP_OCIR_AUTHKEY argument is in quotes.
+echo Usage example : ./dockerLogin.sh foo@bar.com "8nO[BKNU5iwasdf2xeefU;yl"
+
 export WORKINGDIR=workingdir
 echo WORKINGDIR = $WORKINGDIR
 
@@ -7,7 +10,7 @@ if [[ $1 == "" ]]
 then
   echo MSDATAWORKSHOP_OCIR_USER not provided
   echo Required arguments are MSDATAWORKSHOP_OCIR_USER and MSDATAWORKSHOP_OCIR_AUTHKEY.
-  echo Usage example : ./dockerLogin.sh foo@bar.com 8nO[BKNU5iwasdf2xeefU;yl
+  echo Usage example : ./dockerLogin.sh foo@bar.com "8nO[BKNU5iwasdf2xeefU;yl"
   exit
 fi
 
@@ -15,7 +18,7 @@ if [[ $2 == "" ]]
 then
   echo MSDATAWORKSHOP_OCIR_AUTHKEY not provided
   echo Required arguments are MSDATAWORKSHOP_OCIR_USER and MSDATAWORKSHOP_OCIR_AUTHKEY.
-  echo Usage example : ./dockerLogin.sh foo@bar.com 8nO[BKNU5iwasdf2xeefU;yl
+  echo Usage example : ./dockerLogin.sh foo@bar.com "8nO[BKNU5iwasdf2xeefU;yl"
   exit
 fi
 
