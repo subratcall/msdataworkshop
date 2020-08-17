@@ -31,6 +31,3 @@ else
   echo create msdataworkshop namespace...
   kubectl create ns msdataworkshop
 fi
-
-echo setting Jaeger Address...
-./setJaegerAddress.sh
