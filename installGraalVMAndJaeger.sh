@@ -6,3 +6,6 @@ gunzip graalvm-ce-java11-linux-amd64-20.1.0.tar.gz
 tar xvf graalvm-ce-java11-linux-amd64-20.1.0.tar
 rm graalvm-ce-java11-linux-amd64-20.1.0.tar
 mv graalvm-ce-java11-20.1.0 ~/
+
+echo install jaeger...
+kubectl create -f https://tinyurl.com/yxn83h3q -n msdataworkshop

@@ -1,25 +1,15 @@
 #!/bin/bash
 
 echo ________________________________________
-echo verifying OKE cluster creation,  create ~/.kube/config, and create msdataworkshop namespace ...
+echo verifying OKE cluster creation,  create ~/.kube/config, create msdataworkshop namespace, and set Jaeger UI Address ...
 echo this script requires that createOKECluster.sh has already been run in order to set the compartmentid  ...
 echo ________________________________________
 
 export WORKINGDIR=workingdir
 echo WORKINGDIR = $WORKINGDIR
 
-
-export MSDATAWORKSHOP_REGION=$1
-echo MSDATAWORKSHOP_REGION is $MSDATAWORKSHOP_REGION
-
-if [[ $MSDATAWORKSHOP_REGION == "" ]]
-then
-  echo defaulting to us-ashburn-1
-#  export MSDATAWORKSHOP_REGION=us-ashburn-1
-  export MSDATAWORKSHOP_REGION=us-phoenix-1
-fi
+export MSDATAWORKSHOP_REGION=$(cat $WORKINGDIR/msdataworkshopregion.txt)
 echo MSDATAWORKSHOP_REGION... $MSDATAWORKSHOP_REGION
-
 
 export MSDATAWORKSHOP_COMPARTMENT_ID=$(cat $WORKINGDIR/msdataworkshopcompartmentid.txt)
 echo MSDATAWORKSHOP_COMPARTMENT_ID... $MSDATAWORKSHOP_COMPARTMENT_ID
@@ -41,3 +31,6 @@ else
   echo create msdataworkshop namespace...
   kubectl create ns msdataworkshop
 fi
+
+echo setting Jaeger Address...
+./setJaegerAddress.sh
