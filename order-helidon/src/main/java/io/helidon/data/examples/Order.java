@@ -44,6 +44,30 @@ public class Order {
         return deliverylocation;
     }
 
+    public void setOrderid(String orderid) {
+        this.orderid = orderid;
+    }
+
+    public void setItemid(String itemid) {
+        this.itemid = itemid;
+    }
+
+    public void setDeliverylocation(String deliverylocation) {
+        this.deliverylocation = deliverylocation;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public void setInventoryLocation(String inventoryLocation) {
+        this.inventoryLocation = inventoryLocation;
+    }
+
+    public void setSuggestiveSale(String suggestiveSale) {
+        this.suggestiveSale = suggestiveSale;
+    }
+
     public String getStatus() {
         return status;
     }

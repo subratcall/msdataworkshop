@@ -46,7 +46,7 @@ public class InventoryServiceOrderEventConsumer implements Runnable {
                     Queue queue = ((AQjmsSession) qsess).getQueue(inventoryResource.inventoryuser, inventoryResource.orderQueueName);
                     consumer = (AQjmsConsumer) qsess.createConsumer(queue);
                 }
-                TextMessage orderMessage = (TextMessage) (consumer.receive(-1));
+                TextMessage orderMessage = (TextMessage) (consumer.receive(-1));  //todo address JMS-257: receive(long timeout) of javax.jms.MessageConsumer took more time than the network timeout configured at the java.sql.Connection.
                 String txt = orderMessage.getText();
                 System.out.println("txt " + txt);
                 System.out.print("JMSPriority: " + orderMessage.getJMSPriority());

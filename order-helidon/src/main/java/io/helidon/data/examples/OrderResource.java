@@ -177,40 +177,6 @@ public class OrderResource {
     }
 
     @Operation(summary = "Displays an order",
-            description = "Displays a previously-placed order, including if the order is cached")
-    @APIResponses({
-            @APIResponse(
-                    responseCode = "200",
-                    description = "Previously-placed order",
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(
-                                    implementation = Order.class
-                            ))
-            )
-    })
-    @Path("/showordercache")
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response showorder(
-            @Parameter(description = "The order ID for the order",
-                    required = true,
-                    example = "1",
-                    schema = @Schema(type = SchemaType.STRING))
-            @QueryParam("orderid") String orderId) {
-        System.out.println("--->showorder for orderId:" + orderId);
-        OrderDetail orderDetail = cachedOrders.get(orderId);
-        if (orderDetail == null || orderDetail.getOrderStatus().equals("pending")) {
-            System.out.println("--->showorder not in cache for orderId:" + orderId + " orderDetail:" + orderDetail + " querying DB...");
-            return showordernocache(orderId);
-        }
-        String returnJSON = JsonUtils.writeValueAsString(new Order(orderDetail));
-        System.out.println("OrderResource.showorder returnJSON:" + returnJSON);
-        return Response.ok()
-                .entity(returnJSON)
-                .build();
-    }
-
-    @Operation(summary = "Displays an order",
             description = "Displays a previously-placed order, excluding if the order is cached")
     @APIResponses({
             @APIResponse(
@@ -246,30 +212,6 @@ public class OrderResource {
                     .build();
         }
 
-    }
-
-    @Operation(summary = "Lists all orders",
-            description = "Lists the information for all previously-placed orders")
-    @APIResponses({
-            @APIResponse(
-                    responseCode = "200",
-                    description = "Display of previously-placed orders",
-                    content = @Content(mediaType = "text/html")
-            )
-    })
-    @Path("/showallorders")
-    @GET
-    @Produces(MediaType.TEXT_HTML)
-    public Response showallorders() {
-        System.out.println("showallorders...");
-        StringBuilder returnString = new StringBuilder("orders in cache...");
-        for (String order : cachedOrders.keySet()) {
-            returnString.append("<br>");
-            returnString.append(cachedOrders.get(order));
-        }
-        return Response.ok()
-                .entity(returnString.toString())
-                .build();
     }
 
 

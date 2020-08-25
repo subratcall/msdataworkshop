@@ -51,29 +51,24 @@ public class OrderServiceEventConsumer implements Runnable {
                 String orderid = inventory.getOrderid();
                 String itemid = inventory.getItemid();
                 String inventorylocation = inventory.getInventorylocation();
-                OrderDetail orderDetail = orderResource.cachedOrders.get(orderid);
-                System.out.println("Lookup orderid:" + orderid + " orderDetail:" + orderDetail + " itemid:" + itemid + " inventorylocation:" + inventorylocation);
-                if (orderDetail == null) {
-                    System.out.println("Order not in cache, querying DB orderid:" + orderid);
-                    Order order = orderResource.orderServiceEventProducer.getOrderViaSODA(orderResource.atpOrderPdb, orderid);
-                    if (order == null)
-                        throw new JMSException("Rollingback message as no orderDetail found for orderid:" + orderid +
+                System.out.println("Lookup orderid:" + orderid);
+                Order order = orderResource.orderServiceEventProducer.getOrderViaSODA(orderResource.atpOrderPdb, orderid);
+                if (order == null)
+                    throw new JMSException("Rollingback message as no orderDetail found for orderid:" + orderid +
                                 ". It may have been started by another server (eg if horizontally scaling) or " +
                                 " this server started the order but crashed. ");
-                }
                 boolean isSuccessfulInventoryCheck = !(inventorylocation == null || inventorylocation.equals("")
                         || inventorylocation.equals("inventorydoesnotexist")
                         || inventorylocation.equals("none"));
                 if (isSuccessfulInventoryCheck) {
-                    orderDetail.setOrderStatus("success inventory exists");
-                    orderDetail.setInventoryLocation(inventorylocation);
-                    orderDetail.setSuggestiveSale(inventory.getSuggestiveSale());
+                    order.setStatus("success inventory exists");
+                    order.setInventoryLocation(inventorylocation);
+                    order.setSuggestiveSale(inventory.getSuggestiveSale());
                 } else {
-                    orderDetail.setOrderStatus("failed inventory does not exist");
+                    order.setStatus("failed inventory does not exist");
                 }
-                Order updatedOrder = new Order(orderDetail);
                 dbConnection = ((AQjmsSession) qsess).getDBConnection();
-                orderResource.orderServiceEventProducer.updateOrderViaSODA(updatedOrder, dbConnection);
+                orderResource.orderServiceEventProducer.updateOrderViaSODA(order, dbConnection);
                 System.out.println("((AQjmsSession) qsess).getDBConnection(): " + ((AQjmsSession) qsess).getDBConnection());
                 qsess.commit();
             } catch (Exception e) {
