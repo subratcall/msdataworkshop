@@ -122,8 +122,31 @@ public class FrontEndResource {
     @GET
     @Produces("image/svg+xml")
     public Response burger() {
+        System.out.println("Getting Burger...");
         try {
             return Response.ok(Resource.create("web/images/burger.svg").stream()).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+    }
+
+    @GET
+    @Path("{path: css/.*}")
+    public Response cssResources(@PathParam("path") final String path) {
+        System.out.println("handling CSS assets: " + path);
+        try {
+            return Response.ok(Resource.create(String.format("web/%s", path)).stream()).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+    }
+
+    @GET
+    @Path("{path: js/.*}")
+    public Response jsResources(@PathParam("path") final String path) {
+        System.out.println("handling JS assets: " + path);
+        try {
+            return Response.ok(Resource.create(String.format("web/%s", path)).stream()).build();
         } catch (Exception e) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
