@@ -18,7 +18,7 @@ echo put cwallet.sso in bucket ...select "y" when asked to overwrite
 oci os object put --bucket-name msdataworkshop --file $MSDATAWORKSHOP_LOCATION/atp-secrets-setup/orderdbwallet/cwallet.sso
 
 echo create link to cwallet.sso in objectstorage, save, export, and echo value..
-oci os preauth-request create --access-type ObjectRead --bucket-name msdataworkshop --name msdataworkshopwallet --time-expires 2020-12-21 --object-name cwallet.sso | jq --raw-output '.data | .["access-uri"] ' > preauthlink.txt
+oci os preauth-request create --access-type ObjectRead --bucket-name msdataworkshop --name msdataworkshopwallet --time-expires 2021-12-21 --object-name cwallet.sso | jq --raw-output '.data | .["access-uri"] ' > preauthlink.txt
 export cwalletobjecturi=$(cat preauthlink.txt)
 export cwalletobjecturi=https://objectstorage.${OCI_REGION}.oraclecloud.com${cwalletobjecturi}
 echo updating atpaqadmin-deployment-${CURRENTTIME}.yaml with cwalletobjecturi $cwalletobjecturi

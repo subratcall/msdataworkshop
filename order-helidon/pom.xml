@@ -13,17 +13,33 @@
                              http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
 
-    <modelVersion>4.0.0</modelVersion>
-    <artifactId>order-helidon</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-    <name>order-helidon</name>
-    <description>stateful microservices demo</description>
+<!--    <modelVersion>4.0.0</modelVersion>-->
+<!--    <artifactId>order-helidon</artifactId>-->
+<!--    <version>0.0.1-SNAPSHOT</version>-->
+<!--    <name>order-helidon</name>-->
+<!--    <description>stateful microservices demo</description>-->
 
+<!--    <parent>-->
+<!--        <groupId>io.helidon</groupId>-->
+<!--        <artifactId>helidon-project</artifactId>-->
+<!--        <version>2.0.1</version>-->
+<!--    </parent>-->
+
+<!--    -->
+
+
+    <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>io.helidon</groupId>
-        <artifactId>helidon-project</artifactId>
-        <version>2.0.0</version>
+        <groupId>io.helidon.applications</groupId>
+        <artifactId>helidon-mp</artifactId>
+        <version>2.2.0</version>
     </parent>
+    <groupId>io.helidon.examples</groupId>
+    <artifactId>helidon-quickstart-mp</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <name>order-helidon</name>
+
+
 
     <properties>
         <maven.sources.skip>true</maven.sources.skip>
@@ -176,13 +192,16 @@
         </dependency>
         <dependency>
             <groupId>com.oracle.ojdbc</groupId>
+<!--            <artifactId>ojdbc11</artifactId>-->
             <artifactId>ojdbc10</artifactId>
+<!--            <version>beta</version>-->
             <version>19.3.0.0</version>
         </dependency>
         <dependency>
             <groupId>com.oracle.ojdbc</groupId>
             <artifactId>ucp</artifactId>
             <version>19.3.0.0</version>
+<!--            <version>beta</version>-->
         </dependency>
         <dependency>
             <groupId>com.oracle.ojdbc</groupId>
@@ -209,11 +228,10 @@
             <artifactId>aqapi</artifactId>
             <version>19.3.0.0</version>
         </dependency>
-        <!--the following two will change when orajsoda is available in public maven repos-->
         <dependency>
-            <groupId>com.oracle</groupId>
+            <groupId>com.oracle.database.soda</groupId>
             <artifactId>orajsoda</artifactId>
-            <version>1.1.0</version>
+            <version>1.1.4</version>
         </dependency>
         <dependency>
             <groupId>javax.json.bind</groupId>

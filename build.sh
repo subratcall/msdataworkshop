@@ -7,12 +7,6 @@ cd frontend-helidon
 ./build.sh
 cd ../
 
-echo maven install soda jar...
-cd lib
-mvn install:install-file -Dfile=orajsoda-1.1.0.jar -DgroupId=com.oracle \
-    -DartifactId=orajsoda -Dversion=1.1.0 -Dpackaging=jar
-cd ../
-
 echo ________________________________________
 echo building and pushing atpaqadmin...
 echo ________________________________________
